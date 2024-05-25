@@ -53,14 +53,14 @@ def on_server_stop(server: PluginServerInterface, old):
     server.logger.info('检测到服务器关闭，正在通知机器人服务器……')
     send_shutdown(server)
     if config.broadcast_server:
-        send_message(F'服务器 {config.name} 关闭了！喵~')
+        send_message(F'服务器 [{config.name}] 关闭了！喵~')
 
 
 def on_server_startup(server: PluginServerInterface):
     server.logger.info('检测到服务器开启，正在连接机器人服务器……')
     send_startup(server)
     if config.broadcast_server:
-        send_message(F'服务器 {config.name} 已经开启辣！喵~')
+        send_message(F'服务器 [{config.name}] 已经开启辣！喵~')
 
 
 def on_player_left(server: PluginServerInterface, player: str):

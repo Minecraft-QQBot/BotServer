@@ -25,6 +25,8 @@ async def handle_private(event: PrivateMessageEvent):
 
 
 def server_handle():
+    status = None
     for index, name in enumerate(server_manager.numbers):
         status = "在线" if server_manager.status.get(name) else "离线"
-        yield F'编号为 ({index}) 的服务器 [{name}] 状态： {status} 。'
+        yield F'编号为 ({index}) 的服务器 [{name}] 状态： {status}'
+    if not status: yield '当前没有已连接的服务器！'

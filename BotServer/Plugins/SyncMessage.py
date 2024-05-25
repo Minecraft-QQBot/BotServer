@@ -5,7 +5,7 @@ from Config import config
 from Minecraft import server_manager
 
 
-@on_message()
+@on_message
 async def sync_message(event: GroupMessageEvent):
     if event.group_id != config.main_group:
         return None
