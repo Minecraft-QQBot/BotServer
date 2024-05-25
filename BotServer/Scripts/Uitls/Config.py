@@ -14,6 +14,7 @@ class Config:
     main_group: int = None
     sync_groups: list = None
     command_start: str = None
+    command_disabled: list = None
 
     def __init__(self):
         logger.info('加载配置文件……')
@@ -43,7 +44,8 @@ class Config:
     def check(self):
         for name, type in self.__annotations__.items():
             if not name.startswith('__'):
-                if type == int:
-                    exec(F'self.{name} = int(self.{name})')
-                elif type == list:
-                    exec(F'self.{name} = loads(self.{name})')
+                if value := eval(F'self.{name}'):
+                    if type == int:
+                        exec(F'self.{name} = {value}')
+                    elif type == list:
+                        exec(F'self.{name} = {loads(value)}')

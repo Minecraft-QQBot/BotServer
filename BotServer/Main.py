@@ -1,5 +1,5 @@
 from Config import config
-from Scripts import HttpServer
+from Scripts import PluginsChecker, HttpServer
 
 from pathlib import Path
 
@@ -8,6 +8,7 @@ from nonebot.adapters.onebot.v11 import Adapter
 
 nonebot.init()
 
+PluginsChecker.check('./Plugins/Commands/')
 nonebot.load_plugins('./Plugins/Commands/')
 nonebot.load_plugin(Path('./Plugins/SyncMessage.py'))
 
