@@ -31,11 +31,11 @@
 
 ```json
 {
-    "name": "服务器名称", // 服务器名称，中英文都可。
-    "port": 8000, // 端口号，和服务器配置文件下的 PORT 保持一致即可。
-    "token": "令牌", // 口令，和服务器配置文件下的 TOKEN 保持一致即可。
-    "broadcast_server": true, // 
-    "broadcast_player": true // 
+    "name": "服务器名称",
+    "port": 8000,
+    "token": "令牌",
+    "broadcast_server": true,
+    "broadcast_player": true
 }
 ```
 
