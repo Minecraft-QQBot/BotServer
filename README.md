@@ -17,23 +17,23 @@
 
 你可以选择用
 `git clone https://github.com/Lonely-Sails/MinecraftBot.git`
-来克隆仓库，或者直接下载 Zip 文件。下载完毕后，点击 Rquirements.bat 自动安装依赖。
+来克隆仓库，或者直接下载 Zip 文件。下载完毕后，点击 Requirements.bat 自动安装依赖。
 
 ### 配置环境
 
 打开 `BotServer` 文件夹下的 `.env` 文件，按照注释配置即可。
 
-对于 QQ 机器人平台（如 GoCqHttp，LOneBot 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup) 适配器文档。其中，本机器人仅支持 `Websocket` 反向链接。
+对于 QQ 机器人平台（如 GoCqHttp，LLOneBot 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup) 适配器文档。其中，本机器人仅支持 `Websocket` 反向链接。
 
 ### 安装插件
 
-将 `QQChat.py` 文拷贝到 MCDR 的 插件文件夹 下，编辑 配置文件夹 QQChat 下的 `Config.json` 文件。配置文件内容参考如下：
+在release中下载 `QQChat.mcdr` 并拷贝到 MCDR 的 插件文件夹 下，编辑 配置文件夹 QQChat 下的 `Config.json` 文件。配置文件内容参考如下：
 
 ```json
 {
     "name": "服务器名称",
     "port": 8000,
-    "token": "令牌",
+    "token": "your_token",
     "broadcast_server": true,
     "broadcast_player": true
 }
