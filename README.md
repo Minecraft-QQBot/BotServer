@@ -31,9 +31,9 @@
 
 ```json
 {
-    "name": "服务器名称",
+    "name": "",
     "port": 8000,
-    "token": "your_token",
+    "token": "",
     "broadcast_server": true,
     "broadcast_player": true
 }
@@ -43,11 +43,11 @@
 
 |字段名|类型|含义|
 |:--:|:--:|:--:|
-|port|整数|端口号，和服务器配置文件下的 PORT 保持一致即可。|
 |name|字符串|服务器名称，中英文都可。|
+|port|整数|端口号，和服务器配置文件下的 PORT 保持一致即可。|
 |token|字符串|口令，和服务器配置文件下的 TOKEN 保持一致即可。|
-|broadcast_player|布尔值|是否播报玩家 **离开** 或 **加入** 事件。
 |broadcast_server|布尔值|是否播报服务器 **开启** 或 **关闭** 事件。
+|broadcast_player|布尔值|是否播报玩家 **离开** 或 **加入** 事件。
 
 
 ### 运行服务
