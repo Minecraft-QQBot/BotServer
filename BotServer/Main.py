@@ -1,5 +1,5 @@
-from Config import config
 from Scripts import PluginsChecker, HttpServer
+from Scripts.Managers import server_manager, data_manager
 
 from pathlib import Path
 
@@ -8,7 +8,6 @@ from nonebot.adapters.onebot.v11 import Adapter
 
 nonebot.init()
 
-PluginsChecker.check('./Plugins/Commands/')
 nonebot.load_plugins('./Plugins/Commands/')
 nonebot.load_plugin(Path('./Plugins/SyncMessage.py'))
 
@@ -18,12 +17,15 @@ driver.register_adapter(Adapter)
 
 @driver.on_startup
 def startup():
+    data_manager.load()
+    server_manager.init()
     HttpServer.setup_http_server()
 
 
 @driver.on_shutdown
 def shutdown():
-    config.save()
+    data_manager.save()
+    server_manager.unload()
 
 
 if __name__ == '__main__':
