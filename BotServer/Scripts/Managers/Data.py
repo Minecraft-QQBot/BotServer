@@ -10,6 +10,7 @@ class DataManager:
     commands = {}
 
     def load(self):
+        self.load_command_info()
         logger.info('加载数据文件……')
         if exists('Data.json'):
             with open('Data.json', encoding='Utf-8', mode='r') as file:
@@ -20,7 +21,8 @@ class DataManager:
                 return None
         logger.info('未发现玩家数据文件！正在生成……')
         self.save()
-        logger.success('加载数据文件完毕！')
+
+    def load_command_info(self):
         logger.info('正在加载命令信息……')
         with open('Plugins/Commands.json', encoding='Utf-8', mode='r') as file:
             self.commands = load(file)

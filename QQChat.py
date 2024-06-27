@@ -8,9 +8,9 @@ from json import dumps
 
 
 PLUGIN_METADATA = {
-    'id': 'QQChat',
+    'id': 'qq_chat',
     'version': '1.0.0',
-    'name': '服务器 QQ 机器人插件。',
+    'name': 'QQChat',
     'description': '与机器人服务器交互的插件，可以发送消息到 QQ 群。',
     'link': 'https://github.com/Lonely-Sails/Minecraft_QQBot'
 }
@@ -41,11 +41,8 @@ class EventSender:
 
     def __request(self, name: str, data: dict):
         data['token'] = config.token
-        try:
-            request = requests.post(
-                F'{self.request_url}/{name}', data=dumps(data))
-        except Exception:
-            return None
+        try: request = requests.post(F'{self.request_url}/{name}', data=dumps(data))
+        except Exception: return None
         if request.status_code == 200:
             response = request.json()
             if response.get('Success'):
@@ -102,7 +99,7 @@ def on_load(server: PluginServerInterface, old):
     def qq(source: CommandSource, content: CommandContext):
         player = 'Console' if source.is_console else source.player
         success = event_sender.send_message(
-            F'[{config.name}] <{player}> {content.get('message')}')
+            F'[{config.name}] <{player}> {content.get("message")}')
         source.reply('§7发送消息成功！§7' if success else '§6发送消息失败！§6')
 
     global event_sender, config
@@ -118,14 +115,14 @@ def on_load(server: PluginServerInterface, old):
 
 def on_server_stop(server: PluginServerInterface, old):
     server.logger.info('检测到服务器关闭，正在通知机器人服务器……')
-    event_sender.send_shutdown(server)
+    event_sender.send_shutdown()
     if config.broadcast_server:
         event_sender.send_message(F'服务器 [{config.name}] 关闭了！喵~')
 
 
 def on_server_startup(server: PluginServerInterface):
     server.logger.info('检测到服务器开启，正在连接机器人服务器……')
-    event_sender.send_startup(server)
+    event_sender.send_startup()
     if config.broadcast_server:
         event_sender.send_message(F'服务器 [{config.name}] 已经开启辣！喵~')
 

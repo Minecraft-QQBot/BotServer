@@ -1,4 +1,4 @@
-from Scripts import PluginsChecker, HttpServer
+from Scripts import HttpServer
 from Scripts.Managers import server_manager, data_manager
 
 from pathlib import Path

@@ -10,9 +10,10 @@ from nonebot.drivers import HTTPServerSetup, ASGIMixin, Request, Response, URL
 class Config(BaseModel):
     token: str = None
     bot_prefix: str = None
+    sync_message_groups: list = None
 
 
-config = get_plugin_config(Config)
+config: Config = None
 
 
 async def send_message(request: Request):
@@ -21,7 +22,7 @@ async def send_message(request: Request):
     bot = get_bot()
     if message := request.json.get('message'):
         logger.info(F'发送消息到同步消息群！消息为 {message} 。')
-        for group_id in data_manager.sync_groups:
+        for group_id in config.sync_message_groups:
             await bot.send_group_msg(group_id=group_id, message=message)
     return Response(200, content=dumps({'Success': True}))
 
@@ -43,6 +44,8 @@ async def server_shutdown(request: Request):
 
 
 def setup_http_server():
+    global config
+    config = get_plugin_config(Config)
     logger.info('正在载入 Http 服务器……')
     if isinstance(driver := get_driver(), ASGIMixin):
         http_server = HTTPServerSetup(

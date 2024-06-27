@@ -7,9 +7,9 @@ from nonebot.log import logger
 
 
 class ServerManager:
-    status = {}
-    servers = {}
-    numbers = []
+    numbers: list[int] = []
+    status: dict[str, bool] = {}
+    servers: dict[str, RconConnection] = {}
 
     def init(self):
         logger.info('初始化服务器管理器！正在尝试连接到已保存的服务器……')
@@ -28,9 +28,9 @@ class ServerManager:
     def execute(self, command: str, server_name: (str | int) = None):
         if server_name is None:
             result = {}
-            for name, client in self.servers.items():
+            for name, rcon in self.servers.items():
                 if self.status.get(name):
-                    result.setdefault(name, client.run(command))
+                    result.setdefault(name, rcon.send_command(command))
             return result
         if isinstance(server_name, int):
             if len(self.numbers) < server_name:

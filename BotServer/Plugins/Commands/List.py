@@ -38,7 +38,7 @@ def get_players():
 
 def list_handle():
     player_count = 0
-    if players := get_players:
+    if players := get_players():
         for name, value in players.items():
             yield F'====== {name} ======'
             if config.bot_prefix:

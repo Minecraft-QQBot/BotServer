@@ -10,6 +10,7 @@ from datetime import date
 
 class Config(BaseModel):
     command_groups: list = None
+    command_enabled: list = None
 
 
 config = get_plugin_config(Config)
