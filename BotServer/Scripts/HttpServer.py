@@ -1,9 +1,11 @@
-from Scripts.Managers import data_manager, server_manager
+from Scripts.Managers import server_manager
 
 from json import dumps
 from pydantic import BaseModel
 
-from nonebot import get_plugin_config, get_driver, get_bot, logger
+from nonebot import get_plugin_config, get_driver, get_bot
+from nonebot.log import logger
+from nonebot.exception import NetworkError
 from nonebot.drivers import HTTPServerSetup, ASGIMixin, Request, Response, URL
 
 
@@ -23,7 +25,10 @@ async def send_message(request: Request):
     if message := request.json.get('message'):
         logger.info(F'发送消息到同步消息群！消息为 {message} 。')
         for group_id in config.sync_message_groups:
-            await bot.send_group_msg(group_id=group_id, message=message)
+            try:
+                await bot.send_group_msg(group_id=group_id, message=message)
+            except NetworkError:
+                logger.error(F'发送同步消息失败，请检查群号 {group_id} 是否正确！')
     return Response(200, content=dumps({'Success': True}))
 
 
@@ -55,7 +60,7 @@ def setup_http_server():
             URL('/server/startup'), 'POST', 'server_startup', server_startup)
         driver.setup_http_server(http_server)
         http_server = HTTPServerSetup(
-            URL('/server/startup'), 'POST', 'server_shutdown', server_shutdown)
+            URL('/server/shutdown'), 'POST', 'server_shutdown', server_shutdown)
         driver.setup_http_server(http_server)
         logger.success('Http 服务器载入完毕！')
         return None

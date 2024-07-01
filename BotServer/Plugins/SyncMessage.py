@@ -12,8 +12,7 @@ class Config(BaseModel):
 
 
 config = get_plugin_config(Config)
-mapping = {'record': '转发', 'image': '图片', 'reply': '回复',
-           'video': '视频', 'face': '表情', 'file': '文件'}
+mapping = {'record': '聊天记录', 'image': '图片', 'reply': '回复', 'face': '表情', 'file': '文件'}
 
 
 @on_message
@@ -27,15 +26,15 @@ async def sync_message(event: GroupMessageEvent):
     plain_texts = []
     for segment in event.get_message():
         if segment.type == 'text':
-            plain_texts.append(segment.data['text'])
+            if text := segment.data['text']:
+                plain_texts.append(text)
             continue
         elif segment.type == 'at':
             user = segment.data['qq']
-            plain_texts.append(
-                F'[@{data_manager.players.get(user, "Unknow")}]')
+            plain_texts.append(F'[@{data_manager.players.get(user, "未知用户")}]')
             continue
         plain_texts.append(F'[{mapping.get(segment.type, "未知类型")}]')
     plain_text = ' '.join(plain_texts)
-    name = data_manager.players.get(str(event.user_id), '<Unknow>')
+    name = data_manager.players.get(str(event.user_id), '未知用户')
     server_manager.broadcast(F'[QQ] <{name}> {plain_text}', 'gray')
-    logger.info(F'转发主群用户 {name} 消息 {plain_text} 到游戏内。')
+    logger.debug(F'转发主群用户 {name} 消息 {plain_text} 到游戏内。')

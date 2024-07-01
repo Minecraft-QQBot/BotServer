@@ -1,34 +1,25 @@
-from nonebot import get_plugin_config, on_command
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, Message
+from Scripts.Utils import turn_message, get_rule
 
-from pydantic import BaseModel
+from nonebot import on_command
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment
 
 import random
 from hashlib import md5
 from datetime import date
 
 
-class Config(BaseModel):
-    command_groups: list = None
-    command_enabled: list = None
-
-
-config = get_plugin_config(Config)
-matcher = on_command('luck', force_whitespace=True)
 bad_things = ('造世吞（直接放飞', '修机器（一修就炸', '挖矿（只挖到原石')
 good_things = ('造世吞（完美运行', '修机器（一修就好', '挖矿（挖到十钻石')
+matcher = on_command('luck', force_whitespace=True, rule=get_rule('luck'))
 
 
 @matcher.handle()
-async def luck_handle(event: GroupMessageEvent):
-    if not (('luck' in config.command_enabled) or (event.group_id in config.command_groups)):
-        await matcher.finish()
-    lines = tuple(luck_handle(event))
-    message = Message('\n'.join(lines))
+async def handle_group(event: GroupMessageEvent):
+    message = turn_message(luck_handler(event))
     await matcher.finish(message)
 
 
-def luck_handle(event: GroupMessageEvent):
+def luck_handler(event: GroupMessageEvent):
     hash = md5(F'{date.today()} {event.group_id} {event.user_id}'.encode())
     random.seed(seed := int(hash.hexdigest(), 16))
     tips = '啧……'

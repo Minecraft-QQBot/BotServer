@@ -1,32 +1,69 @@
 {
   "luck": {
-    "usage": "查看今日运势（仅供参考）。",
-    "command": "luck"
+    "usage": "luck",
+    "description": "查看今日运势（仅供参考）。"
   },
   "server": {
-    "usage": "查看当前所有服务器的状态和编号。",
-    "command": "server"
+    "usage": "server",
+    "description": "查看当前所有服务器的状态和编号。",
+    "children": {
+      "remove": {
+        "usage": "server remove <server>",
+        "description": "从服务器列表中移除某个指定的服务器。",
+        "parameters": {
+          "server": "指定服务器名称或编号。"
+        }
+      }
+    }
   },
   "list": {
-    "usage": "查询当前在线的玩家。",
-    "command": "list <*server>",
-    "parmeters": {
+    "usage": "list <*server>",
+    "description": "查询当前在线的玩家。",
+    "parameters": {
       "server": "可选，指定服务器名称或编号。"
     }
   },
   "help": {
-    "usage": "查看所有可用命令的帮助信息。",
-    "command": "help <*command>",
-    "parmeters": {
+    "usage": "help <*command>",
+    "description": "查看所有可用命令的帮助信息。",
+    "parameters": {
       "command": "可选，指定命令名称并显示此命令的详细信息。"
     }
   },
   "command": {
-    "usage": "在某个指定的服务器执行指令（仅管理员可用）。",
-    "command": "command <server> <command>",
-    "parmeters": {
-      "server": "指定服务器名称或编号。",
+    "usage": "command <server> <command>",
+    "description": "在某个指定的服务器执行指令（仅管理员可用）。",
+    "parameters": {
+      "server": "指定服务器名称或编号，为 * 时表示所有服务器。",
       "command": "要执行的指令。"
+    }
+  },
+  "bound": {
+    "usage": "bound <*player>",
+    "description": "绑定到白名单到游戏或查看绑定的白名单。",
+    "parameters": {
+      "player": "可选，绑定的玩家名称，不填写时查看自身绑定的白名单。"
+    },
+    "children": {
+      "list": {
+        "usage": "bound list",
+        "description": "查看当前所有绑定的白名单，需管理员权限。"
+      },
+      "remove": {
+        "usage": "bound remove <*QQ>",
+        "description": "从白名单中移除某个玩家，解绑自身时无需管理员权限。",
+        "parameters": {
+          "QQ": "可选，要移除的玩家所绑定的 QQ 号或 @ 此用户，为空时解绑自身的白名单。"
+        }
+      },
+      "append": {
+        "usage": "bound append <QQ> <player>",
+        "description": "添加某个玩家到白名单，需管理员权限。",
+        "parameters": {
+          "QQ": "绑定用户的 QQ 号。",
+          "player": "要绑定的玩家名称。"
+        }
+      }
     }
   }
 }

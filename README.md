@@ -10,6 +10,8 @@
   - `list` 查询每个服务器的玩家在线情况。
   - `help` 查看帮助信息。
   - `server` 查看当前在线的服务器并显示对应编号。
+  - `bound` 有关绑定白名单的指令。
+  - `command` 运行指令到服务器。
 
 更多功能还在探索中……
 
@@ -29,10 +31,10 @@ pip3 install "nonebot2[fastapi], nonebot-adapter-onebot, mcdreforged"
 
 解压在 Releases 中下载的 `BotServer.zip` 到任意位置，进入 `BotServer` 文件夹，编辑文件夹下的 `.env` 文件，按照注释配置即可。
 
-对于 QQ 机器人平台（如 GoCqHttp，LOneBot 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
+对于 QQ 机器人平台（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
 适配器文档。
 
-> 本机器人仅支持 `Websocket` 反向链接，并且仅支持 Onebot V11 协议。
+> 本机器人仅支持 Onebot V11 协议。
 
 ### 安装插件
 
@@ -67,5 +69,8 @@ pip3 install "nonebot2[fastapi], nonebot-adapter-onebot, mcdreforged"
 ```
 
 即代表机器人**连接成功**，你可以向群内发送`help`指令，若机器人正常回复，那么恭喜你已经安装成功了。若无反应，请检查配置是否正确，或联系作者寻求帮助。开始使用你的机器人吧！
+
+> [!CAUTION]\
+> **关闭机器人服务器时，请按 `Ctrl + C` 键退出！否则你的数据，类似绑定的白名单将不会保存！！！！**
 
 > 若遇到问题，或有更好的想法，可以加入 QQ 群 `962802248` 向作者反馈。
