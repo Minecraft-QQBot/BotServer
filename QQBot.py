@@ -9,7 +9,7 @@ from json import dumps
 
 PLUGIN_METADATA = {
     'id': 'qq_bot',
-    'version': '1.1.1',
+    'version': '1.1.0',
     'name': 'QQBot',
     'description': '与此机器人服务器交互的配套插件，可以发送消息到 QQ 群。',
     'link': 'https://github.com/Lonely-Sails/Minecraft_QQBot',
