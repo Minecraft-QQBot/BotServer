@@ -1,17 +1,11 @@
+from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
 
-from nonebot import get_plugin_config, on_message, logger
+from nonebot import on_message
+from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import GroupMessageEvent
 
-from pydantic import BaseModel
 
-
-class Config(BaseModel):
-    command_start: list = None
-    sync_message_groups: list = None
-
-
-config = get_plugin_config(Config)
 mapping = {'record': '聊天记录', 'image': '图片', 'reply': '回复', 'face': '表情', 'file': '文件'}
 
 

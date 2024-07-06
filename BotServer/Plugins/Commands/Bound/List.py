@@ -1,17 +1,11 @@
+from Scripts.Config import config
 from Scripts.Managers import data_manager
-from Scripts.Utils import get_username, get_rule, turn_message
+from Scripts.Utils import get_rule, turn_message
 
-from nonebot import get_plugin_config, on_command
+from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent
 
-from pydantic import BaseModel
 
-
-class Config(BaseModel):
-    superusers: list = None
-
-
-config = get_plugin_config(Config)
 matcher = on_command('bound list', force_whitespace=True, block=True, priority=5, rule=get_rule('bound'))
 
 
@@ -25,6 +19,7 @@ async def handle_group(event: GroupMessageEvent):
 
 def bound_list_handle():
     if data_manager.players:
+        yield '白名单列表：'
         for user, player in data_manager.players.items():
             yield F'  {user} -> {player}'
         return None

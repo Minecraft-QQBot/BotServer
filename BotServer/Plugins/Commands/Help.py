@@ -1,18 +1,14 @@
-from Scripts.Utils import turn_message, get_rule
+from Scripts.Config import config
 from Scripts.Managers import data_manager
+from Scripts.Utils import turn_message, get_rule
 
+from nonebot import on_command
+from nonebot.log import logger
 from nonebot.params import CommandArg
-from nonebot import get_plugin_config, on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
-from pydantic import BaseModel
 
-
-class Config(BaseModel):
-    command_enabled: list = None
-
-
-config = get_plugin_config(Config)
+logger.debug('命令 Help 加载完毕！')
 matcher = on_command('help', force_whitespace=True, rule=get_rule('help'))
 
 
@@ -42,7 +38,7 @@ def help_handler():
         yield F'  {name} — {data_manager.commands[name]["description"]}'
         if children := info.get('children'):
             for child_name, child_info in children.items():
-                yield F' -  {name} {child_name} — {child_info["description"]}'
+                yield F'  - {name} {child_name} — {child_info["description"]}'
 
 
 def detailed_handler(name: str):

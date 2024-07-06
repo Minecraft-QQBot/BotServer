@@ -1,20 +1,14 @@
+from Scripts.Config import config
 from Scripts.Managers import server_manager
 from Scripts.Utils import turn_message, get_rule
 
+from nonebot import on_command
+from nonebot.log import logger
 from nonebot.params import CommandArg
-from nonebot import get_plugin_config, on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
-from pydantic import BaseModel
 
-
-class Config(BaseModel):
-    bot_prefix: str = None
-    command_groups: list = None
-    command_enabled: list = None
-
-
-config = get_plugin_config(Config)
+logger.debug('加载命令 List 完毕！')
 matcher = on_command('list', force_whitespace=True, rule=get_rule('list'))
 
 
@@ -62,7 +56,7 @@ def format_players(players: list):
         yield ('    ' + fake_players + '\n')
         return None
     if players:
-        yield ('  '.join(players) + '\n')
+        yield ('\n    '.join(players) + '\n')
         return None
     yield '  没有玩家在线！\n'
 
@@ -81,7 +75,7 @@ def list_handler(server: str = None):
         yield '当前没有已连接的服务器！'
         return None
     if name := server_manager.parse_server(server):
-        yield F'======= 服务器 {name} 玩家列表 ======='
+        yield F'===== 服务器 {name} 玩家列表 ====='
         players = get_players(server)
         yield from format_players(players)
         yield F'当前在线人数共 {len(players)} 人'

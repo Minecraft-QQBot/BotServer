@@ -1,14 +1,15 @@
 from os.path import exists
 from json import load, dump
+from typing import Any
 
 from nonebot.log import logger
 
 
 class DataManager:
-    servers = {}
-    server_numbers = []
-    players = {}
-    commands = {}
+    servers: dict = {}
+    server_numbers: list = []
+    players: dict = {}
+    commands: dict = {}
 
     def load(self):
         self.load_command_info()
@@ -32,7 +33,7 @@ class DataManager:
 
     def save(self):
         logger.info('正在保存数据文件……')
-        self.players['numbers'] = self.server_numbers
+        self.servers['numbers'] = self.server_numbers
         content = {'servers': self.servers, 'players': self.players}
         with open('Data.json', encoding='Utf-8', mode='w') as file:
             dump(content, file)

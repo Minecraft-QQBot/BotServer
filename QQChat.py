@@ -1,6 +1,6 @@
 from mcdreforged.api.utils import Serializable
 from mcdreforged.api.command import SimpleCommandBuilder, GreedyText
-from mcdreforged.api.all import PluginServerInterface, CommandContext, CommandSource
+from mcdreforged.api.all import PluginServerInterface, CommandContext, CommandSource, Info
 
 import requests
 from os.path import exists
@@ -9,7 +9,7 @@ from json import dumps
 
 PLUGIN_METADATA = {
     'id': 'qq_chat',
-    'version': '1.0.0',
+    'version': '1.1.0',
     'name': 'QQChat',
     'description': '与机器人服务器交互的插件，可以发送消息到 QQ 群。',
     'link': 'https://github.com/Lonely-Sails/Minecraft_QQBot'
@@ -27,6 +27,8 @@ class Config(Serializable):
     broadcast_server: bool = True
     # 是否播报玩家进入/离开服务器
     broadcast_player: bool = True
+    # 是否转发玩家的所有游戏内消息
+    sync_all_messages: bool = False
     # 可以不用动，会自动同步
     bot_prefix: str = 'bot_'
 
@@ -40,7 +42,7 @@ class EventSender:
         self.request_url = self.request_url.format(port)
 
     def __request(self, name: str, data: dict):
-        data['token'] = config.token
+        data.setdefault('token', config.token)
         try: request = requests.post(F'{self.request_url}/{name}', data=dumps(data))
         except Exception: return None
         if request.status_code == 200:
@@ -97,9 +99,11 @@ event_sender: EventSender = None
 
 def on_load(server: PluginServerInterface, old):
     def qq(source: CommandSource, content: CommandContext):
+        if config.sync_all_messages:
+            source.reply('§7已启用 同步所有消息 功能！此指令已自动禁用。§7')
+            return None
         player = 'Console' if source.is_console else source.player
-        success = event_sender.send_message(
-            F'[{config.name}] <{player}> {content.get("message")}')
+        success = event_sender.send_message(F'[{config.name}] <{player}> {content.get("message")}')
         source.reply('§7发送消息成功！§7' if success else '§6发送消息失败！§6')
 
     global event_sender, config
@@ -125,6 +129,11 @@ def on_server_startup(server: PluginServerInterface):
     event_sender.send_startup()
     if config.broadcast_server:
         event_sender.send_message(F'服务器 [{config.name}] 已经开启辣！喵~')
+
+
+def on_user_info(server: PluginServerInterface, info: Info):
+    if config.sync_all_messages:
+        event_sender.send_message(F'[{config.name}] <{info.player}> {info.content}')
 
 
 def on_player_left(server: PluginServerInterface, player: str):

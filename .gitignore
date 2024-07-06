@@ -1,2 +1,3 @@
 BotServer.zip
-.DS_Store
+*\.DS_Store
+Test.py

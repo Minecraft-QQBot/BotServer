@@ -18,6 +18,6 @@ def server_handler():
     status = None
     for index, name in enumerate(data_manager.server_numbers):
         status = '在线' if server_manager.status.get(name) else '离线'
-        yield F'({index:0>2}) [{name}] -> {status}'
+        yield F'({(index + 1):0>2}) [{name}] -> {status}'
     if not status:
         yield '当前没有已连接的服务器！请检查是否正确安装了 Mcdr 插件或启动服务器后再试。'

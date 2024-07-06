@@ -19,7 +19,7 @@
 
 因为本插件依赖于 MCDR 所以请先安装，[官网](https://mcdreforged.com/zh-CN) 在这里。若安装完 MCDR 后，则可以下载本项目。
 
-你可以到 [Releases](https://github.com/Xiaocaicai/Minecraft_QQBot/releases) 下载最新版本的机器人服务器和服务器插件。
+你可以到 [Releases](https://github.com/Lonely-Sails/Minecraft_QQBot/releases) 下载最新版本的机器人服务器和服务器插件。
 
 在命令行内输入以下指令安装依赖：
 
@@ -34,7 +34,7 @@ pip3 install "nonebot2[fastapi], nonebot-adapter-onebot, mcdreforged"
 对于 QQ 机器人平台（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
 适配器文档。
 
-> 本机器人仅支持 Onebot V11 协议。
+> 本机器人仅支持 Onebot V11 协议，建议用 Websocket 反向链接。
 
 ### 安装插件
 
@@ -46,7 +46,8 @@ pip3 install "nonebot2[fastapi], nonebot-adapter-onebot, mcdreforged"
   "port": 8000,
   "token": "令牌",
   "broadcast_server": true,
-  "broadcast_player": true
+  "broadcast_player": true,
+  "sync_all_messages": false
 }
 ```
 
@@ -59,6 +60,7 @@ pip3 install "nonebot2[fastapi], nonebot-adapter-onebot, mcdreforged"
 |      token       | 字符串 | 口令，和服务器配置文件下的 TOKEN 保持一致即可。  |
 | broadcast_player | 布尔值 |     是否播报玩家 **离开** 或 **加入** 事件。     |
 | broadcast_server | 布尔值 |    是否播报服务器 **开启** 或 **关闭** 事件。    |
+| sync_all_messages | 布尔值 ｜ 是否转发游戏内玩家的所有消息。 |
 
 ### 运行服务
 
@@ -71,6 +73,7 @@ pip3 install "nonebot2[fastapi], nonebot-adapter-onebot, mcdreforged"
 即代表机器人**连接成功**，你可以向群内发送`help`指令，若机器人正常回复，那么恭喜你已经安装成功了。若无反应，请检查配置是否正确，或联系作者寻求帮助。开始使用你的机器人吧！
 
 > [!CAUTION]\
-> **关闭机器人服务器时，请按 `Ctrl + C` 键退出！否则你的数据，类似绑定的白名单将不会保存！！！！**
+> **文件夹下的 `Data.json` 文件储存着服务器信息，包括 Rcon 端口和密码等重要数据，请保管好此文件以免有心人利用，入侵服务器。若有泄露，请立即修改 Rcon 密码并重新启动服务器！如若服务器因此被入侵造成的损失，机器人作者概不负。**
 
-> 若遇到问题，或有更好的想法，可以加入 QQ 群 `962802248` 向作者反馈。
+> [!TIPS]\
+> 若遇到问题，或有更好的想法，可以加入 QQ 群 [`962802248`](https://qm.qq.com/q/B3kmvJl2xO) 向作者反馈。

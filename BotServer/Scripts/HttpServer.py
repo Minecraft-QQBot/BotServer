@@ -1,21 +1,12 @@
+from .Config import config
 from Scripts.Managers import server_manager
 
 from json import dumps
-from pydantic import BaseModel
 
-from nonebot import get_plugin_config, get_driver, get_bot
+from nonebot import get_driver, get_bot
 from nonebot.log import logger
 from nonebot.exception import NetworkError
 from nonebot.drivers import HTTPServerSetup, ASGIMixin, Request, Response, URL
-
-
-class Config(BaseModel):
-    token: str = None
-    bot_prefix: str = None
-    sync_message_groups: list = None
-
-
-config: Config = None
 
 
 async def send_message(request: Request):
@@ -23,7 +14,7 @@ async def send_message(request: Request):
         return Response(403, content=dumps({'Success': False}))
     bot = get_bot()
     if message := request.json.get('message'):
-        logger.info(F'发送消息到同步消息群！消息为 {message} 。')
+        logger.debug(F'发送消息到同步消息群！消息为 {message} 。')
         for group_id in config.sync_message_groups:
             try:
                 await bot.send_group_msg(group_id=group_id, message=message)
@@ -49,18 +40,13 @@ async def server_shutdown(request: Request):
 
 
 def setup_http_server():
-    global config
-    config = get_plugin_config(Config)
     logger.info('正在载入 Http 服务器……')
     if isinstance(driver := get_driver(), ASGIMixin):
-        http_server = HTTPServerSetup(
-            URL('/send_message'), 'POST', 'send_message', send_message)
+        http_server = HTTPServerSetup(URL('/send_message'), 'POST', 'send_message', send_message)
         driver.setup_http_server(http_server)
-        http_server = HTTPServerSetup(
-            URL('/server/startup'), 'POST', 'server_startup', server_startup)
+        http_server = HTTPServerSetup(URL('/server/startup'), 'POST', 'server_startup', server_startup)
         driver.setup_http_server(http_server)
-        http_server = HTTPServerSetup(
-            URL('/server/shutdown'), 'POST', 'server_shutdown', server_shutdown)
+        http_server = HTTPServerSetup(URL('/server/shutdown'), 'POST', 'server_shutdown', server_shutdown)
         driver.setup_http_server(http_server)
         logger.success('Http 服务器载入完毕！')
         return None
