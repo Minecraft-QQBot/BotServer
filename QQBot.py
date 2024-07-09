@@ -11,7 +11,7 @@ PLUGIN_METADATA = {
     'id': 'qq_bot',
     'version': '1.1.0',
     'name': 'QQBot',
-    'description': '与此机器人服务器交互的配套插件，可以发送消息到 QQ 群。',
+    'description': '一个基于 Nonebot2 的 Minecraft 服务器 QQ 机器人，支持多服使用',
     'link': 'https://github.com/Lonely-Sails/Minecraft_QQBot',
     'authors': [
         {

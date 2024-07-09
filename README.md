@@ -15,8 +15,7 @@
 
 更多功能还在探索中……
 
-> [!CAUTION]
-> **`BotServer` 文件夹下的 `Data.json` 文件是服务器数据文件，储存着 Minecraft 服务器信息，包括 Rcon 端口和密码等重要数据。请妥善保管此文件以免有心人利用入侵服务器。若有泄露，请立即修改 Rcon 密码并重新启动服务器！如若服务器因此被入侵造成的损失，本作者概不负责。**
+> [!CAUTION] > **`BotServer` 文件夹下的 `Data.json` 文件是服务器数据文件，储存着 Minecraft 服务器信息，包括 Rcon 端口和密码等重要数据。请妥善保管此文件以免有心人利用入侵服务器。若有泄露，请立即修改 Rcon 密码并重新启动服务器！如若服务器因此被入侵造成的损失，本作者概不负责。**
 
 ## 使用
 
@@ -27,7 +26,7 @@
 在命令行内输入以下指令安装依赖：
 
 ```bash
-pip3 install "nonebot2[fastapi], nonebot-adapter-onebot, mcdreforged"
+pip3 install "nonebot2[fastapi]>=2.3.1", "nonebot-adapter-onebot>=2.4.3", "mcdreforged>=2.12.3"
 ```
 
 ### 配置环境
@@ -69,24 +68,24 @@ pip3 install "nonebot2[fastapi], nonebot-adapter-onebot, mcdreforged"
 
 其中各个字段的含义如下：
 
-|      字段名      |  类型  |                       含义                       |
-| :--------------: | :----: | :----------------------------------------------: |
-|       port       |  整数  | 端口号，和服务器配置文件下的 PORT 保持一致即可。 |
-|       name       | 字符串 |             服务器名称，中英文都可。             |
-|      token       | 字符串 | 口令，和服务器配置文件下的 TOKEN 保持一致即可。  |
-| broadcast_player | 布尔值 |     是否播报玩家 **离开** 或 **加入** 事件。     |
-| broadcast_server | 布尔值 |    是否播报服务器 **开启** 或 **关闭** 事件。    |
-| sync_all_messages | 布尔值 ｜ 是否转发游戏内玩家的所有消息。 |
+|      字段名       |  类型  |                       含义                       |
+| :---------------: | :----: | :----------------------------------------------: |
+|       port        |  整数  | 端口号，和服务器配置文件下的 PORT 保持一致即可。 |
+|       name        | 字符串 |             服务器名称，中英文都可。             |
+|       token       | 字符串 | 口令，和服务器配置文件下的 TOKEN 保持一致即可。  |
+| broadcast_player  | 布尔值 |     是否播报玩家 **离开** 或 **加入** 事件。     |
+| broadcast_server  | 布尔值 |    是否播报服务器 **开启** 或 **关闭** 事件。    |
+| sync_all_messages | 布尔值 |          是否转发游戏内玩家的所有消息。          |
 
 当你看到类似 `发送服务器启动消息成功！` 的 Mcdr 日志时，你的 Mcdr 服务器已经成功连接到机器人服务器。若出现错误提示，请确保你的机器人服务器已经开启，或者配置文件的 Port 是否正确。
 
 > [!TIP]
 > 若遇到问题，或有更好的想法，可以加入 QQ 群 [`962802248`](https://qm.qq.com/q/B3kmvJl2xO) 或者提交 Issues 向作者反馈。
 
-
 ## 鸣谢
 
 感谢以下人员为此插件开发提供帮助，在此特别鸣谢：
-* [meng877](https://github.com/meng877) 提出意见，贡献部分代码。
-* [Decent_Kook](https://github.com/AISophon) 提供测试环境，提出意见。
-* [creepebucket](https://github.com/creepebucket) 提供测试环境。
+
+- [meng877](https://github.com/meng877) 提出意见，贡献部分代码。
+- [Decent_Kook](https://github.com/AISophon) 提供测试环境，提出意见。
+- [creepebucket](https://github.com/creepebucket) 提供测试环境。
