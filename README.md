@@ -32,7 +32,7 @@ pip3 install "nonebot2[fastapi]>=2.3.1", "nonebot-adapter-onebot>=2.4.3", "mcdre
 
 ### 配置环境
 
-解压在 Releases 中下载的 `BotServer.zip` 到任意位置，进入 `BotServer` 文件夹，编辑文件夹下的 `.env` 文件，按照注释配置即可。
+解压在 Releases 中下载的 `BotServer.zip` 到任意位置，进入 `BotServer` 文件夹，编辑文件夹下的 [`.env`](https://github.com/Lonely-Sails/Minecraft_QQBot/blob/main/BotServer/.env) 文件，按照注释配置即可。
 
 对于 QQ 机器人平台（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
 适配器文档。
