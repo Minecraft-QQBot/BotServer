@@ -72,8 +72,6 @@ pip3 install matplotlib
   "name": "服务器名称",
   "port": 8000,
   "token": "令牌",
-  "broadcast_server": true,
-  "broadcast_player": true,
   "sync_all_messages": false
 }
 ```
@@ -85,8 +83,6 @@ pip3 install matplotlib
 |       port        |  整数  | 端口号，和服务器配置文件下的 PORT 保持一致即可。 |
 |       name        | 字符串 |             服务器名称，中英文都可。             |
 |       token       | 字符串 | 口令，和服务器配置文件下的 TOKEN 保持一致即可。  |
-| broadcast_player  | 布尔值 |     是否播报玩家 **离开** 或 **加入** 事件。     |
-| broadcast_server  | 布尔值 |    是否播报服务器 **开启** 或 **关闭** 事件。    |
 | sync_all_messages | 布尔值 |          是否转发游戏内玩家的所有消息。          |
 
 当你看到类似 `发送服务器启动消息成功！` 的 Mcdr 日志时，你的 Mcdr 服务器已经成功连接到机器人服务器。若出现错误提示，请确保你的机器人服务器已经开启，或者配置文件的 Port 是否正确。
