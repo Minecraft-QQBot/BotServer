@@ -13,7 +13,7 @@ async def watch_decrease(event: GroupDecreaseNoticeEvent):
     if event.group_id not in config.command_groups:
         await matcher.finish()
     if player := data_manager.players.pop(str(event.user_id), None):
-        server_manager.execute(F'whitelist remove {player}')
+        server_manager.execute(F'{config.whitelist_command} remove {player}')
         await matcher.finish(F'用户 {event.user_id} 离开了群聊，自动从白名单中移除 {player} 玩家。')
 
 

@@ -15,12 +15,12 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if str(event.user_id) not in config.superusers:
         await matcher.finish('你没有权限执行此命令！')
     if server := args.extract_plain_text().strip():
-        message = server_remove_handle(server)
+        message = server_remove_handler(server)
         await matcher.finish(message)
     await matcher.finish('请输入参数！')
 
 
-def server_remove_handle(server: str):
+def server_remove_handler(server: str):
     if name := server_manager.parse_server(server):
         data_manager.remove_server(name)
         server_manager.disconnect_server(name)

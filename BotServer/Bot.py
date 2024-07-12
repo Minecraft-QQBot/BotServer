@@ -1,5 +1,3 @@
-from Scripts.Managers import server_manager, data_manager
-
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
 
@@ -13,15 +11,20 @@ driver.register_adapter(Adapter)
 
 @driver.on_startup
 def startup():
-    from Scripts import HttpServer
+    from Scripts import HttpServers
+    from Scripts.ServerWatcher import server_watcher
+    from Scripts.Managers import server_manager, data_manager
 
     data_manager.load()
     server_manager.init()
-    HttpServer.setup_http_server()
+    server_watcher.start()
+    HttpServers.setup_base_http_server()
 
 
 @driver.on_shutdown
 def shutdown():
+    from Scripts.Managers import server_manager, data_manager
+    
     data_manager.save()
     server_manager.unload()
 

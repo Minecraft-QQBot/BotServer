@@ -1,6 +1,8 @@
 from .Config import config
 
+from nonebot import get_bot
 from nonebot.log import logger
+from nonebot.exception import NetworkError, ActionFailed
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
 from string import ascii_letters, digits
@@ -28,16 +30,25 @@ def get_args(args: Message):
     for segment in args:
         if segment.type == 'text':
             for arg in segment.data['text'].split(' '):
-                if arg: result.append(arg)
+                if arg:
+                    result.append(arg)
         elif segment.type == 'at':
-            result.append(segment.data['qq'])
+            result.append(str(segment.data['qq']))
     logger.debug(F'提取参数 {result} 。')
     return result
 
 
 def get_rule(name: str):
     def rule(event: GroupMessageEvent):
-        nonlocal name
         return (name in config.command_enabled) and (event.group_id in config.command_groups)
-    
+
     return rule
+
+
+async def send_sync_message(message: str):
+    try: bot = get_bot()
+    except ValueError: return False
+    for group in config.sync_message_groups:
+        try: await bot.send_group_msg(group_id=group, message=message)
+        except (NetworkError, ActionFailed): return False
+    return True

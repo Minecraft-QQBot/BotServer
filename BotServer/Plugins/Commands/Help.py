@@ -8,7 +8,7 @@ from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
 
-logger.debug('命令 Help 加载完毕！')
+logger.debug('加载命令 Help 完毕！')
 matcher = on_command('help', force_whitespace=True, rule=get_rule('help'))
 
 
@@ -23,12 +23,12 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
 
 def format_info(info: dict):
     prefix = info.get('prefix', '')
-    yield F'{prefix}  用法：{info["description"]}'
-    yield F'{prefix}  语法：{info["usage"]}'
+    yield F'{prefix}  +-- 用法：{info["description"]}'
+    yield F'{prefix}  +-- 语法：{info["usage"]}'
     if parameters := info.get('parameters'):
         yield F'{prefix}  参数说明：'
         for parmeter, usage in parameters.items():
-            yield F'{prefix}    {parmeter} — {usage}'
+            yield F'{prefix}    +-- {parmeter} — {usage}'
 
 
 def help_handler():
@@ -38,7 +38,7 @@ def help_handler():
         yield F'  {name} — {data_manager.commands[name]["description"]}'
         if children := info.get('children'):
             for child_name, child_info in children.items():
-                yield F'  - {name} {child_name} — {child_info["description"]}'
+                yield F'  +-- {name} {child_name} — {child_info["description"]}'
 
 
 def detailed_handler(name: str):
@@ -48,8 +48,8 @@ def detailed_handler(name: str):
         yield from format_info(info)
         if children := info.get('children'):
             for child_name, child_info in children.items():
-                child_info.setdefault('prefix', '  ')
-                yield F'- 子命令 {child_name}'
+                child_info['prefix'] = '  '
+                yield F'  +-- 子命令 {child_name}'
                 yield from format_info(child_info)
         return None
     yield F'命令 {name} 不存在或已被禁用！'

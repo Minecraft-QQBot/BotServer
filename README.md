@@ -16,11 +16,14 @@
 更多功能还在探索中……
 
 > [!CAUTION]
-> **`BotServer` 文件夹下的 `Data.json` 文件是服务器数据文件，储存着 Minecraft 服务器信息，包括 Rcon 端口和密码等重要数据。请妥善保管此文件以免有心人利用入侵服务器。若有泄露，请立即修改 Rcon 密码并重新启动服务器！如若服务器因此被入侵造成的损失，本作者概不负责。**
+> **`Data` 文件夹下的 `Server.json` 文件是服务器数据文件，储存着 Minecraft 服务器信息，包括 Rcon 端口和密码等重要数据。请妥善保管此文件以免有心人利用入侵服务器。若有泄露，请立即修改 Rcon 密码并重新启动服务器！如若服务器因此被入侵造成的损失，本作者概不负责。**
 
 ## 使用
 
 因为本插件依赖于 MCDR 所以请先安装，[官网](https://mcdreforged.com/zh-CN) 在这里。若安装完 MCDR 后，则可以下载本项目。
+
+> [!WARNING]
+> 此机器人仅支持 Python 3.8 及以上版本。若版本过低，否则可能会出现不可预知的错误。
 
 你可以到 [Releases](https://github.com/Lonely-Sails/Minecraft_QQBot/releases) 下载最新版本的机器人服务器和服务器插件。
 
@@ -30,11 +33,19 @@
 pip3 install "nonebot2[fastapi]>=2.3.1", "nonebot-adapter-onebot>=2.4.3", "mcdreforged>=2.12.3"
 ```
 
+以上是运行本机器所必须的。此外，您可以自行选择是否安装其他依赖库，一些拓展的指令需要额外安装。不安装也仅会影响那部分指令的使用。
+
+如若你需要使用 server status 指令，您需安装 `matplotlib` 库。使用如下指令安装：
+
+```bash
+pip3 install matplotlib
+```
+
 ### 配置环境
 
 解压在 Releases 中下载的 `BotServer.zip` 到任意位置，进入 `BotServer` 文件夹，编辑文件夹下的 [`.env`](https://github.com/Lonely-Sails/Minecraft_QQBot/blob/main/BotServer/.env) 文件，按照注释配置即可。
 
-对于 QQ 机器人平台（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
+对于 QQ 机器人（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
 适配器文档。
 
 > 本机器人仅支持 Onebot V11 协议，建议用 Websocket 反向链接。

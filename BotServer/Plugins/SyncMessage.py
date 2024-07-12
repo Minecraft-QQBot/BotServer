@@ -24,7 +24,7 @@ async def sync_message(event: GroupMessageEvent):
                 plain_texts.append(text)
             continue
         elif segment.type == 'at':
-            user = segment.data['qq']
+            user = str(segment.data['qq'])
             plain_texts.append(F'[@{data_manager.players.get(user, "未知用户")}]')
             continue
         plain_texts.append(F'[{mapping.get(segment.type, "未知类型")}]')

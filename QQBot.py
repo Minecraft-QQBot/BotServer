@@ -9,7 +9,7 @@ from json import dumps
 
 PLUGIN_METADATA = {
     'id': 'qq_bot',
-    'version': '1.1.0',
+    'version': '1.2.0',
     'name': 'QQBot',
     'description': '一个基于 Nonebot2 的 Minecraft 服务器 QQ 机器人，支持多服使用',
     'link': 'https://github.com/Lonely-Sails/Minecraft_QQBot',
@@ -32,11 +32,7 @@ class Config(Serializable):
     # 服务器名称
     name: str = 'name'
     # 和机器人服务器的 token 一致
-    token: str = 'Your Token'
-    # 是否播报服务器开启/关闭
-    broadcast_server: bool = True
-    # 是否播报玩家进入/离开服务器
-    broadcast_player: bool = True
+    token: str = 'YourToken'
     # 是否转发玩家的所有游戏内消息
     sync_all_messages: bool = False
     # 可以不用动，会自动同步
@@ -57,22 +53,30 @@ class EventSender:
         except Exception: return None
         if request.status_code == 200:
             response = request.json()
-            if response.get('Success'):
+            if response.get('success'):
                 return response
 
     def send_message(self, message: str):
-        data = {'token': config.token, 'message': message}
+        data = {'message': message}
         self.server.logger.info(F'向 QQ 群发送消息 {message}')
         return self.__request('send_message', data)
 
-    def send_startup(self):
-        rcon_info = self.read_rcon_info()
-        data = {'name': config.name, 'rcon': rcon_info}
-        if response := self.__request('server/startup', data):
-            self.server.logger.info('发送服务器启动消息成功！')
-            config.bot_prefix = response.get('bot_prefix')
+    def send_info(self):
+        pid = self.server.get_server_pid()
+        data = {'name': config.name, 'pid': pid}
+        if self.__request('server/info', data):
+            self.server.logger.info('发送服务器信息成功！')
             return None
-        self.server.logger.error('发送服务器启动消息失败！请检查配置或查看是否启动服务端，然后重试。')
+        self.server.logger.error('发送服务器信息失败！请检查配置或查看是否启动服务端，然后重试。')
+
+    def send_startup(self):
+        if rcon_info := self.read_rcon_info():
+            pid = self.server.get_server_pid()
+            data = {'name': config.name, 'rcon': rcon_info, 'pid': pid}
+            if self.__request('server/startup', data):
+                self.server.logger.info('发送服务器启动消息成功！')
+                return None
+            self.server.logger.error('发送服务器启动消息失败！请检查配置或查看是否启动服务端，然后重试。')
 
     def send_shutdown(self):
         data = {'name': config.name}
@@ -80,6 +84,20 @@ class EventSender:
             self.server.logger.info('发送服务器关闭消息成功！')
             return None
         self.server.logger.error('发送服务器关闭消息失败！请检查配置或查看是否启动服务端，然后重试。')
+
+    def send_player_left(self, player: str):
+        data = {'name': config.name, 'player': player}
+        if self.__request('player/left', data):
+            self.server.logger.info(F'发送玩家 {player} 离开消息成功！')
+            return None
+        self.server.logger.error(F'发送玩家 {player} 离开消息失败！请检查配置或查看是否启动服务端，然后重试。')
+
+    def send_player_joined(self, player: str, info):
+        data = {'name': config.name, 'player': player, 'info': info}
+        if self.__request('player/joined', data):
+            self.server.logger.info(F'发送玩家 {player} 加入消息成功！')
+            return None
+        self.server.logger.error(F'发送玩家 {player} 加入消息失败！请检查配置或查看是否启动服务端，然后重试。')
 
     def read_rcon_info(self):
         password, port = None, None
@@ -127,18 +145,19 @@ def on_load(server: PluginServerInterface, old):
     event_sender = EventSender(server, config.port)
 
 
+def on_info(server: PluginServerInterface, info: Info):
+    if not info.is_player and info.content == '[Rcon] BotServer was connected to the server!':
+        event_sender.send_info()
+
+
 def on_server_stop(server: PluginServerInterface, old):
     server.logger.info('检测到服务器关闭，正在通知机器人服务器……')
     event_sender.send_shutdown()
-    if config.broadcast_server:
-        event_sender.send_message(F'服务器 [{config.name}] 关闭了！喵~')
 
 
 def on_server_startup(server: PluginServerInterface):
     server.logger.info('检测到服务器开启，正在连接机器人服务器……')
     event_sender.send_startup()
-    if config.broadcast_server:
-        event_sender.send_message(F'服务器 [{config.name}] 已经开启辣！喵~')
 
 
 def on_user_info(server: PluginServerInterface, info: Info):
@@ -147,16 +166,8 @@ def on_user_info(server: PluginServerInterface, info: Info):
 
 
 def on_player_left(server: PluginServerInterface, player: str):
-    if config.broadcast_player:
-        if config.bot_prefix and player.upper().startswith(config.bot_prefix):
-            event_sender.send_message(F'机器人 {player} 离开了 [{config.name}] 服务器。')
-            return
-        event_sender.send_message(F'玩家 {player} 离开了 [{config.name}] 服务器，呜~')
+    event_sender.send_player_left(player)
 
 
 def on_player_joined(server: PluginServerInterface, player: str, info):
-    if config.broadcast_player:
-        if config.bot_prefix and player.upper().startswith(config.bot_prefix):
-            event_sender.send_message(F'机器人 {player} 加入了 [{config.name}] 服务器！')
-            return
-        event_sender.send_message(F'玩家 {player} 加入了 [{config.name}] 服务器！喵~')
+    event_sender.send_player_joined(player, info)

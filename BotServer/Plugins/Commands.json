@@ -3,6 +3,13 @@
     "usage": "luck",
     "description": "查看今日运势（仅供参考）。"
   },
+  "info": {
+    "usage": "info <*server>",
+    "description": "查看某个服务器的信息，如 CPU 使用率、内存使用率等。",
+    "parameters": {
+      "server": "可选，指定服务器名称或编号。不填写时默认显示所有服务器。"
+    }
+  },
   "server": {
     "usage": "server",
     "description": "查看当前所有服务器的状态和编号。",
@@ -12,6 +19,13 @@
         "description": "从服务器列表中移除某个指定的服务器。",
         "parameters": {
           "server": "指定服务器名称或编号。"
+        }
+      },
+      "status": {
+        "usage": "server status <*server>",
+        "description": "查看某个服务器的状态，若没有安装依赖则自动禁用。",
+        "parameters": {
+          "server": "可选，指定服务器名称或编号。不填写时默认显示所有服务器。"
         }
       }
     }

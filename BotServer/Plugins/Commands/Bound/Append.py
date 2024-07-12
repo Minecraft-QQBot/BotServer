@@ -15,11 +15,11 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if str(event.user_id) not in config.superusers:
         await matcher.finish('你没有权限执行此命令！')
     args = get_args(args)
-    message = bound_append_handle(args)
+    message = bound_append_handler(args)
     await matcher.finish(message)
 
 
-def bound_append_handle(args: list):
+def bound_append_handler(args: list):
     if len(args) != 2:
         return '参数错误！请检查语法是否正确。'
     user, player = args
@@ -31,7 +31,7 @@ def bound_append_handle(args: list):
         return F'用户 {user} 已经绑定了白名单！请先解绑后尝试。'
     if player in data_manager.players.values():
         return '此玩家名称已经绑定过了，请换一个名称！'
-    if server_manager.execute(F'whitelist add {player}'):
+    if server_manager.execute(F'{config.whitelist_command} add {player}'):
         data_manager.players.setdefault(user, player)
         data_manager.save()
         return F'用户 {user} 已绑定白名单到 {player} 玩家。'

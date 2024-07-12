@@ -20,7 +20,7 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
 
 
 def get_players(server: str = None):
-    if server is None:
+    if not server:
         result = server_manager.execute('list')
         for name, value in result.items():
             players = value.strip().replace(' ', '')
@@ -62,13 +62,13 @@ def format_players(players: list):
 
 
 def list_handler(server: str = None):
-    if server is None:
+    if not server:
         player_count = 0
         if players := get_players():
             yield '======= 玩家列表 ======='
             for name, value in players.items():
                 player_count += len(value)
-                yield F' ----- {name} -----'
+                yield F' ------- {name} -------'
                 yield from format_players(value)
             yield F'当前在线人数共 {player_count} 人'
             return None
