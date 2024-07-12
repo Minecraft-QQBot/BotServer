@@ -43,6 +43,7 @@ def command_handle(args: list):
         if result := server_manager.execute(command, server):
             if server:
                 yield F'服务器 [{server}] 执行命令完毕！返回值为 {result if result else "空"} 。'
+                return None
             yield '命令已发送到所有服务器！服务器回应：'
             for name, response in result.items():
                 yield F'  [{name}] -> {response if response else "无返回值"}'
