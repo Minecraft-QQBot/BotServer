@@ -65,17 +65,17 @@ def list_handler(server: str = None):
     if not server:
         player_count = 0
         if players := get_players():
-            yield '======= 玩家列表 ======='
+            yield '====== 玩家列表 ======'
             for name, value in players.items():
                 player_count += len(value)
-                yield F' ------- {name} -------'
+                yield F' -------- {name} --------'
                 yield from format_players(value)
             yield F'当前在线人数共 {player_count} 人'
             return None
         yield '当前没有已连接的服务器！'
         return None
     if name := server_manager.parse_server(server):
-        yield F'===== 服务器 {name} 玩家列表 ====='
+        yield F'===== {name} 玩家列表 ====='
         players = get_players(server)
         yield from format_players(players)
         yield F'当前在线人数共 {len(players)} 人'

@@ -26,7 +26,6 @@ async def server_info(request: Request):
         return Response(403, content=dumps({'success': False}))
     pid = request.json.get('pid')
     name = request.json.get('name')
-    print(name, pid)
     server_watcher.append_server(name, pid)
     return Response(200, content=dumps({'success': True}))
 
@@ -67,7 +66,7 @@ async def player_joined(request: Request):
     name = request.json.get('name')
     player = request.json.get('player')
     if config.broadcast_player:
-        if config.bot_prefix and player.startswith(config.bot_prefix):
+        if config.bot_prefix and player.upper().startswith(config.bot_prefix.upper()):
             message = F'机器人 {player} 加入了 [{name}] 服务器。'
         else: message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
         if await send_sync_message(message):
@@ -84,7 +83,7 @@ async def player_left(request: Request):
     name = request.json.get('name')
     player = request.json.get('player')
     if config.broadcast_player:
-        if config.bot_prefix and player.startswith(config.bot_prefix):
+        if config.bot_prefix and player.upper().startswith(config.bot_prefix.upper()):
             message = F'机器人 {player} 离开了 [{name}] 服务器。'
         else: message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
         if await send_sync_message(message):

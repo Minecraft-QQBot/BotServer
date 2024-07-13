@@ -1,3 +1,4 @@
+from Scripts.Config import config
 from Scripts.Utils import check_player, get_rule
 from Scripts.Managers import data_manager, server_manager
 

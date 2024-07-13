@@ -48,7 +48,8 @@ class EventSender:
         self.request_url = self.request_url.format(port)
 
     def __request(self, name: str, data: dict):
-        data.setdefault('token', config.token)
+        data['name'] = config.name
+        data['token'] = config.token
         try: request = requests.post(F'{self.request_url}/{name}', data=dumps(data))
         except Exception: return None
         if request.status_code == 200:
@@ -63,8 +64,7 @@ class EventSender:
 
     def send_info(self):
         pid = self.server.get_server_pid()
-        data = {'name': config.name, 'pid': pid}
-        if self.__request('server/info', data):
+        if self.__request('server/info', {'pid': pid}):
             self.server.logger.info('发送服务器信息成功！')
             return None
         self.server.logger.error('发送服务器信息失败！请检查配置或查看是否启动服务端，然后重试。')
@@ -72,29 +72,25 @@ class EventSender:
     def send_startup(self):
         if rcon_info := self.read_rcon_info():
             pid = self.server.get_server_pid()
-            data = {'name': config.name, 'rcon': rcon_info, 'pid': pid}
-            if self.__request('server/startup', data):
+            if self.__request('server/startup', {'rcon': rcon_info, 'pid': pid}):
                 self.server.logger.info('发送服务器启动消息成功！')
                 return None
             self.server.logger.error('发送服务器启动消息失败！请检查配置或查看是否启动服务端，然后重试。')
 
     def send_shutdown(self):
-        data = {'name': config.name}
-        if self.__request('server/shutdown', data):
+        if self.__request('server/shutdown', {}):
             self.server.logger.info('发送服务器关闭消息成功！')
             return None
         self.server.logger.error('发送服务器关闭消息失败！请检查配置或查看是否启动服务端，然后重试。')
 
     def send_player_left(self, player: str):
-        data = {'name': config.name, 'player': player}
-        if self.__request('player/left', data):
+        if self.__request('player/left', {'player': player}):
             self.server.logger.info(F'发送玩家 {player} 离开消息成功！')
             return None
         self.server.logger.error(F'发送玩家 {player} 离开消息失败！请检查配置或查看是否启动服务端，然后重试。')
 
-    def send_player_joined(self, player: str, info):
-        data = {'name': config.name, 'player': player, 'info': info}
-        if self.__request('player/joined', data):
+    def send_player_joined(self, player: str):
+        if self.__request('player/joined', {'player': player}):
             self.server.logger.info(F'发送玩家 {player} 加入消息成功！')
             return None
         self.server.logger.error(F'发送玩家 {player} 加入消息失败！请检查配置或查看是否启动服务端，然后重试。')
@@ -132,7 +128,7 @@ def on_load(server: PluginServerInterface, old):
             return None
         player = 'Console' if source.is_console else source.player
         success = event_sender.send_message(F'[{config.name}] <{player}> {content.get("message")}')
-        source.reply('§7发送消息成功！§7' if success else '§6发送消息失败！§6')
+        source.reply('§a发送消息成功！§a' if success else '§c发送消息失败！§c')
 
     global event_sender, config
     config = server.load_config_simple(target_class=Config)
@@ -170,4 +166,4 @@ def on_player_left(server: PluginServerInterface, player: str):
 
 
 def on_player_joined(server: PluginServerInterface, player: str, info):
-    event_sender.send_player_joined(player, info)
+    event_sender.send_player_joined(player)
