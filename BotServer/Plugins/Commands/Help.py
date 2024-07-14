@@ -14,7 +14,7 @@ matcher = on_command('help', force_whitespace=True, rule=get_rule('help'))
 
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
-    if name := args.extract_plain_text():
+    if name := args.extract_plain_text().strip():
         message = turn_message(detailed_handler(name))
         await matcher.finish(message)
     message = turn_message(help_handler())

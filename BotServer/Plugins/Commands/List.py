@@ -14,7 +14,7 @@ matcher = on_command('list', force_whitespace=True, rule=get_rule('list'))
 
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
-    server = args if (args := args.extract_plain_text()) else None
+    server = args if (args := args.extract_plain_text().strip()) else None
     message = turn_message(list_handler(server))
     await matcher.finish(message)
 

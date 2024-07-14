@@ -13,7 +13,7 @@ matcher = on_command('bound', force_whitespace=True, priority=10, rule=get_rule(
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if player := args.extract_plain_text().strip():
-        await matcher.finish(bound_handler(event.user_id, player))
+        await matcher.finish(bound_handler(str(event.user_id), player))
     if (user := str(event.user_id)) not in data_manager.players.keys():
         await matcher.finish('你还没有绑定白名单，请先绑定后再试。')
     await matcher.finish(F'用户 {user} 你已绑定白名单到 {data_manager.players[user]} 玩家。')

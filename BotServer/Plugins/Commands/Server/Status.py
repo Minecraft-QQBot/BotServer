@@ -21,7 +21,7 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     global font
     if not font:
         font = find_font()
-    if args := args.extract_plain_text():
+    if args := args.extract_plain_text().strip():
         if name := server_manager.parse_server(args):
             message = turn_message(detailed_handler(name))
             await matcher.finish(message)
