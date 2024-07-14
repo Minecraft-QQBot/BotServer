@@ -65,7 +65,7 @@ pip3 install matplotlib
 
 ### 安装插件
 
-将下载好的 `QQChat.mcdr` 文拷贝到 MCDR 的 插件文件夹 下，编辑 配置文件夹 QQChat 下的 `Config.json` 文件。配置文件内容参考如下：
+将下载好的 `QQBot.mcdr` 文拷贝到 MCDR 的 插件文件夹 下，编辑 配置文件夹 `qq_bot` 下的 `config.json` 文件。配置文件内容参考如下：
 
 ```json
 {
