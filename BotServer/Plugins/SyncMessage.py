@@ -33,4 +33,4 @@ async def sync_message(event: GroupMessageEvent):
     plain_text = ' '.join(plain_texts)
     name = data_manager.players.get(str(event.user_id), await get_format_name(event.sender.card))
     server_manager.broadcast('QQ', name, plain_text)
-    logger.debug(F'转发主群用户 {name} 消息 {plain_text} 到游戏内。')
+    logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')
