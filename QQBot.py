@@ -63,7 +63,7 @@ class EventSender:
         return self.__request('send_message', data)
 
     def send_info(self):
-        pid = self.server.get_server_pid()
+        pid = self.server.get_server_pid_all()[-1]
         if self.__request('server/info', {'pid': pid}):
             self.server.logger.info('发送服务器信息成功！')
             return None
@@ -71,7 +71,7 @@ class EventSender:
 
     def send_startup(self):
         if rcon_info := self.read_rcon_info():
-            pid = self.server.get_server_pid()
+            pid = self.server.get_server_pid_all()[-1]
             if self.__request('server/startup', {'rcon': rcon_info, 'pid': pid}):
                 self.server.logger.info('发送服务器启动消息成功！')
                 return None

@@ -44,7 +44,7 @@ class ServerWatcher(Thread):
         self.cpus[name] = []
         self.rams[name] = []
         try:
-            process = Process(pid).children()[0]
+            process = Process(pid)
             process.cpu_percent(interval=0.1)
         except Exception:
             logger.warning(F'设置监视服务器 [{name}] PID 为 {pid} 失败！')
