@@ -142,7 +142,7 @@ def on_load(server: PluginServerInterface, old):
 
 
 def on_info(server: PluginServerInterface, info: Info):
-    if not info.is_player and info.content == '[Rcon] BotServer was connected to the server!':
+    if not info.is_player and '[Rcon] BotServer was connected to the server!' in info.content:
         event_sender.send_info()
 
 
