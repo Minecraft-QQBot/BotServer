@@ -2,3 +2,4 @@
 BotServer-v*.*.*.zip
 Test.py
 .DS_Store
+BotServer/Plugins/.vscode/settings.json
