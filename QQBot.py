@@ -52,7 +52,7 @@ class EventSender:
         data['token'] = config.token
         try: request = requests.post(F'{self.request_url}/{name}', data=dumps(data))
         except Exception: return None
-        if request.status_code == 200:
+        if request.status_code == 200 or 400:
             response = request.json()
             if response.get('success'):
                 return response

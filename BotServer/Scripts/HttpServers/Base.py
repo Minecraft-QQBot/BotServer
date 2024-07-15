@@ -41,8 +41,9 @@ async def server_startup(request: Request):
     if config.broadcast_server:
         if await send_sync_message(F'服务器 [{name}] 已开启，喵～'):
             return Response(200, content=dumps({'success': True}))
-    logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
-    return Response(500, content=dumps({'success': False}))
+        logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+        return Response(500, content=dumps({'success': False}))
+    else: return Response(400,content=dumps({'success': True}))
 
 
 async def server_shutdown(request: Request):
@@ -55,8 +56,9 @@ async def server_shutdown(request: Request):
     if config.broadcast_server:
         if await send_sync_message(F'服务器 [{name}] 已关闭，呜……'):
             return Response(200, content=dumps({'success': True}))
-    logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
-    return Response(500, content=dumps({'success': False}))
+        logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+        return Response(500, content=dumps({'success': False}))
+    else: return Response(400,content=dumps({'success': True}))
 
 
 async def player_joined(request: Request):
@@ -71,8 +73,9 @@ async def player_joined(request: Request):
         else: message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
         if await send_sync_message(message):
             return Response(200, content=dumps({'success': True}))
-    logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
-    return Response(500, content=dumps({'success': False}))
+        logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+        return Response(500, content=dumps({'success': False}))
+    else: return Response(400,content=dumps({'success': True}))
         
 
 
@@ -88,8 +91,9 @@ async def player_left(request: Request):
         else: message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
         if await send_sync_message(message):
             return Response(200, content=dumps({'success': True}))
-    logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
-    return Response(500, content=dumps({'success': False}))
+        logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+        return Response(500, content=dumps({'success': False}))
+    else: return Response(400,content=dumps({'success': True}))
 
 
 def setup_base_http_server():
