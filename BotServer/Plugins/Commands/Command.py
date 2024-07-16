@@ -27,6 +27,7 @@ def parse_command(command_args: list):
         for enabled_command in config.command_minecraft_whitelist:
             if command.startswith(enabled_command):
                 return command
+        return None
     for disabled_command in config.command_minecraft_blacklist:
         if command.startswith(disabled_command):
             return None
