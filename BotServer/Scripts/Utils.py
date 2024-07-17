@@ -1,3 +1,4 @@
+import re
 from .Config import config
 
 from nonebot import get_bot
@@ -41,7 +42,6 @@ def get_args(args: Message):
 def get_rule(name: str):
     def rule(event: GroupMessageEvent):
         return (name in config.command_enabled) and (event.group_id in config.command_groups)
-
     return rule
 
 
@@ -52,3 +52,15 @@ async def send_sync_message(message: str):
         try: await bot.send_group_msg(group_id=group, message=message)
         except (NetworkError, ActionFailed): return False
     return True
+
+
+async def get_group_card(user_id):
+    bot = get_bot()
+    req = await bot.call_api('get_group_member_info', group_id = config.sync_message_groups, user_id = user_id)
+    return req['card']
+
+async def get_format_name(player):
+    try: 
+        return re.findall(r'[a-zA-Z0-9_]+', player)[0]
+    except IndexError:
+        return "未知用户"

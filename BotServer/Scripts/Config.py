@@ -24,5 +24,9 @@ class Config(BaseModel):
 
     whitelist_command: str = 'whitelist'
 
+    source_name_color: str = 'gray'
+    qq_player_color: str = 'gray'
+    qq_message_color: str = 'gray'
+
 
 config: Config = get_plugin_config(Config)

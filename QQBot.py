@@ -52,7 +52,7 @@ class EventSender:
         data['token'] = config.token
         try: request = requests.post(F'{self.request_url}/{name}', data=dumps(data))
         except Exception: return None
-        if request.status_code == 200:
+        if request.status_code == 200 or 400:
             response = request.json()
             if response.get('success'):
                 return response
@@ -63,7 +63,7 @@ class EventSender:
         return self.__request('send_message', data)
 
     def send_info(self):
-        pid = self.server.get_server_pid()
+        pid = self.server.get_server_pid_all()[-1]
         if self.__request('server/info', {'pid': pid}):
             self.server.logger.info('发送服务器信息成功！')
             return None
@@ -71,7 +71,7 @@ class EventSender:
 
     def send_startup(self):
         if rcon_info := self.read_rcon_info():
-            pid = self.server.get_server_pid()
+            pid = self.server.get_server_pid_all()[-1]
             if self.__request('server/startup', {'rcon': rcon_info, 'pid': pid}):
                 self.server.logger.info('发送服务器启动消息成功！')
                 return None
@@ -142,7 +142,7 @@ def on_load(server: PluginServerInterface, old):
 
 
 def on_info(server: PluginServerInterface, info: Info):
-    if not info.is_player and info.content == '[Rcon] BotServer was connected to the server!':
+    if not info.is_player and '[Rcon] BotServer was connected to the server!' in info.content:
         event_sender.send_info()
 
 
