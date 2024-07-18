@@ -17,9 +17,10 @@ class ServerManager:
         logger.info('初始化服务器管理器！正在尝试连接到已保存的服务器……')
         for name, info in data_manager.servers.items():
             if name != 'numbers':
-                if self.connect_server({'name': name, 'rcon': info}, False):
-                    self.execute('say BotServer was connected to the server!', name)
+                self.connect_server({'name': name, 'rcon': info}, False)
         logger.success('服务器管理器初始化完成！')
+        for name, info in data_manager.servers.items():
+            self.execute('say BotServer was connected to the server!', name)
 
     def unload(self):
         logger.info('正在断开所有服务器的连接……')
