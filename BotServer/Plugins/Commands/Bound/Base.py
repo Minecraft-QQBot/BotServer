@@ -24,12 +24,11 @@ def bound_handler(user: str, player: str):
         return '此玩家名称非法！玩家名称应只包含字母、数字、下划线且长度不超过 16 个字符。'
     # if user in data_manager.players:
     #     return '你已经绑定了白名单！请先解绑后尝试。'
-    if player in data_manager.players.values():
-        return '此玩家名称已经绑定过了，请换一个名称！'
+    for players in data_manager.players.values():
+        if player in list(players):
+            return '此玩家名称已经绑定过了，请换一个名称！'
     if server_manager.execute(F'{config.whitelist_command} add {player}'):
-        try:
-            players = data_manager.players[user]
-        except KeyError:
+        if not (players := data_manager.players.get(user)):
             players = []
         players.append(player)
         data_manager.players.setdefault(user, players)

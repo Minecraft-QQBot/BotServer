@@ -57,14 +57,14 @@
         "description": "查看当前所有绑定的白名单，需管理员权限。"
       },
       "remove": {
-        "usage": "bound remove <*QQ>",
-        "description": "从白名单中移除某个玩家，解绑自身时无需管理员权限。",
+        "usage": "bound remove <player> <*QQ>",
+        "description": "从白名单中移除玩家的某个账号，用*代表此QQ号下的所有账号。解绑自身时无需管理员权限。",
         "parameters": {
           "QQ": "可选，要移除的玩家所绑定的 QQ 号或 @ 此用户，为空时解绑自身的白名单。"
         }
       },
       "append": {
-        "usage": "bound append <QQ> <player>",
+        "usage": "bound append <player> <QQ> ",
         "description": "添加某个玩家到白名单，需管理员权限。",
         "parameters": {
           "QQ": "绑定用户的 QQ 号。",

@@ -27,10 +27,10 @@ async def sync_message(event: GroupMessageEvent):
             continue
         elif segment.type == 'at':
             user_id = str(segment.data['qq'])
-            plain_texts.append(F"[@{data_manager.players.get(user_id, await get_format_name(await get_group_card(user_id)))}]")
+            plain_texts.append(F"[@{data_manager.players.get(user_id, [await get_format_name(await get_group_card(user_id))])[0]}]")
             continue
         plain_texts.append(F'[{mapping.get(segment.type, "未知类型")}]')
     plain_text = ' '.join(plain_texts)
-    name = data_manager.players.get(str(event.user_id), await get_format_name(event.sender.card))
+    name = data_manager.players.get(str(event.user_id), [await get_format_name(event.sender.card)])[0]
     server_manager.broadcast('QQ', name, plain_text)
     logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')

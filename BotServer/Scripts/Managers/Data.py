@@ -27,8 +27,9 @@ class DataManager:
             with player_file.open(encoding='Utf-8', mode='r') as file:
                 self.players = load(file)
             logger.success('加载数据文件完毕！')
-        logger.warning('服务器信息文件不存在，正在创建服务器信息文件……')
-        self.save()
+        else:
+            logger.warning('服务器信息文件不存在，正在创建服务器信息文件……')
+            self.save()
 
     def load_command_info(self):
         logger.info('正在加载命令信息……')
