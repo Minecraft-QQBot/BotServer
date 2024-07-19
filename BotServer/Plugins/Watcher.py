@@ -1,5 +1,6 @@
 from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
+from Plugins.Commands.Bound.Remove import bound_remove_handler
 
 from nonebot import on_notice
 from nonebot.adapters.onebot.v11 import GroupIncreaseNoticeEvent, GroupDecreaseNoticeEvent, MessageSegment, Message
@@ -12,9 +13,8 @@ matcher = on_notice()
 async def watch_decrease(event: GroupDecreaseNoticeEvent):
     if event.group_id not in config.command_groups:
         await matcher.finish()
-    if player := data_manager.players.pop(str(event.user_id), None):
-        server_manager.execute(F'{config.whitelist_command} remove {player}')
-        await matcher.finish(F'用户 {event.user_id} 离开了群聊，自动从白名单中移除 {player} 玩家。')
+    if player := bound_remove_handler(["*", str(event.user_id)]):
+        await matcher.finish(F'{player}, 原因：用户 {event.user_id} 离开了群聊，')
 
 
 @matcher.handle()
