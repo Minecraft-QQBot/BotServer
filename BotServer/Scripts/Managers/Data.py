@@ -27,6 +27,7 @@ class DataManager:
             with player_file.open(encoding='Utf-8', mode='r') as file:
                 self.players = load(file)
             logger.success('加载数据文件完毕！')
+            return None
         logger.warning('服务器信息文件不存在，正在创建服务器信息文件……')
         self.save()
 
