@@ -1,5 +1,5 @@
 from Scripts.Config import config
-from Scripts.Utils import get_rule, get_args
+from Scripts.Utils import get_args, rule
 from Scripts.Managers import data_manager, server_manager
 
 from nonebot import on_command
@@ -7,7 +7,7 @@ from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
 
-matcher = on_command('bound remove', force_whitespace=True, block=True, priority=5, rule=get_rule('bound'))
+matcher = on_command('bound remove', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
 @matcher.handle()

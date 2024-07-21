@@ -1,13 +1,13 @@
 from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
-from Scripts.Utils import get_user_name, check_player, get_rule, get_args
+from Scripts.Utils import get_user_name, check_player, get_args, rule
 
 from nonebot import on_command
 from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
 
-matcher = on_command('bound append', force_whitespace=True, block=True, priority=5, rule=get_rule('bound'))
+matcher = on_command('bound append', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
 @matcher.handle()

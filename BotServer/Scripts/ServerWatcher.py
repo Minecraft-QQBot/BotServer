@@ -1,5 +1,4 @@
 from .Config import config
-from .Managers import server_manager
 
 from time import sleep
 from psutil import Process
@@ -28,7 +27,7 @@ class ServerWatcher(Thread):
                     self.rams[name].pop(0)
                 self.cpus[name].append(cpu)
                 self.rams[name].append(ram)
-            sleep(config.server_watcher_update_interval * 60)
+            sleep(config.server_watcher_update_interval)
 
     def get_data(self, server_name: str = None):
         if not server_name:

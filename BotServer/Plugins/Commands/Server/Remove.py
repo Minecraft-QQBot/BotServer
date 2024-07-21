@@ -1,5 +1,5 @@
+from Scripts.Utils import rule
 from Scripts.Config import config
-from Scripts.Utils import get_rule
 from Scripts.Managers import server_manager, data_manager
 
 from nonebot import on_command
@@ -7,7 +7,7 @@ from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
 
-matcher = on_command('server remove', force_whitespace=True, block=True, priority=5, rule=get_rule('server'))
+matcher = on_command('server remove', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
 @matcher.handle()

@@ -10,6 +10,9 @@ from re import IGNORECASE, compile
 
 regax = compile(R'[A-Z0-9_]+', IGNORECASE)
 
+def rule(event: GroupMessageEvent):
+    return (event.group_id in config.command_groups)
+
 
 def turn_message(iterator: iter):
     lines = tuple(iterator)
@@ -39,16 +42,10 @@ def get_args(args: Message):
     return result
 
 
-def get_rule(name: str):
-    def rule(event: GroupMessageEvent):
-        return (name in config.command_enabled) and (event.group_id in config.command_groups)
-    return rule
-
-
 async def send_sync_message(message: str):
     try: bot = get_bot()
     except ValueError: return False
-    for group in config.sync_message_groups:
+    for group in config.message_groups:
         try: await bot.send_group_msg(group_id=group, message=message)
         except (NetworkError, ActionFailed): return False
     return True

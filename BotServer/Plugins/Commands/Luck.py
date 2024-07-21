@@ -1,4 +1,4 @@
-from Scripts.Utils import turn_message, get_rule
+from Scripts.Utils import turn_message, rule
 
 from nonebot import on_command
 from nonebot.log import logger
@@ -13,7 +13,7 @@ bad_things = ('造世吞（直接放飞', '修机器（一修就炸', '挖矿（
 good_things = ('造世吞（完美运行', '修机器（一修就好', '挖矿（挖到十钻石')
 
 logger.debug('加载命令 Luck 完毕！')
-matcher = on_command('luck', force_whitespace=True, rule=get_rule('luck'))
+matcher = on_command('luck', force_whitespace=True, rule=rule)
 
 
 @matcher.handle()

@@ -3,8 +3,8 @@ from mcdreforged.api.command import SimpleCommandBuilder, GreedyText
 from mcdreforged.api.all import PluginServerInterface, CommandContext, CommandSource, Info
 
 import requests
-from os.path import exists
 from json import dumps
+from pathlib import Path
 
 
 PLUGIN_METADATA = {
@@ -83,6 +83,13 @@ class EventSender:
             return None
         self.server.logger.error('发送服务器关闭消息失败！请检查配置或查看是否启动服务端，然后重试。')
 
+    def send_player_info(self, player: str, message: str):
+        data = {'player': player, 'message': message}
+        if self.__request('player/info', data):
+            self.server.logger.info(F'发送玩家 {player} 消息 {message} 成功！')
+            return None
+        self.server.logger.error(F'发送玩家 {player} 消息 {message} 失败！请检查配置或查看是否启动服务端，然后重试。')
+
     def send_player_left(self, player: str):
         if self.__request('player/left', {'player': player}):
             self.server.logger.info(F'发送玩家 {player} 离开消息成功！')
@@ -96,11 +103,11 @@ class EventSender:
         self.server.logger.error(F'发送玩家 {player} 加入消息失败！请检查配置或查看是否启动服务端，然后重试。')
 
     def read_rcon_info(self):
-        password, port = None, None
-        if not exists('./server/server.properties'):
+        server_config = Path('./server/server.properties')
+        if not server_config.exists():
             self.server.logger.error('服务器配置文件不存在！请联系管理员求助。')
-            return None
-        with open('./server/server.properties', encoding='Utf-8', mode='r') as file:
+            return None, None
+        with server_config.open('r', encoding='utf-8') as file:
             for line in file.readlines():
                 if (not line) or line.startswith('#'):
                     continue
@@ -113,7 +120,7 @@ class EventSender:
                     password = (value if key == 'rcon.password' else password)
         if not (password and port):
             self.server.logger.error('服务器配置文件中没有找到 Rcon 信息！请检查服务器配置文件后重试。')
-            return None
+            return None, None
         return password, port
 
 
@@ -157,8 +164,7 @@ def on_server_startup(server: PluginServerInterface):
 
 
 def on_user_info(server: PluginServerInterface, info: Info):
-    if config.sync_all_messages:
-        event_sender.send_message(F'[{config.name}] <{info.player}> {info.content}')
+    event_sender.send_player_info(info.player, info.content)
 
 
 def on_player_left(server: PluginServerInterface, player: str):

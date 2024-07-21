@@ -1,6 +1,6 @@
 from Scripts.Config import config
 from Scripts.Managers import server_manager
-from Scripts.Utils import turn_message, get_rule, get_args
+from Scripts.Utils import turn_message, get_args, rule
 
 from nonebot import on_command
 from nonebot.log import logger
@@ -9,7 +9,7 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
 
 logger.debug('命令 Command 加载完毕！')
-matcher = on_command('command', force_whitespace=True, rule=get_rule('command'))
+matcher = on_command('command', force_whitespace=True, rule=rule)
 
 
 @matcher.handle()

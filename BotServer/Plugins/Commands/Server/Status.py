@@ -1,6 +1,6 @@
+from Scripts.Utils import turn_message, rule
 from Scripts.Managers import server_manager
 from Scripts.ServerWatcher import server_watcher
-from Scripts.Utils import turn_message, get_rule
 
 from io import BytesIO
 from matplotlib import pyplot
@@ -13,7 +13,7 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, Messa
 
 
 font = None
-matcher = on_command('server status', force_whitespace=True, block=True, priority=5, rule=get_rule('server'))
+matcher = on_command('server status', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
 @matcher.handle()

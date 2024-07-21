@@ -3,6 +3,13 @@
     "usage": "luck",
     "description": "查看今日运势（仅供参考）。"
   },
+  "send": {
+    "usage": "send <message>",
+    "description": "发送消息到所有已连接的服务器。",
+    "parameters": {
+      "message": "要发送的消息。"
+    }
+  },
   "server": {
     "usage": "server",
     "description": "查看当前所有服务器的状态和编号。",

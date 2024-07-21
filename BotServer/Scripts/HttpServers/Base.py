@@ -61,6 +61,17 @@ async def server_shutdown(request: Request):
     return Response(200, content=dumps({'success': True}))
 
 
+async def player_info(request: Request):
+    if request.json.get('token') != config.token:
+        return Response(403, content=dumps({'success': False}))
+    name = request.json.get('name')
+    player = request.json.get('player')
+    message = request.json.get('message')
+    logger.info(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
+    if config.broadcast_player:
+        logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+
+
 async def player_joined(request: Request):
     if request.json.get('token') != config.token:
         return Response(403, content=dumps({'success': False}))
@@ -68,7 +79,7 @@ async def player_joined(request: Request):
     name = request.json.get('name')
     player = request.json.get('player')
     if config.broadcast_player:
-        if config.bot_prefix and player.upper().startswith(config.bot_prefix.upper()):
+        if config.bot_prefix and player.upper().startswith(config.bot_prefix):
             message = F'机器人 {player} 加入了 [{name}] 服务器。'
         else: message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
         if await send_sync_message(message):
@@ -86,7 +97,7 @@ async def player_left(request: Request):
     name = request.json.get('name')
     player = request.json.get('player')
     if config.broadcast_player:
-        if config.bot_prefix and player.upper().startswith(config.bot_prefix.upper()):
+        if config.bot_prefix and player.upper().startswith(config.bot_prefix):
             message = F'机器人 {player} 离开了 [{name}] 服务器。'
         else: message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
         if await send_sync_message(message):
@@ -100,6 +111,8 @@ def setup_base_http_server():
     logger.info('正在载入基础 Http 服务器……')
     if isinstance(driver := get_driver(), ASGIMixin):
         http_server = HTTPServerSetup(URL('/send_message'), 'POST', 'send_message', send_message)
+        driver.setup_http_server(http_server)
+        http_server = HTTPServerSetup(URL('/player/info'), 'POST', 'player_info', player_info)
         driver.setup_http_server(http_server)
         http_server = HTTPServerSetup(URL('/player/left'), 'POST', 'player_left', player_left)
         driver.setup_http_server(http_server)
