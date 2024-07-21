@@ -43,7 +43,7 @@ async def server_startup(request: Request):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
-    else: return Response(400,content=dumps({'success': True}))
+    return Response(200, content=dumps({'success': True}))
 
 
 async def server_shutdown(request: Request):
@@ -58,7 +58,7 @@ async def server_shutdown(request: Request):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
-    else: return Response(400,content=dumps({'success': True}))
+    return Response(200, content=dumps({'success': True}))
 
 
 async def player_joined(request: Request):
@@ -75,7 +75,7 @@ async def player_joined(request: Request):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
-    else: return Response(400,content=dumps({'success': True}))
+    return Response(200, content=dumps({'success': True}))
         
 
 
@@ -93,7 +93,7 @@ async def player_left(request: Request):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
-    else: return Response(400,content=dumps({'success': True}))
+    return Response(200, content=dumps({'success': True}))
 
 
 def setup_base_http_server():

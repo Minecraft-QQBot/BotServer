@@ -5,7 +5,7 @@ from nonebot import get_plugin_config
 
 class Config(BaseModel):
     token: str = ''
-    bot_prefix: str = ''
+    bot_prefix: str = None
 
     superusers: list[str] = []
     command_start: list[str] = ['.']
@@ -24,9 +24,9 @@ class Config(BaseModel):
 
     whitelist_command: str = 'whitelist'
 
-    source_name_color: str = 'gray'
-    qq_player_color: str = 'gray'
-    qq_message_color: str = 'gray'
+    sync_color_source: str = 'gray'
+    sync_color_player: str = 'gray'
+    sync_color_message: str = 'gray'
 
 
 config: Config = get_plugin_config(Config)
