@@ -33,10 +33,7 @@ class Config(Serializable):
     name: str = 'name'
     # 和机器人服务器的 token 一致
     token: str = 'YourToken'
-    # 是否转发玩家的所有游戏内消息
     sync_all_messages: bool = False
-    # 可以不用动，会自动同步
-    bot_prefix: str = 'bot_'
 
 
 class EventSender:
@@ -57,11 +54,6 @@ class EventSender:
             if response.get('success'):
                 return response
 
-    def send_message(self, message: str):
-        data = {'message': message}
-        self.server.logger.info(F'向 QQ 群发送消息 {message}')
-        return self.__request('send_message', data)
-
     def send_info(self):
         pid = self.server.get_server_pid_all()[-1]
         if self.__request('server/info', {'pid': pid}):
@@ -69,11 +61,18 @@ class EventSender:
             return None
         self.server.logger.error('发送服务器信息失败！请检查配置或查看是否启动服务端，然后重试。')
 
+    def send_message(self, message: str):
+        data = {'message': message}
+        self.server.logger.info(F'向 QQ 群发送消息 {message}')
+        return self.__request('send_message', data)
+
     def send_startup(self):
         if rcon_info := self.read_rcon_info():
             pid = self.server.get_server_pid_all()[-1]
-            if self.__request('server/startup', {'rcon': rcon_info, 'pid': pid}):
+            if response := self.__request('server/startup', {'rcon': rcon_info, 'pid': pid}):
                 self.server.logger.info('发送服务器启动消息成功！')
+                config.sync_all_messages = response.get('sync_all_messages')
+                self.server.save_config_simple(config)
                 return None
             self.server.logger.error('发送服务器启动消息失败！请检查配置或查看是否启动服务端，然后重试。')
 

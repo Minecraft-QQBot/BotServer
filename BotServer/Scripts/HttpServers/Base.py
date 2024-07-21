@@ -43,7 +43,7 @@ async def server_startup(request: Request):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
-    return Response(200, content=dumps({'success': True}))
+    return Response(200, content=dumps({'success': True, 'sync_all_message': config.sync_all_game_message}))
 
 
 async def server_shutdown(request: Request):
