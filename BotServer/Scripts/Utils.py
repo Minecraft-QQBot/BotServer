@@ -8,7 +8,7 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, Bot
 from re import IGNORECASE, compile
 
 
-regax = compile(R'[A-Z0-9_]', IGNORECASE)
+regax = compile(R'[A-Z0-9_]+', IGNORECASE)
 
 
 def turn_message(iterator: iter):
@@ -32,8 +32,7 @@ def get_args(args: Message):
     for segment in args:
         if segment.type == 'text':
             for arg in segment.data['text'].split(' '):
-                if arg:
-                    result.append(arg)
+                if arg: result.append(arg)
         elif segment.type == 'at':
             result.append(str(segment.data['qq']))
     logger.debug(F'提取参数 {result} 。')
