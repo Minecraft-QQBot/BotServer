@@ -39,7 +39,7 @@ def help_handler():
         if children := info.get('children'):
             for child_name, child_info in children.items():
                 yield F'  +-- {name} {child_name} — {child_info["description"]}'
-    yield '\n其中，<参数名> 代表必填参数，<*参数名> 代表此参数可选，对于所有需要输入 QQ 号的指令，可以通过 @ 此用户来代替输入的 QQ 号。'
+    yield '\n注：<name> 代表必填的参数，<*name> 代表此参数可选。对于所有需要输入 QQ 号的指令，可以通过 @ 此用户来代替输入的 QQ 号。'
 
 
 def detailed_handler(name: str):

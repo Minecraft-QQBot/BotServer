@@ -1,5 +1,6 @@
 from .Base import *
 from .List import *
+from .Query import *
 from .Append import *
 from .Remove import *
 

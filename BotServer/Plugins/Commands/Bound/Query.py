@@ -1,6 +1,6 @@
 from Scripts.Config import config
-from Scripts.Managers import server_manager, data_manager
-from Scripts.Utils import get_user_name, check_player, get_rule, get_args
+from Scripts.Managers import data_manager
+from Scripts.Utils import get_user_name, get_rule, get_args
 
 from nonebot import on_command
 from nonebot.params import CommandArg
