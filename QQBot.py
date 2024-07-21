@@ -102,6 +102,7 @@ class EventSender:
         self.server.logger.error(F'发送玩家 {player} 加入消息失败！请检查配置或查看是否启动服务端，然后重试。')
 
     def read_rcon_info(self):
+        password, port = None, None
         server_config = Path('./server/server.properties')
         if not server_config.exists():
             self.server.logger.error('服务器配置文件不存在！请联系管理员求助。')
