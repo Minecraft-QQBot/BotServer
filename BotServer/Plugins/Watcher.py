@@ -21,7 +21,5 @@ async def watch_decrease(event: GroupDecreaseNoticeEvent):
 async def watch_increase(event: GroupIncreaseNoticeEvent):
     if event.group_id not in config.command_groups:
         await matcher.finish()
-    at = MessageSegment.at(event.user_id)
-    message = F'{at} 欢迎加入群聊！请仔细阅读群聊公告，并按照要求进行操作。'
-    await matcher.finish(Message(message))
+    await matcher.finish('欢迎加入群聊！请仔细阅读群聊公告，并按照要求进行操作。', at_sender=True)
 

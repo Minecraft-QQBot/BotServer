@@ -2,7 +2,7 @@ from Scripts.Utils import turn_message, rule
 
 from nonebot import on_command
 from nonebot.log import logger
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment
+from nonebot.adapters.onebot.v11 import GroupMessageEvent
 
 import random
 from hashlib import md5
@@ -19,7 +19,7 @@ matcher = on_command('luck', force_whitespace=True, rule=rule)
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent):
     message = turn_message(luck_handler(event))
-    await matcher.finish(message)
+    await matcher.finish(message, at_sender=True)
 
 
 def luck_handler(event: GroupMessageEvent):
@@ -30,7 +30,7 @@ def luck_handler(event: GroupMessageEvent):
     if luck_point > 90: tips = '哇！'
     elif luck_point > 60: tips = '喵~'
     elif luck_point > 30: tips = '呜……'
-    yield F'{MessageSegment.at(event.user_id)} 你今天的人品为 {luck_point}，{tips}'
+    yield F'你今天的人品为 {luck_point}，{tips}'
     bad_thing = bad_things[(seed := (seed & event.group_id)) % len(bad_things)]
     good_thing = good_things[seed % len(good_things)]
     yield F'今日宜：{good_thing}'
