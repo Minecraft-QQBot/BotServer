@@ -7,25 +7,6 @@ from json import dumps
 from pathlib import Path
 
 
-PLUGIN_METADATA = {
-    'id': 'qq_bot',
-    'version': '1.3.1',
-    'name': 'QQBot',
-    'description': '一个基于 Nonebot2 的 Minecraft 服务器 QQ 机器人，支持多服使用',
-    'link': 'https://github.com/Lonely-Sails/Minecraft_QQBot',
-    'authors': [
-        {
-            'name': 'LonelySail',
-            'link': 'https://github.com/Lonely-Sails'
-        },
-        {
-            'name': 'meng877',
-            'link': 'https://github.com/meng877'
-        }
-    ]
-}
-
-
 class Config(Serializable):
     # 机器人服务器的端口
     port: int = 8000
@@ -47,8 +28,10 @@ class EventSender:
     def __request(self, name: str, data: dict):
         data['name'] = config.name
         data['token'] = config.token
-        try: request = requests.post(F'{self.request_url}/{name}', data=dumps(data), timeout=10)
-        except Exception: return None
+        try:
+            request = requests.post(F'{self.request_url}/{name}', data=dumps(data), timeout=10)
+        except Exception:
+            return None
         if request.status_code == 200:
             response = request.json()
             if response.get('success'):

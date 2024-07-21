@@ -1,4 +1,4 @@
-*\.DS_Store
+**\.DS_Store
 BotServer-v*.*.*.zip
 Test.py
 .DS_Store
