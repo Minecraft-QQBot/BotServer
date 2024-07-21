@@ -11,7 +11,6 @@ from nonebot.log import logger
 class ServerManager:
     status: dict[str, bool] = {}
     servers: dict[str, RconConnection] = {}
-    server_pids: dict[str, int] = {}
 
     def init(self):
         logger.info('初始化服务器管理器！正在尝试连接到已保存的服务器……')
@@ -27,9 +26,14 @@ class ServerManager:
             rcon.disconnect()
         logger.success('所有服务器的连接已断开！')
 
-    def broadcast(self, source: str, player: str, message: str):
+    def broadcast(self, source: str, player: str, message: str, except_server: str = None):
         params = ({'color': config.sync_color_source, 'text': F'[{source}] '}, {'color': config.sync_color_player, 'text': F'<{player}> '}, {'color': config.sync_color_message, 'text': message})
-        self.execute(F'tellraw @a {dumps(params)}')
+        if not except_server:
+            self.execute(F'tellraw @a {dumps(params)}')
+            return None
+        for name, status in self.status.items():
+            if name != except_server and status:
+                self.servers[name].send_command(F'tellraw @a {dumps(params)}')
 
     def execute(self, command: str, server: Union[str, int] = None):
         if not server:
@@ -43,7 +47,7 @@ class ServerManager:
             logger.debug(F'执行命令 [{command}] 到服务器 [{name}]。')
             rcon = self.servers.get(name)
             return rcon.send_command(command)
-        
+
     def parse_server(self, server: Union[str, int]):
         if isinstance(server, int) or server.isdigit():
             server = int(server)

@@ -68,8 +68,12 @@ async def player_info(request: Request):
     player = request.json.get('player')
     message = request.json.get('message')
     logger.info(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
-    if config.broadcast_player:
-        logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+    if config.sync_all_game_message:
+        if not (await send_sync_message(F'[{name}] <{player}> {message}')):
+            logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+    if config.sync_message_between_servers:
+        server_manager.broadcast(name, player, message, name)
+    return Response(200, content=dumps({'success': True}))
 
 
 async def player_joined(request: Request):
