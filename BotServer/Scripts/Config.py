@@ -38,5 +38,5 @@ config: Config = get_plugin_config(Config)
 
 config.server_watcher_update_interval *= 60
 config.bot_prefix = config.bot_prefix.upper()
-if config.sync_all_qq_message:
+if config.sync_all_qq_message and ('send' in config.command_enabled):
     config.command_enabled.remove('send')
