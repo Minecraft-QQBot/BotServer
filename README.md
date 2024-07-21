@@ -2,6 +2,7 @@
 
 **一款通过 MCDReforged 插件与 Minecraft 交互的 Python QQ 机器人**。功能丰富，使用简单且可以自行配置，仅需简单配置即可使用。目前已实现的功能有：
 
+- 多服互联。
 - !!qq 指令在游戏内向 QQ 群发送消息。
 - 把 QQ 群内的消息转发到游戏内。
 - 禁用 QQ 群内的特定命令。
@@ -83,7 +84,6 @@ pip3 install matplotlib
 |       port        |  整数  | 端口号，和服务器配置文件下的 PORT 保持一致即可。 |
 |       name        | 字符串 |             服务器名称，中英文都可。             |
 |       token       | 字符串 | 口令，和服务器配置文件下的 TOKEN 保持一致即可。  |
-| sync_all_messages | 布尔值 |          是否转发游戏内玩家的所有消息。          |
 
 当你看到类似 `发送服务器启动消息成功！` 的 Mcdr 日志时，你的 Mcdr 服务器已经成功连接到机器人服务器。若出现错误提示，请确保你的机器人服务器已经开启，或者配置文件的 Port 是否正确。你可以通过 `server` 指令查看服务器是否连接上机器人。
 
@@ -105,4 +105,10 @@ A: 你可以在 QQ 群内发送 `help` 指令查看机器人的帮助信息，�
 - [creepebucket](https://github.com/creepebucket) 提供测试环境。
 
 > [!TIP]
-> 若遇到问题，或有更好的想法，可以加入 QQ 群 [`962802248`](https://qm.qq.com/q/B3kmvJl2xO) 或者提交 Issues 向作者反馈。
+> 若遇到问题，或有更好的想法，可以加入 QQ 群 [`962802248`](https://qm.qq.com/q/B3kmvJl2xO) 或者提交 Issues 向作者反馈。若你有能力，欢迎为本项目提供代码贡献！
+
+## 友链
+
+- TQM 服务器
+- [LemonFate 服务器](https://www.lemonfate.cn/)
+- [RedstoneDaily 红石日报](https://www.redstonedaily.com/)
