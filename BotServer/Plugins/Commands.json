@@ -56,11 +56,18 @@
         "usage": "bound list",
         "description": "查看当前所有绑定的白名单，需管理员权限。"
       },
+      "query": {
+        "usage": "bound query <QQ>",
+        "description": "查询某个 QQ 号绑定的玩家名称。",
+        "parameters": {
+          "QQ": "要查询的 QQ 号。"
+        }
+      },
       "remove": {
         "usage": "bound remove <*QQ>",
         "description": "从白名单中移除某个玩家，解绑自身时无需管理员权限。",
         "parameters": {
-          "QQ": "可选，要移除的玩家所绑定的 QQ 号或 @ 此用户，为空时解绑自身的白名单。"
+          "QQ": "可选，要移除的玩家所绑定的 QQ 号，为空时解绑自身的白名单。"
         }
       },
       "append": {

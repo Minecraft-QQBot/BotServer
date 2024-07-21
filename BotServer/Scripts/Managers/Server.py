@@ -27,12 +27,7 @@ class ServerManager:
             rcon.disconnect()
         logger.success('所有服务器的连接已断开！')
 
-    def broadcast(self, source, user, text):
-        params = (
-            {'color': config.source_name_color, 'text': f'[{source}] '},
-            {'color': config.qq_player_color, 'text': f'<{user}> '},
-            {'color': config.qq_message_color, 'text': text}
-        )
+    def broadcast(self, params: tuple):
         self.execute(F'tellraw @a {dumps(params)}')
 
     def execute(self, command: str, server: Union[str, int] = None):

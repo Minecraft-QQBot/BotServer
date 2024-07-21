@@ -50,9 +50,9 @@ class EventSender:
     def __request(self, name: str, data: dict):
         data['name'] = config.name
         data['token'] = config.token
-        try: request = requests.post(F'{self.request_url}/{name}', data=dumps(data))
+        try: request = requests.post(F'{self.request_url}/{name}', data=dumps(data), timeout=10)
         except Exception: return None
-        if request.status_code == 200 or 400:
+        if request.status_code == 200:
             response = request.json()
             if response.get('success'):
                 return response

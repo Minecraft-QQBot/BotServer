@@ -1,15 +1,14 @@
-import re
 from .Config import config
 
 from nonebot import get_bot
 from nonebot.log import logger
 from nonebot.exception import NetworkError, ActionFailed
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, Bot
 
-from string import ascii_letters, digits
+from re import IGNORECASE, compile
 
 
-letters = (ascii_letters + digits + '_')
+regax = compile(R'[A-Z0-9_]', IGNORECASE)
 
 
 def turn_message(iterator: iter):
@@ -17,13 +16,15 @@ def turn_message(iterator: iter):
     return Message('\n'.join(lines))
 
 
+def get_player_name(name):
+    if result := regax.search(name):
+        return result.group()
+
+
 def check_player(player: str):
     if len(player) > 16:
         return False
-    for char in player:
-        if char not in letters:
-            return False
-    return True
+    return (get_player_name(player) == player)
 
 
 def get_args(args: Message):
@@ -54,13 +55,8 @@ async def send_sync_message(message: str):
     return True
 
 
-async def get_group_card(user_id):
+async def get_user_name(group: int, user: int):
     bot = get_bot()
-    req = await bot.call_api('get_group_member_info', group_id = config.sync_message_groups, user_id = user_id)
-    return req['card']
-
-async def get_format_name(player):
-    try: 
-        return re.findall(r'[a-zA-Z0-9_]+', player)[0]
-    except IndexError:
-        return "未知用户"
+    try: response = await bot.get_group_member_info(group_id=group, user_id=user)
+    except (NetworkError, ActionFailed): return None
+    return response.get('card')
