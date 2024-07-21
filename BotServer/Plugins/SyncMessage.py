@@ -12,7 +12,7 @@ mapping = {'record': '聊天记录', 'image': '图片', 'reply': '回复', 'face
 
 @on_message
 async def sync_message(event: GroupMessageEvent):
-    if event.group_id not in config.message_groups:
+    if (not config.sync_all_qq_message) or (event.group_id not in config.message_groups):
         return None
     plain_text = event.get_plaintext()
     for start in config.command_start:
