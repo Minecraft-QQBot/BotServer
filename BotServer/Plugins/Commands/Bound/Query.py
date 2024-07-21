@@ -26,9 +26,8 @@ async def bound_query_handler(args: list, group: int):
     if not (user := args[0]).isdigit():
         return '参数错误！绑定的 QQ 号格式错误。'
     if user_name := await get_user_name(group, int(user)):
-        return F'用户 {user} 不在此群聊！请检查 QQ 号是否正确。'
-    if user in data_manager.players:
-        return F'用户 {user_name}({user}) 没有绑定白名单！'
-    return F'用户 {user_name}({user}) 绑定的白名单为 {data_manager.players[user]}！'
-
+        if user in data_manager.players:
+            return F'用户 {user_name}({user}) 没有绑定白名单！'
+        return F'用户 {user_name}({user}) 绑定的白名单为 {data_manager.players[user]}！'
+    return F'用户 {user} 不在此群聊！请检查 QQ 号是否正确。'
     

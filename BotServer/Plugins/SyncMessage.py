@@ -34,5 +34,5 @@ async def sync_message(event: GroupMessageEvent):
         plain_texts.append(F'[{mapping.get(segment.type, "未知类型")}]')
     plain_text = ' '.join(plain_texts)
     name = data_manager.players.get(str(event.user_id), get_player_name(event.sender.card))
-    server_manager.broadcast(params)
+    server_manager.broadcast('QQ', name, plain_text)
     logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')

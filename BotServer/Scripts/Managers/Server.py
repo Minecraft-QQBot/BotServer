@@ -28,7 +28,7 @@ class ServerManager:
         logger.success('所有服务器的连接已断开！')
 
     def broadcast(self, source: str, player: str, message: str):
-        params = ({'color': config.source_name_color, 'text': F'[{source}] '}, {'color': config.qq_player_color, 'text': F'<{player}> '}, {'color': config.qq_message_color, 'text': plain_text})
+        params = ({'color': config.sync_color_source, 'text': F'[{source}] '}, {'color': config.sync_color_player, 'text': F'<{player}> '}, {'color': config.sync_color_message, 'text': message})
         self.execute(F'tellraw @a {dumps(params)}')
 
     def execute(self, command: str, server: Union[str, int] = None):
