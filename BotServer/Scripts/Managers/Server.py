@@ -26,14 +26,17 @@ class ServerManager:
             rcon.disconnect()
         logger.success('所有服务器的连接已断开！')
 
-    def broadcast(self, source: str, player: str, message: str, except_server: str = None):
-        params = ({'color': config.sync_color_source, 'text': F'[{source}] '}, {'color': config.sync_color_player, 'text': F'<{player}> '}, {'color': config.sync_color_message, 'text': message})
+    def broadcast(self, source: str, player: str = None, message: str = None, except_server: str = None):
+        params = [{'color': config.sync_color_source, 'text': F'[{source}] '}]
+        if player: params.append({'color': config.sync_color_player, 'text': F'<{player}> '})
+        if message: params.append({'color': config.sync_color_message, 'text': message})
+        params = dumps(params)
         if not except_server:
-            self.execute(F'tellraw @a {dumps(params)}')
+            self.execute(F'tellraw @a {params}')
             return None
         for name, status in self.status.items():
             if name != except_server and status:
-                self.servers[name].send_command(F'tellraw @a {dumps(params)}')
+                self.servers[name].send_command(F'tellraw @a {params}')
 
     def execute(self, command: str, server: Union[str, int] = None):
         if not server:

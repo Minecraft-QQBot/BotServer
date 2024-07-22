@@ -39,6 +39,7 @@ async def server_startup(request: Request):
         name = request.json.get('name')
         server_watcher.append_server(name, pid)
     if config.broadcast_server:
+        server_manager.broadcast(name, '服务器已开启！', except_server=name)
         if await send_sync_message(F'服务器 [{name}] 已开启，喵～'):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
@@ -72,7 +73,7 @@ async def player_info(request: Request):
         if not (await send_sync_message(F'[{name}] <{player}> {message}')):
             logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     if config.sync_message_between_servers:
-        server_manager.broadcast(name, player, message, name)
+        server_manager.broadcast(name, player, message, except_server=name)
     return Response(200, content=dumps({'success': True}))
 
 

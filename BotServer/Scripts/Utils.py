@@ -3,7 +3,7 @@ from .Config import config
 from nonebot import get_bot
 from nonebot.log import logger
 from nonebot.exception import NetworkError, ActionFailed
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, Bot
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
 from re import IGNORECASE, compile
 
