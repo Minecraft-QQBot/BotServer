@@ -63,7 +63,7 @@ class ServerManager:
         name = info.get('name')
         password, port = info.get('rcon')
         try:
-            rcon = RconConnection('127.0.0.1', port, password)
+            rcon = RconConnection('127.0.0.1', int(port), password)
             rcon.connect()
         except ConnectionRefusedError:
             logger.warning(F'连接到服务器 [{name}] 失败！')
