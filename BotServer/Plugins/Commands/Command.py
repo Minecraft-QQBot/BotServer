@@ -38,18 +38,18 @@ def command_handle(args: list):
     if len(args) <= 1:
         yield '参数错误！请检查语法是否正确。'
         return None
-    server, * command = args
+    server_flag, * command = args
     if (command := parse_command(command)):
-        server = (None if server == '*' else server)
-        if result := server_manager.execute(command, server):
-            if server:
-                yield F'服务器 [{server}] 执行命令完毕！返回值为 {result if result else "空"} 。'
+        server_flag = (None if server_flag == '*' else server_flag)
+        if result := server_manager.execute(command, server_flag):
+            if result:
+                yield F'服务器 [{server_flag}] 执行命令完毕！返回值为 {result if result else "空"} 。'
                 return None
             yield '命令已发送到所有服务器！服务器回应：'
             for name, response in result.items():
                 yield F'  [{name}] -> {response if response else "无返回值"}'
             return None
-        yield F'服务器 [{server}] 不存在，请检查编号或名称是否输入正确。'
+        yield F'服务器 [{server_flag}] 不存在，请检查编号或名称是否输入正确。'
         return None
     yield '命令已被禁止！'
 

@@ -19,12 +19,12 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     await matcher.finish(message)
 
 
-async def bound_append_handler(args: list, event: GroupMessageEvent):
+async def bound_append_handler(args: list, group: int):
     if len(args) != 2: return '参数错误！请检查语法是否正确。'
     user, player = args
     if not user.isdigit():
         return '参数错误！绑定的 QQ 号格式错误。'
-    if user_name := await get_user_name(event.group_id, int(user)):
+    if user_name := await get_user_name(group, int(user)):
         if not check_player(player):
             return '玩家名称非法！玩家名称只能包含字母、数字、下划线且长度不超过 16 个字符。'
         if user in data_manager.players:
