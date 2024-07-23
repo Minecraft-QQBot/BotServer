@@ -3,7 +3,7 @@ from .Config import config
 from nonebot import get_bot
 from nonebot.log import logger
 from nonebot.exception import NetworkError, ActionFailed
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, Bot
 
 from re import IGNORECASE, compile
 
@@ -38,12 +38,12 @@ def get_args(args: Message):
                 if arg: result.append(arg)
         elif segment.type == 'at':
             result.append(str(segment.data['qq']))
-    logger.debug(F'提取参数 {result} 。')
+    logger.debug(F'从 {args} 中提取参数 {result} 完毕。')
     return result
 
 
 async def send_sync_message(message: str):
-    try: bot = get_bot()
+    try: bot: Bot = get_bot()
     except ValueError: return False
     for group in config.message_groups:
         try: await bot.send_group_msg(group_id=group, message=message)

@@ -34,17 +34,17 @@ async def server_startup(request: Request):
     if request.json.get('token') != config.token:
         return Response(403, content=dumps({'success': False}))
     logger.info('收到服务器开启数据！尝试连接到服务器……')
+    pid = request.json.get('pid')
+    name = request.json.get('name')
+    server_watcher.append_server(name, pid)
     server_manager.connect_server(request.json)
-    if pid := request.json.get('pid'):
-        name = request.json.get('name')
-        server_watcher.append_server(name, pid)
     if config.broadcast_server:
         server_manager.broadcast(name, message='服务器已开启！', except_server=name)
         if await send_sync_message(F'服务器 [{name}] 已开启，喵～'):
-            return Response(200, content=dumps({'success': True}))
+            return Response(200, content=dumps({'success': True, 'flag': config.sync_all_game_message}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
-    return Response(200, content=dumps({'success': True, 'sync_all_message': config.sync_all_game_message}))
+    return Response(200, content=dumps({'success': True, 'flag': config.sync_all_game_message}))
 
 
 async def server_shutdown(request: Request):

@@ -1,11 +1,13 @@
 from Scripts.Config import config
-from Scripts.Managers import server_manager
 from Scripts.Utils import turn_message, rule
+from Scripts.Managers import server_manager
+from Scripts.Managers.Server import Server
 
 from nonebot import on_command
 from nonebot.log import logger
 from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+
 
 
 logger.debug('加载命令 List 完毕！')
@@ -19,7 +21,7 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     await matcher.finish(message)
 
 
-def get_players(server: str = None):
+def get_players(server: Server = None):
     if not server:
         result = server_manager.execute('list')
         for name, value in result.items():
@@ -29,7 +31,7 @@ def get_players(server: str = None):
                 continue
             result[name] = []
         return result
-    if players := server_manager.execute('list', server):
+    if players := server.execute('list'):
         players = players.strip().replace(' ', '')
         if len(players := players.split(':')) == 2:
             return players[1].split(',') if players[1] else []
@@ -61,8 +63,8 @@ def format_players(players: list):
     yield '  没有玩家在线！\n'
 
 
-def list_handler(server: str = None):
-    if not server:
+def list_handler(server_flag: str = None):
+    if not server_flag:
         player_count = 0
         if players := get_players():
             yield '====== 玩家列表 ======'
@@ -74,7 +76,7 @@ def list_handler(server: str = None):
             return None
         yield '当前没有已连接的服务器！'
         return None
-    if name := server_manager.parse_server(server):
+    if server := server_manager.get_server(server_flag):
         yield F'===== {name} 玩家列表 ====='
         players = get_players(server)
         yield from format_players(players)
