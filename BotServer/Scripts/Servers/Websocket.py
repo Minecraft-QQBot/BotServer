@@ -11,43 +11,51 @@ from nonebot.exception import WebSocketClosed
 from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 
 
-async def handle_websocket(websocket: WebSocket):
-    await websocket.accept()
+async def verify(websocket: WebSocket):
     logger.info('检测到 WebSocket 链接，正在验证身份……')
     data = loads(await websocket.receive())
-    if data.get('token') != config.token and ('name' in data):
-        websocket.send(dumps({'success': False}))
-        logger.error('身份验证失败！请检查插件配置文件是否正确。')
+    if data.get('token') != config.token and data.get('name'):
         await websocket.close()
+        logger.warning('身份验证失败！请检查插件配置文件是否正确。')
         return None
     await websocket.send(dumps({'success': True}))
-    name = data.get('name')
-    logger.success('身份验证成功！WebSocket 连接已建立。')
-    try:
-        while True:
-            response = None
-            message = loads(await websocket.receive())
-            logger.debug(F'收到来数据 {message} 。')
-            data = message.get('data')
-            action = message.get('action')
-            if action == 'send_message':
-                response = await send_message(name, data)
-            elif action == 'server_info':
-                response = await server_info(name, data)
-            elif action == 'server_startup':
-                response = await server_startup(name, data)
-            elif action == 'server_shutdown':
-                response = await server_shutdown(name, data)
-            elif action == 'player_info':
-                response = await player_info(name, data)
-            elif action == 'player_joined':
-                response = await player_joined(name, data)
-            elif action == 'player_left':
-                response = await player_left(name, data)
-            if response is not None:
-                await websocket.send(dumps(response))
-    except WebSocketClosed:
-        logger.info('WebSocket 连接已关闭！')
+    logger.success(F'身份验证成功，服务器 [{(name := data["name"])}] 已连接到！WebSocket 连接已建立。')
+    return name
+
+async def handle_websocket_minecraft(websocket: WebSocket):
+    await websocket.accept()
+    if name := await verify(websocket):
+        server_manager.append_server()
+        
+
+async def handle_websocket_bot(websocket: WebSocket):
+    await websocket.accept()
+    if name := await verify(websocket):
+        try:
+            while True:
+                response = None
+                message = loads(await websocket.receive())
+                logger.debug(F'收到来数据 {message} 。')
+                data = message.get('data')
+                action = message.get('action')
+                if action == 'send_message':
+                    response = await send_message(name, data)
+                elif action == 'server_info':
+                    response = await server_info(name, data)
+                elif action == 'server_startup':
+                    response = await server_startup(name, data)
+                elif action == 'server_shutdown':
+                    response = await server_shutdown(name, data)
+                elif action == 'player_info':
+                    response = await player_info(name, data)
+                elif action == 'player_joined':
+                    response = await player_joined(name, data)
+                elif action == 'player_left':
+                    response = await player_left(name, data)
+                if response is not None:
+                    await websocket.send(dumps(response))
+        except (ConnectionError, WebSocketClosed):
+            logger.info('WebSocket 连接已关闭！')
 
 
 async def send_message(name: str, data: dict):
@@ -145,7 +153,7 @@ async def player_left(name: str, message: dict):
 
 def setup_websocket_server():
     if isinstance((driver := get_driver()), ASGIMixin):
-        driver.setup_websocket_server(WebSocketServerSetup(URL('/minecraft/websocket'), 'minecraft', handle_websocket))
+        driver.setup_websocket_server(WebSocketServerSetup(URL('/websokcet/bot'), 'bot', handle_websocket_bot))
         logger.success('装载 WebSocket 服务器成功！')
         return None
     logger.error('装载 WebSocket 服务器失败！请检查驱动是否正确。')

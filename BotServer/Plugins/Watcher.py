@@ -39,10 +39,9 @@ async def watch_poke(event: PokeNotifyEvent):
 
 def poke_handler():
     now = datetime.now()
-    yield F'今天是 {now.strftime("%Y-%m-%d")} 星期{week_mapping[now.weekday()]}'
-    yield F'现在是北京时间 {now.strftime("%H:%M:%S")}'
+    yield F'{now.strftime("%Y-%m-%d")} 星期{week_mapping[now.weekday()]}  {now.strftime("%H:%M:%S")}'
     response = requests.get('https://v1.jinrishici.com/all.json')
     if response.status_code == 200:
         data = response.json()
-        yield F'\n  「{data["content"]}」'
-        yield F'          —— {data["author"]}《{data["origin"]}》'
+        yield F'\n「 {data["content"]}」'
+        yield F'               —— {data["author"]}《{data["origin"]}》'

@@ -1,3 +1,5 @@
+import asyncio
+
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
 
@@ -26,7 +28,8 @@ def shutdown():
     from Scripts.Managers import server_manager, data_manager
     
     data_manager.save()
-    server_manager.unload()
+    task = asyncio.create_task(server_manager.unload())
+    asyncio.run(task)
 
 
 if __name__ == '__main__':
