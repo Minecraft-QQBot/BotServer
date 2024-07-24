@@ -79,8 +79,9 @@ A: 你可以在 QQ 群内发送 `help` 指令查看机器人的帮助信息，�
 
 ## 鸣谢
 
-感谢以下人员为此插件开发提供帮助，在此特别鸣谢：
+感谢以下人员为此机器人开发提供帮助，在此特别鸣谢：
 
+- []
 - [meng877](https://github.com/meng877) 提出意见，贡献部分代码。
 - [Decent_Kook](https://github.com/AISophon) 提供测试环境，提出意见。
 - [creepebucket](https://github.com/creepebucket) 提供测试环境。

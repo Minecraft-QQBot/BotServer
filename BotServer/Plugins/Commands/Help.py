@@ -21,16 +21,6 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     await matcher.finish(message)
 
 
-def format_info(info: dict):
-    prefix = info.get('prefix', '')
-    yield F'{prefix}  +-- 用法：{info["description"]}'
-    yield F'{prefix}  +-- 语法：{info["usage"]}'
-    if parameters := info.get('parameters'):
-        yield F'{prefix}  参数说明：'
-        for parmeter, usage in parameters.items():
-            yield F'{prefix}    +-- {parmeter} — {usage}'
-
-
 def help_handler():
     yield '命令列表：'
     for name in config.command_enabled:
@@ -54,3 +44,13 @@ def detailed_handler(name: str):
                 yield from format_info(child_info)
         return None
     yield F'命令 {name} 不存在或已被禁用！'
+
+
+def format_info(info: dict):
+    prefix = info.get('prefix', '')
+    yield F'{prefix}  +-- 用法：{info["description"]}'
+    yield F'{prefix}  +-- 语法：{info["usage"]}'
+    if parameters := info.get('parameters'):
+        yield F'{prefix}  参数说明：'
+        for parmeter, usage in parameters.items():
+            yield F'{prefix}    +-- {parmeter} — {usage}'

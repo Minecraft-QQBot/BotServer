@@ -14,11 +14,10 @@ driver.register_adapter(Adapter)
 @driver.on_startup
 def startup():
     from Scripts.Servers import Websocket
+    from Scripts.Managers import data_manager
     from Scripts.ServerWatcher import server_watcher
-    from Scripts.Managers import server_manager, data_manager
 
     data_manager.load()
-    server_manager.init()
     server_watcher.start()
     Websocket.setup_websocket_server()
 

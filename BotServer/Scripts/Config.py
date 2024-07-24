@@ -33,6 +33,8 @@ class Config(BaseModel):
     sync_color_player: str = 'gray'
     sync_color_message: str = 'gray'
 
+    qq_bound_max_number: int = 1
+
 
 config: Config = get_plugin_config(Config)
 

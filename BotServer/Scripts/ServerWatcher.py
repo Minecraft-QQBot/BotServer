@@ -13,8 +13,7 @@ class ServerWatcher(Thread):
     processes: dict[str, Process] = {}
 
     def __init__(self):
-        Thread.__init__(self)
-        self.setDaemon(True)
+        Thread.__init__(self, name='ServerWatcher', daemon=True)
 
     def run(self):
         logger.info('服务器监视线程启动。')

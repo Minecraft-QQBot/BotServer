@@ -1,4 +1,4 @@
-from ..Utils import send_sync_message
+from ..Utils import send_synchronous_message
 from ..Config import config
 from ..Managers import server_manager
 from ..ServerWatcher import server_watcher
@@ -15,7 +15,7 @@ async def send_message(request: Request):
         return Response(403, content=dumps({'success': False}))
     if message := request.json.get('message'):
         logger.debug(F'发送消息到同步消息群！消息为 {message} 。')
-        if await send_sync_message(message):
+        if await send_synchronous_message(message):
             return Response(200, content=dumps({'success': True}))
     logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     return Response(500, content=dumps({'success': False}))
@@ -40,7 +40,7 @@ async def server_startup(request: Request):
     server_manager.connect_server(request.json)
     if config.broadcast_server:
         server_manager.broadcast(name, message='服务器已开启！', except_server=name)
-        if await send_sync_message(F'服务器 [{name}] 已开启，喵～'):
+        if await send_synchronous_message(F'服务器 [{name}] 已开启，喵～'):
             return Response(200, content=dumps({'success': True, 'flag': config.sync_all_game_message}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
@@ -56,7 +56,7 @@ async def server_shutdown(request: Request):
     server_watcher.remove_server(name)
     if config.broadcast_server:
         server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
-        if await send_sync_message(F'服务器 [{name}] 已关闭，呜……'):
+        if await send_synchronous_message(F'服务器 [{name}] 已关闭，呜……'):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
@@ -71,7 +71,7 @@ async def player_info(request: Request):
     message = request.json.get('message')
     logger.debug(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
     if config.sync_all_game_message:
-        if not (await send_sync_message(F'[{name}] <{player}> {message}')):
+        if not (await send_synchronous_message(F'[{name}] <{player}> {message}')):
             logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     if config.sync_message_between_servers:
         server_manager.broadcast(name, player, message, except_server=name)
@@ -91,7 +91,7 @@ async def player_joined(request: Request):
         else:
             message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
             server_manager.broadcast(name, message=F'玩家 {player} 加入了游戏，喵～', except_server=name)
-        if await send_sync_message(message):
+        if await send_synchronous_message(message):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))
@@ -112,7 +112,7 @@ async def player_left(request: Request):
         else:
             message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
             server_manager.broadcast(name, message=F'玩家 {player} 离开了游戏，呜……', except_server=name)
-        if await send_sync_message(message):
+        if await send_synchronous_message(message):
             return Response(200, content=dumps({'success': True}))
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return Response(500, content=dumps({'success': False}))

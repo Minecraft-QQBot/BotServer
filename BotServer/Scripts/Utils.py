@@ -42,17 +42,17 @@ def get_args(args: Message):
     return result
 
 
-async def send_sync_message(message: str):
+async def get_user_name(group: int, user: int):
+    bot = get_bot()
+    try: response = await bot.get_group_member_info(group_id=group, user_id=user)
+    except (NetworkError, ActionFailed): return None
+    return response.get('card')
+
+
+async def send_synchronous_message(message: str):
     try: bot: Bot = get_bot()
     except ValueError: return False
     for group in config.message_groups:
         try: await bot.send_group_msg(group_id=group, message=message)
         except (NetworkError, ActionFailed): return False
     return True
-
-
-async def get_user_name(group: int, user: int):
-    bot = get_bot()
-    try: response = await bot.get_group_member_info(group_id=group, user_id=user)
-    except (NetworkError, ActionFailed): return None
-    return response.get('card')

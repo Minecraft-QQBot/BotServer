@@ -3,11 +3,12 @@ from Scripts.Utils import turn_message, rule
 from Scripts.Managers import server_manager
 from Scripts.Managers.Server import Server
 
+from typing import Union
+
 from nonebot import on_command
 from nonebot.log import logger
 from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
-
 
 
 logger.debug('加载命令 List 完毕！')
@@ -17,25 +18,31 @@ matcher = on_command('list', force_whitespace=True, rule=rule)
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     server = args if (args := args.extract_plain_text().strip()) else None
-    message = turn_message(list_handler(server))
+    players = await get_players(server)
+    message = turn_message(list_handler(players))
     await matcher.finish(message)
 
 
-def get_players(server: Server = None):
-    if not server:
-        result = server_manager.execute('list')
-        for name, value in result.items():
-            players = value.strip().replace(' ', '')
-            if len(players := players.split(':')) == 2:
-                result[name] = players[1].split(',') if players[1] else []
-                continue
-            result[name] = []
-        return result
-    if players := server.execute('list'):
-        players = players.strip().replace(' ', '')
-        if len(players := players.split(':')) == 2:
-            return players[1].split(',') if players[1] else []
-        return []
+def list_handler(players: Union[dict, list]):
+    if isinstance(players, dict):
+        player_count = 0
+        if players:
+            yield '====== 玩家列表 ======'
+            for name, value in players.items():
+                player_count += len(value)
+                yield F' -------- {name} --------'
+                yield from format_players(value)
+            yield F'当前在线人数共 {player_count} 人'
+            return None
+        yield '当前没有已连接的服务器！'
+        return None
+    if server := players:
+        yield F'===== {name} 玩家列表 ====='
+        players = get_players(server)
+        yield from format_players(players)
+        yield F'当前在线人数共 {len(players)} 人'
+        return None
+    yield F'没有找到已连接的 [{server}] 服务器！请检查编号或名称是否输入正确。'
 
 
 def format_players(players: list):
@@ -63,23 +70,18 @@ def format_players(players: list):
     yield '  没有玩家在线！\n'
 
 
-def list_handler(server_flag: str = None):
-    if not server_flag:
-        player_count = 0
-        if players := get_players():
-            yield '====== 玩家列表 ======'
-            for name, value in players.items():
-                player_count += len(value)
-                yield F' -------- {name} --------'
-                yield from format_players(value)
-            yield F'当前在线人数共 {player_count} 人'
-            return None
-        yield '当前没有已连接的服务器！'
-        return None
-    if server := server_manager.get_server(server_flag):
-        yield F'===== {name} 玩家列表 ====='
-        players = get_players(server)
-        yield from format_players(players)
-        yield F'当前在线人数共 {len(players)} 人'
-        return None
-    yield F'没有找到已连接的 [{server}] 服务器！请检查编号或名称是否输入正确。'
+async def get_players(server: str = None):
+    if not server:
+        result = await server_manager.execute('list')
+        for name, value in result.items():
+            players = value.strip().replace(' ', '')
+            if len(players := players.split(':')) == 2:
+                result[name] = players[1].split(',') if players[1] else []
+                continue
+            result[name] = []
+        return result
+    if players := await server_manager.execute('list', server):
+        players = players.strip().replace(' ', '')
+        if len(players := players.split(':')) == 2:
+            return players[1].split(',') if players[1] else []
+        return []
