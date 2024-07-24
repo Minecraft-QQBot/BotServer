@@ -9,32 +9,26 @@ from matplotlib.font_manager import findSystemFonts, FontProperties
 from nonebot import on_command
 from nonebot.log import logger
 from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, Message
+from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 
 
-font = None
+for font_path in findSystemFonts():
+    if 'KAITI' in font_path.upper():
+        logger.success(F'自动选择系统字体 {font_path} 设为图表字体。')
+        font = FontProperties(fname=font_path, size=15)
+
 matcher = on_command('server status', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
 @matcher.handle()
-async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
-    global font
-    if not font:
-        font = find_font()
+async def handle_group(event: MessageEvent, args: Message = CommandArg()):
     if args := args.extract_plain_text().strip():
-        if name := server_manager.parse_server(args):
-            message = turn_message(detailed_handler(name))
+        if server := server_manager.get_server(args):
+            message = turn_message(detailed_handler(server.name))
             await matcher.finish(message)
         await matcher.finish(F'未找到服务器 [{args}]，请检查输入是否正确！或是因为服务器的 PID 没有被记录，请重启服务器后尝试。')
     message = turn_message(status_handler())
     await matcher.finish(message)
-
-
-def find_font():
-    for font_path in findSystemFonts():
-        if 'KAITI' in font_path.upper():
-            logger.success(F'自动选择系统字体 {font_path} 设为图表字体。')
-            return FontProperties(fname=font_path, size=15)
 
 
 def draw_chart(data: dict):
@@ -87,8 +81,9 @@ def status_handler():
     yield '当前没有被监视的服务器！'
 
 
-def detailed_handler(server: str):
-    if name := server_manager.parse_server(server):
+def detailed_handler(server_flag: str):
+    if server := server_manager.get_server(server_flag):
+        name = server.name
         if data := server_watcher.get_data(name):
             cpu, ram = data
             yield F'服务器 [{name}] 的详细信息：'

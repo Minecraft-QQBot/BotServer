@@ -18,14 +18,24 @@ matcher = on_command('command', force_whitespace=True, rule=rule)
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if str(event.user_id) not in config.superusers:
         await matcher.finish('你没有权限执行此命令！')
-    result = await parse_args(get_args(args))
+    result = await execute_command(get_args(args))
     if isinstance(result, str):
         await matcher.finish(result)
-    message = turn_message(format_response(* result))
+    message = turn_message(command_handler(* result))
     await matcher.finish(message)
 
 
-async def parse_args(args: list):
+def command_handler(server_flag: str, response: Union[dict, str]):
+    if isinstance(response, str):
+        yield F'服务器 [{server_flag}] 执行命令完毕！返回值为 {response if response else "空"} 。'
+        return None
+    yield '命令已发送到所有服务器！服务器回应：'
+    for name, response in response.items():
+        yield F'  [{name}] -> {response if response else "无返回值"}'
+    return None
+
+
+async def execute_command(args: list):
     if len(args) <= 1:
         return '参数不正确！请查看语法后再试。'
     server_flag, * command = args
@@ -42,14 +52,3 @@ async def parse_args(args: list):
     if (response := await server_manager.execute(command, server_flag)) is not None:
         return server_flag, response
     return F'服务器 [{server_flag}] 不存在！请检查插件配置。'
-    
-
-def format_response(server_flag: str, response: Union[dict, str]):
-    if isinstance(response, str):
-        yield F'服务器 [{server_flag}] 执行命令完毕！返回值为 {response if response else "空"} 。'
-        return None
-    yield '命令已发送到所有服务器！服务器回应：'
-    for name, response in response.items():
-        yield F'  [{name}] -> {response if response else "无返回值"}'
-    return None
-    
