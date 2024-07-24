@@ -51,6 +51,9 @@ class ServerManager:
     server_numbers: list[str] = []
     servers: dict[str, Server] = []
 
+    def check_online(self):
+        return any(server.status for server in self.servers.values())
+
     def append_server(self, name: str, websocket: WebSocket):
         self.servers[name] = Server(name, websocket)
 

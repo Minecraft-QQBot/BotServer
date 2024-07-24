@@ -21,6 +21,6 @@ def bound_list_handler():
     if data_manager.players:
         yield '白名单列表：'
         for user, player in data_manager.players.items():
-            yield F'  {user} -> {player}'
+            yield F'  {user} -> {"、".join(player)}'
         return None
     yield '当前没有绑定任何玩家！'

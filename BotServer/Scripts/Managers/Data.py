@@ -65,10 +65,8 @@ class DataManager:
             if player in bounded_players:
                 return True
         return False
-
+    
     def append_player(self, user: str, player: str):
-        if self.check_player_occupied(player):
-            return False
         if user not in self.players:
             self.players[user] = [player]
             self.save()
@@ -79,11 +77,15 @@ class DataManager:
             return True
         return False
 
-    def remove_player(self, user: str, player: str):
-        if user in self.players and player in self.players[user]:
+    def remove_player(self, user: str, player: str = None):
+        if not player:
+            bounded = self.players.pop(user, None)
+            self.save()
+            return bounded
+        if player in self.players[user]:
             self.players[user].remove(player)
             self.save()
-            return True
+            return player
         return False
             
 
