@@ -29,7 +29,7 @@ class Server:
             response = loads(await self.websocket.receive())
             if response.get('success'):
                 logger.debug(F'已收到服务器 [{self.name}] 的回应 {response}，数据发送成功！')
-                return response
+                return response.get('data')
         except (WebSocketClosed, ConnectionError):
             self.status = False
             self.websocket = None
@@ -38,7 +38,7 @@ class Server:
 
     async def send_command(self, command: str):
         if response := await self.send_data('command', {'command': command}):
-            return response.get('data')
+            return response.get('response', {})
 
     async def send_message(self, message: str):
         return await self.send_data('message', {'message': message})

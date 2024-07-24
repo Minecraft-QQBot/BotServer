@@ -31,9 +31,8 @@ async def bound_append_handler(args: list, group: int):
             return F'用户 {user_name}({user}) 已经绑定了白名单！请先解绑后尝试。'
         if player in data_manager.players.values():
             return '此玩家名称已经绑定过了，请换一个名称！'
-        if server_manager.execute(F'{config.whitelist_command} add {player}'):
-            data_manager.players[user] = player
-            data_manager.save()
+        if await server_manager.execute(F'{config.whitelist_command} add {player}'):
+            data_manager.append_player(user, player)
             return F'用户 {user_name}({user}) 已绑定白名单到 {player} 玩家。'
         return '当前没有已链接的服务器，绑定失败！请连接后再试。'
     return F'用户 {user} 不在此群聊！请检查 QQ 号是否正确。'
