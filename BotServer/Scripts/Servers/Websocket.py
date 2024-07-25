@@ -14,14 +14,13 @@ from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 
 async def verify(websocket: WebSocket):
     logger.info('检测到 WebSocket 链接，正在验证身份……')
-    data = loads(await websocket.receive())
-    if data.get('token') != config.token and data.get('name'):
-        await websocket.send({'success': False})
+    name = websocket.request.headers.get('name')
+    token = websocket.request.headers.get('token')
+    if token != config.token and name:
         await websocket.close()
         logger.warning('身份验证失败！请检查插件配置文件是否正确。')
         return None
-    await websocket.send(dumps({'success': True}))
-    logger.success(F'身份验证成功，服务器 [{(name := data["name"])}] 已连接到！连接已建立。')
+    logger.success(F'身份验证成功，服务器 [{(name)}] 已连接到！连接已建立。')
     return name
 
 
@@ -42,7 +41,10 @@ async def handle_websocket_bot(websocket: WebSocket):
         try:
             while True:
                 response = None
-                receive_message = loads(await websocket.receive())
+                receive_message = await websocket.receive()
+                if receive_message == 'Ok':
+                    continue
+                receive_message = loads(receive_message)
                 logger.debug(F'收到来数据 {receive_message} 。')
                 data = receive_message.get('data')
                 type = receive_message.get('type')
