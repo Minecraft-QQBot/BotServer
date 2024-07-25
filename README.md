@@ -33,7 +33,7 @@
 在命令行内输入以下指令安装依赖：
 
 ```bash
-pip3 install "nonebot2[fastapi]>=2.3.1", "nonebot-adapter-onebot>=2.4.3", "mcdreforged>=2.12.3"
+pip3 install "nonebot2[fastapi]>=2.3.1", "nonebot-adapter-onebot>=2.4.3"
 ```
 
 以上是运行本机器所必须的。此外，您可以自行选择是否安装其他依赖库，一些拓展的指令需要额外安装。不安装也仅会影响那部分指令的使用。
@@ -77,11 +77,14 @@ Q: 如何使用指令？
 
 A: 你可以在 QQ 群内发送 `help` 指令查看机器人的帮助信息，也可以用 `help <指令名称>` 查看具体指令的帮助信息。
 
+Q: 为什么我发送的指令没有响应？
+
+A: 请检查你是否加上了指令前缀（即 .env 内的 COMMAND_START）。
+
 ## 鸣谢
 
 感谢以下人员为此机器人开发提供帮助，在此特别鸣谢：
 
-- []
 - [meng877](https://github.com/meng877) 提出意见，贡献部分代码。
 - [Decent_Kook](https://github.com/AISophon) 提供测试环境，提出意见。
 - [creepebucket](https://github.com/creepebucket) 提供测试环境。
