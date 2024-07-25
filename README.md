@@ -23,7 +23,7 @@
 
 本机器人可通过各种方式与 Minecraft 服务器进行交互，包括：
 
-- [Bukkit](https://www.github.com/Minecraft-QQBot/Bukkit) 插件
+- [Bukkit](https://www.github.com/Minecraft-QQBot/Bukkit) 插件（此插件由于开发者不开源，暂不提供）
 - [McdReforged](https://www.github.com/Minecraft-QQBot/McdReforged) 插件
 
 请前往你需要插件的仓库按照说明进行安装。

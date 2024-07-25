@@ -50,7 +50,7 @@ async def get_user_name(group: int, user: int):
 
 
 async def send_synchronous_message(message: str):
-    try: bot: Bot = get_bot()
+    try: bot = get_bot()
     except ValueError: return False
     for group in config.message_groups:
         try: await bot.send_group_msg(group_id=group, message=message)

@@ -1,4 +1,5 @@
 from ..Config import config
+from .Data import data_manager
 
 from typing import Union
 from json import dumps, loads
@@ -48,8 +49,7 @@ class Server:
 
 
 class ServerManager:
-    server_numbers: list[str] = []
-    servers: dict[str, Server] = []
+    servers: dict[str, Server] = {}
 
     def check_online(self):
         return any(server.status for server in self.servers.values())
@@ -60,9 +60,9 @@ class ServerManager:
     def get_server(self, server_flag: Union[str, int]):
         if isinstance(server_flag, int) or server_flag.isdigit():
             index = int(server_flag)
-            if index > len(self.server_numbers):
+            if index > len(data_manager.servers):
                 return None
-            server_flag = self.server_numbers[index - 1]
+            server_flag = data_manager.servers[index - 1]
         server = self.servers.get(server_flag)
         if isinstance(server, Server) and server.status:
             return server
@@ -80,7 +80,7 @@ class ServerManager:
     async def execute(self, command: str, server_flag: Union[str, int] = None):
         if not server_flag:
             logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
-            return {name: server.send_command(command) for name, server in self.servers.items() if server.status}
+            return {name: await server.send_command(command) for name, server in self.servers.items() if server.status}
         if server := self.get_server(server_flag):
             logger.debug(F'执行命令 [{command}] 到服务器 [{server.name}]。')
             return await server.send_command(command)

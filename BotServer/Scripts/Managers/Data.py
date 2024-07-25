@@ -71,6 +71,10 @@ class DataManager:
             self.players[user] = [player]
             self.save()
             return True
+        if config.qq_bound_max_number == 0:
+            self.players[user].append(player)
+            self.save()
+            return True
         if len(self.players[user]) < config.qq_bound_max_number:
             self.players[user].append(player)
             self.save()
@@ -84,6 +88,8 @@ class DataManager:
             return bounded
         if player in self.players[user]:
             self.players[user].remove(player)
+            if not self.players[user]:
+                self.players.pop(user)
             self.save()
             return player
         return False
