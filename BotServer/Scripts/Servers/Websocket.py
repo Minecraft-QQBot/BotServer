@@ -42,8 +42,6 @@ async def handle_websocket_bot(websocket: WebSocket):
             while True:
                 response = None
                 receive_message = await websocket.receive()
-                if receive_message == 'Ok':
-                    continue
                 receive_message = loads(receive_message)
                 logger.debug(F'收到来数据 {receive_message} 。')
                 data = receive_message.get('data')
