@@ -17,17 +17,17 @@
 
 更多功能还在探索中……
 
-> [!CAUTION]
-> **`Data` 文件夹下的 `Server.json` 文件是服务器数据文件，储存着 Minecraft 服务器信息，包括 Rcon 端口和密码等重要数据。请妥善保管此文件以免有心人利用入侵服务器。若有泄露，请立即修改 Rcon 密码并重新启动服务器！如若服务器因此被入侵造成的损失，本作者概不负责。**
-
 ## 安装插件
 
 本机器人可通过各种方式与 Minecraft 服务器进行交互，包括：
 
-- [Bukkit](https://www.github.com/Minecraft-QQBot/Bukkit) 插件（此插件由于开发者不开源，暂不提供）
+- [Fabric](https://www.github.com/Minecraft-QQBot/Fabric) 模组（也在开发中）
+- [Spigot](https://www.github.com/Minecraft-QQBot/Spigot) 插件（还在开发中）
 - [McdReforged](https://www.github.com/Minecraft-QQBot/McdReforged) 插件
 
-请前往你需要插件的仓库按照说明进行安装。
+请前往你需要插件的仓库按照说明进行安装。请注意，不同的插件所提供的功能可能是不一样的，您可根据需求选择安装。
+
+如你有能力开发其他的对接插件，欢迎联系并加入我们！
 
 ## 安装依赖
 
@@ -68,9 +68,6 @@ pip3 install matplotlib
 ```
 
 即代表机器人**连接成功**，你可以向群内发送`help`指令，若机器人正常回复，那么恭喜你已经安装成功了。若无反应，请检查配置是否正确，或联系作者寻求帮助。开始使用你的机器人吧！
-
-> [!TIP]
-> 请注意，若第一次启动机器人，请确机器人启动然后再启动 Minecraft 服务器，以保证机器人能够连接到 Minecraft 服务器。
 
 ## 帮助
 
