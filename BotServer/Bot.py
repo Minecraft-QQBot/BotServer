@@ -27,8 +27,7 @@ def shutdown():
     from Scripts.Managers import server_manager, data_manager
     
     data_manager.save()
-    task = asyncio.create_task(server_manager.unload())
-    asyncio.run(task)
+    asyncio.run(server_manager.unload())
 
 
 if __name__ == '__main__':

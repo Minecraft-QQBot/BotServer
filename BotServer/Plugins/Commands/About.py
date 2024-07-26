@@ -1,0 +1,22 @@
+from Scripts.Managers import data_manager
+from Scripts.Utils import turn_message, rule
+
+from nonebot import on_command
+from nonebot.log import logger
+from nonebot.adapters.onebot.v11 import GroupMessageEvent
+
+
+logger.debug('加载命令 About 完毕！')
+matcher = on_command('about', force_whitespace=True, rule=rule)
+
+
+@matcher.handle()
+async def handle_group(event: GroupMessageEvent):
+    message = turn_message(about_handler())
+    await matcher.finish(message, at_sender=True)
+
+
+def about_handler():
+    yield F'当前版本：{data_manager.version}'
+    yield '项目地址：https://github.com/Minecraft-QQBot\n'
+    yield '欢迎加入 QQ 群 962802248 交流，对这个项目感兴趣不妨点个 Star 吧！'

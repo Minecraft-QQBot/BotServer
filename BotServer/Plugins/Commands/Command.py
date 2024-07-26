@@ -39,7 +39,7 @@ async def execute_command(args: list):
     if len(args) <= 1:
         return '参数不正确！请查看语法后再试。'
     server_flag, * command = args
-    command = ' '.join(server_flag)
+    command = ' '.join(command)
     if config.command_minecraft_whitelist:
         for enabled_command in config.command_minecraft_whitelist:
             if command.startswith(enabled_command):

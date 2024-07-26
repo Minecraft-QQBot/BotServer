@@ -3,6 +3,7 @@ from Scripts.Managers import server_manager
 from Scripts.ServerWatcher import server_watcher
 
 from io import BytesIO
+from os.path import exists
 from matplotlib import pyplot
 from matplotlib.font_manager import findSystemFonts, FontProperties
 
@@ -12,11 +13,18 @@ from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 
 
-for font_path in findSystemFonts():
-    if 'KAITI' in font_path.upper():
-        logger.success(F'自动选择系统字体 {font_path} 设为图表字体。')
-        font = FontProperties(fname=font_path, size=15)
+def choose_font():
+    for type in ('ttf', 'ttc'):
+        if exists(F'./Font.{type}'):
+            logger.info(F'已找到用户设置字体文件，将自动选择该字体作为图表字体。')
+            return FontProperties(fname=F'./Font.{type}', size=15)
+    for font_path in findSystemFonts():
+        if 'KAITI' in font_path.upper():
+            logger.success(F'自动选择系统字体 {font_path} 设为图表字体。')
+            return FontProperties(fname=font_path, size=15)
 
+
+font = choose_font()
 matcher = on_command('server status', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
@@ -75,7 +83,9 @@ def status_handler():
             yield F'————— {name} —————'
             yield F'  内存使用率：{ram:.1f}%'
             yield F'  CPU 使用率：{cpu:.1f}%'
-        yield '所有服务器的占用柱状图：'
+        if font is None:
+            yield '\n由于系统中没有找到可用的中文字体，无法显示中文标题。请查看文档自行配置！'
+        yield '\n所有服务器的占用柱状图：'
         yield str(MessageSegment.image(draw_chart(data)))
         return None
     yield '当前没有被监视的服务器！'
@@ -90,10 +100,10 @@ def detailed_handler(server_flag: str):
             yield F'  内存使用率：{ram:.1f}%'
             yield F'  CPU 使用率：{cpu:.1f}%'
             if image := draw_history_chart(name):
-                yield '服务器的占用历史记录：'
+                yield '\n服务器的占用历史记录：'
                 yield str(MessageSegment.image(image))
                 return None
-            yield '未找到服务器的占用历史记录，无法绘制图表。请稍后再试！'
+            yield '\n未找到服务器的占用历史记录，无法绘制图表。请稍后再试！'
             return None
         yield F'服务器 [{name}] 未处于被监视状态！请重启服务器后尝试。'
         return None

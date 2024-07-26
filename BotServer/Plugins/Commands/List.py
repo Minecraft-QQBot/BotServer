@@ -1,7 +1,6 @@
 from Scripts.Config import config
 from Scripts.Utils import turn_message, rule
 from Scripts.Managers import server_manager
-from Scripts.Managers.Server import Server
 
 from typing import Union
 
@@ -57,14 +56,14 @@ def format_players(players: list):
         yield '  ———— 玩家 ————'
         if not real_players:
             real_players = '没有玩家在线！'
-        yield ('    ' + real_players)
+        yield '    ' + real_players
         yield '  ———— 假人 ————'
         if not fake_players:
             fake_players = '没有假人在线！'
-        yield ('    ' + fake_players + '\n')
+        yield '    ' + fake_players + '\n'
         return None
     if players:
-        yield ('\n    '.join(players) + '\n')
+        yield '\n    '.join(players) + '\n'
         return None
     yield '  没有玩家在线！\n'
 

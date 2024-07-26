@@ -10,6 +10,10 @@
       "message": "要发送的消息。"
     }
   },
+  "about": {
+    "usage": "about",
+    "description": "查看关于本机器人的信息。"
+  },
   "server": {
     "usage": "server",
     "description": "查看当前所有服务器的状态和编号。",

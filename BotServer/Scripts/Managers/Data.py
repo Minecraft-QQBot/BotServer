@@ -7,14 +7,16 @@ from nonebot.log import logger
 
 
 class DataManager:
-    servers: list[str] = []
-    players: dict[str, list] = {}
+    version: str = None
+
+    servers: list = []
+    players: dict = {}
     commands: dict = {}
 
     data_dir = Path('./Data/')
 
     def load(self):
-        self.load_command_info()
+        self.load_bot_data()
         logger.info('加载数据文件……')
         if not self.data_dir.exists():
             logger.warning('数据文件目录不存在，正在创建数据目录……')
@@ -31,15 +33,19 @@ class DataManager:
         logger.warning('服务器信息文件不存在，正在创建服务器信息文件……')
         self.save()
 
-    def load_command_info(self):
-        logger.debug('正在加载命令信息……')
-        commands_path = Path('./Plugins/Commands.json')
-        if not commands_path.exists():
-            logger.error('命令信息文件不存在，请重新安装后再试！')
+    def load_bot_data(self):
+        logger.debug('正在加载机器人数据……')
+        config_path = Path('./Config/')
+        version_path = (config_path / 'Version.json')
+        commands_path = (config_path / 'Commands.json')
+        if not commands_path.exists() or not version_path.exists():
+            logger.error('加载机器人数据失败，请重新安装后再试！')
             exit(1)
         with commands_path.open(encoding='Utf-8', mode='r') as file:
             self.commands = load(file)
-        logger.success('加载命令信息完毕！')
+        with version_path.open(encoding='Utf-8', mode='r') as file:
+            self.version = load(file)['version']
+        logger.success('加载正在加载机器人数据完毕！')
 
     def save(self):
         logger.debug('正在保存数据文件……')
