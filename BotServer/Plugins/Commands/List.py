@@ -9,7 +9,6 @@ from nonebot.log import logger
 from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
-
 logger.debug('加载命令 List 完毕！')
 matcher = on_command('list', force_whitespace=True, rule=rule)
 
@@ -18,7 +17,10 @@ matcher = on_command('list', force_whitespace=True, rule=rule)
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     server = args if (args := args.extract_plain_text().strip()) else None
     result = await get_players(server)
-    message = turn_message(list_handler(* result))
+    if isinstance(result, dict):
+        message = turn_message(list_handler(result))
+        await matcher.finish(message)
+    message = turn_message(list_handler(*result))
     await matcher.finish(message)
 
 
@@ -81,5 +83,5 @@ async def get_players(server: str = None):
     if players := await server_manager.execute('list', server):
         players = players.strip().replace(' ', '')
         if len(players := players.split(':')) == 2:
-            return players[1].split(',') if players[1] else [], server
+            return (players[1].split(',') if players[1] else []), server
         return []
