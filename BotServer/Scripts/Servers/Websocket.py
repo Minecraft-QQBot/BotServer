@@ -102,7 +102,7 @@ async def server_startup(name: str, data: dict):
 async def server_shutdown(name: str, data: dict):
     logger.info('收到服务器关闭信息！正在断开连接……')
     server_watcher.remove_server(name)
-    server_manager.disconnect_server(name)
+    await server_manager.disconnect_server(name)
     if config.broadcast_server:
         await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
         if await send_synchronous_message(F'服务器 [{name}] 已关闭，呜……'):
