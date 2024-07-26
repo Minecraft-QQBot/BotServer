@@ -14,14 +14,15 @@ from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 
 async def verify(websocket: WebSocket):
     logger.info('检测到 WebSocket 链接，正在验证身份……')
-    name = websocket.request.headers.get('name')
-    token = websocket.request.headers.get('token')
-    if token != config.token and name:
-        await websocket.close()
-        logger.warning('身份验证失败！请检查插件配置文件是否正确。')
-        return None
-    logger.success(F'身份验证成功，服务器 [{(name)}] 已连接到！连接已建立。')
-    return name
+    if info := websocket.request.headers.get('info'):
+        info = loads(info)
+        name = info.get('name')
+        if info.get('token') != config.token or (not name):
+            await websocket.close()
+            logger.warning('身份验证失败！请检查插件配置文件是否正确。')
+            return None
+        logger.success(F'身份验证成功，服务器 [{(name)}] 已连接到！连接已建立。')
+        return name
 
 
 async def handle_websocket_minecraft(websocket: WebSocket):
@@ -90,7 +91,7 @@ async def server_startup(name: str, data: dict):
     data_manager.append_server(name)
     server_watcher.append_server(name, pid)
     if config.broadcast_server:
-        server_manager.broadcast(name, message='服务器已开启！', except_server=name)
+        await server_manager.broadcast(name, message='服务器已开启！', except_server=name)
         if await send_synchronous_message(F'服务器 [{name}] 已开启，喵～'):
             return {'flag': config.sync_all_game_message}
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
@@ -100,11 +101,10 @@ async def server_startup(name: str, data: dict):
 
 async def server_shutdown(name: str, data: dict):
     logger.info('收到服务器关闭信息！正在断开连接……')
-    name = data.get('name')
     server_watcher.remove_server(name)
     server_manager.disconnect_server(name)
     if config.broadcast_server:
-        server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
+        await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
         if await send_synchronous_message(F'服务器 [{name}] 已关闭，呜……'):
             return {}
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
@@ -113,7 +113,6 @@ async def server_shutdown(name: str, data: dict):
 
 
 async def player_info(name: str, data: dict):
-    name = data.get('name')
     player = data.get('player')
     message = data.get('message')
     logger.debug(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
@@ -121,7 +120,7 @@ async def player_info(name: str, data: dict):
         if not (await send_synchronous_message(F'[{name}] <{player}> {message}')):
             logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     if config.sync_message_between_servers:
-        server_manager.broadcast(name, player, message, except_server=name)
+        await server_manager.broadcast(name, player, message, except_server=name)
     return {}
 
 
@@ -136,7 +135,7 @@ async def player_joined(name: str, data: dict):
             if config.sync_message_between_servers:
                 server_message = F'机器人 {player} 加入了游戏。'
         if config.sync_message_between_servers:
-            server_manager.broadcast(name, message=server_message, except_server=name)
+            await server_manager.broadcast(name, message=server_message, except_server=name)
         if await send_synchronous_message(message):
             return {}
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
@@ -154,7 +153,7 @@ async def player_left(name: str, message: dict):
             server_message = F'机器人 {player} 离开了游戏。'
             message = F'机器人 {player} 离开了 [{name}] 服务器。'
         if config.sync_message_between_servers:
-            server_manager.broadcast(name, message=server_message, except_server=name)
+            await server_manager.broadcast(name, message=server_message, except_server=name)
         if await send_synchronous_message(message):
             return {}
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
