@@ -1,7 +1,7 @@
+from nonebot.log import logger
+
 from .Base import *
 from .Remove import *
-
-from nonebot.log import logger
 
 logger.debug('加载命令 Server 完毕！')
 

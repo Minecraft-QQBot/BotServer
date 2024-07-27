@@ -1,9 +1,8 @@
-from Scripts.Utils import turn_message, rule
-from Scripts.Managers import server_manager, data_manager
-
 from nonebot import on_command
 from nonebot.adapters.onebot.v11 import MessageEvent
 
+from Scripts.Managers import server_manager, data_manager
+from Scripts.Utils import turn_message, rule
 
 matcher = on_command('server', force_whitespace=True, priority=10, rule=rule)
 

@@ -1,14 +1,13 @@
-from Scripts.Config import config
-from Scripts.Managers import server_manager
-from Scripts.Utils import turn_message, get_args, rule
-
 from typing import Union
 
 from nonebot import on_command
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 
+from Scripts.Config import config
+from Scripts.Managers import server_manager
+from Scripts.Utils import turn_message, get_args, rule
 
 logger.debug('命令 Command 加载完毕！')
 matcher = on_command('command', force_whitespace=True, rule=rule)

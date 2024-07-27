@@ -1,13 +1,13 @@
-from .Config import config
+import binascii
+from base64 import b64encode, b64decode
+from re import IGNORECASE, compile
 
 from nonebot import get_bot
-from nonebot.log import logger
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.exception import NetworkError, ActionFailed
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, Bot
+from nonebot.log import logger
 
-import binascii
-from re import IGNORECASE, compile
-from base64 import b64encode, b64decode
+from .Config import config
 
 regex = compile(R'[A-Z0-9_]+', IGNORECASE)
 

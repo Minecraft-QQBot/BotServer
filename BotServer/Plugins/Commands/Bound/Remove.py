@@ -1,13 +1,12 @@
-from Scripts.Config import config
-from Scripts.Utils import get_user_name, get_args, rule
-from Scripts.Managers import data_manager, server_manager
-
 import asyncio
 
 from nonebot import on_command
-from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+from nonebot.params import CommandArg
 
+from Scripts.Config import config
+from Scripts.Managers import data_manager, server_manager
+from Scripts.Utils import get_user_name, get_args, rule
 
 async_look = asyncio.Lock()
 matcher = on_command('bound remove', force_whitespace=True, block=True, priority=5, rule=rule)

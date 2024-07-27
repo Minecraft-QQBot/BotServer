@@ -1,13 +1,12 @@
-from Scripts.Config import config
-from Scripts.Utils import check_player, rule
-from Scripts.Managers import data_manager, server_manager
-
 import asyncio
 
 from nonebot import on_command
-from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+from nonebot.params import CommandArg
 
+from Scripts.Config import config
+from Scripts.Managers import data_manager, server_manager
+from Scripts.Utils import check_player, rule
 
 async_lock = asyncio.Lock()
 matcher = on_command('bound', force_whitespace=True, priority=10, rule=rule)

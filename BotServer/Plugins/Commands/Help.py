@@ -1,12 +1,11 @@
+from nonebot import on_command
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+from nonebot.log import logger
+from nonebot.params import CommandArg
+
 from Scripts.Config import config
 from Scripts.Managers import data_manager
 from Scripts.Utils import turn_message, rule
-
-from nonebot import on_command
-from nonebot.log import logger
-from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
-
 
 logger.debug('加载命令 Help 完毕！')
 matcher = on_command('help', force_whitespace=True, rule=rule)

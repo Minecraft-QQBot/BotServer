@@ -1,16 +1,16 @@
-from Scripts.Utils import turn_message, rule
-from Scripts.Managers import server_manager
-from Scripts.ServerWatcher import server_watcher
-
 from io import BytesIO
 from os.path import exists
+
 from matplotlib import pyplot
 from matplotlib.font_manager import findSystemFonts, FontProperties
-
 from nonebot import on_command
+from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
+
+from Scripts.Managers import server_manager
+from Scripts.ServerWatcher import server_watcher
+from Scripts.Utils import turn_message, rule
 
 
 def choose_font():

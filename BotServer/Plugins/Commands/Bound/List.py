@@ -1,10 +1,9 @@
-from Scripts.Config import config
-from Scripts.Managers import data_manager
-from Scripts.Utils import turn_message, rule
-
 from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent
 
+from Scripts.Config import config
+from Scripts.Managers import data_manager
+from Scripts.Utils import turn_message, rule
 
 matcher = on_command('bound list', force_whitespace=True, block=True, priority=5, rule=rule)
 

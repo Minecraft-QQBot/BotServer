@@ -1,11 +1,10 @@
-from Scripts.Utils import rule
+from nonebot import on_command
+from nonebot.adapters.onebot.v11 import MessageEvent, Message
+from nonebot.params import CommandArg
+
 from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
-
-from nonebot import on_command
-from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import MessageEvent, Message
-
+from Scripts.Utils import rule
 
 matcher = on_command('server remove', force_whitespace=True, block=True, priority=5, rule=rule)
 

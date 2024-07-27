@@ -1,10 +1,10 @@
-from .Config import config
-
-from time import sleep
-from psutil import Process
 from threading import Thread
+from time import sleep
 
 from nonebot.log import logger
+from psutil import Process
+
+from .Config import config
 
 
 class ServerWatcher(Thread):

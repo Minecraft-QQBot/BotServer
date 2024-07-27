@@ -1,11 +1,9 @@
-from Scripts.Config import config
+from Scripts.Managers import data_manager
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+from nonebot.params import CommandArg
+
 from Scripts.Managers import data_manager
 from Scripts.Utils import get_user_name, get_args, rule
-
-from nonebot import on_command
-from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
-
 
 matcher = on_command('bound query', force_whitespace=True, block=True, priority=5, rule=rule)
 

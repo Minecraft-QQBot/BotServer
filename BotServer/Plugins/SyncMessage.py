@@ -1,11 +1,10 @@
+from nonebot import on_message
+from nonebot.adapters.onebot.v11 import GroupMessageEvent
+from nonebot.log import logger
+
 from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
-
-from nonebot import on_message
-from nonebot.log import logger
-from nonebot.adapters.onebot.v11 import GroupMessageEvent
 from Scripts.Utils import get_player_name, get_user_name
-
 
 mapping = {'record': '聊天记录', 'image': '图片', 'reply': '回复', 'face': '表情', 'file': '文件'}
 

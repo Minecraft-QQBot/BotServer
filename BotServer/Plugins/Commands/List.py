@@ -1,13 +1,13 @@
-from Scripts.Config import config
-from Scripts.Utils import turn_message, rule
-from Scripts.Managers import server_manager
-
 from typing import Union
 
 from nonebot import on_command
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+
+from Scripts.Config import config
+from Scripts.Managers import server_manager
+from Scripts.Utils import turn_message, rule
 
 logger.debug('加载命令 List 完毕！')
 matcher = on_command('list', force_whitespace=True, rule=rule)

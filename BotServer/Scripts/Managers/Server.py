@@ -1,13 +1,13 @@
-from ..Config import config
-from ..Utils import decode, encode
-from .Data import data_manager
+from json import dumps, loads
+from typing import Union
 
-from nonebot.log import logger
 from nonebot.drivers import WebSocket
 from nonebot.exception import WebSocketClosed
+from nonebot.log import logger
 
-from typing import Union
-from json import dumps, loads
+from .Data import data_manager
+from ..Config import config
+from ..Utils import decode, encode
 
 
 class Server:
