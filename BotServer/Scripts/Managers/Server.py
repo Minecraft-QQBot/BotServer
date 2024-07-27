@@ -28,9 +28,9 @@ class Server:
 
     async def send_data(self, event_type: str, data: dict = {}):
         try:
-            await self.websocket.send(decode(dumps({'type': event_type, 'data': data})))
+            await self.websocket.send(encode(dumps({'type': event_type, 'data': data})))
             logger.debug(F'已向服务器 [{self.name}] 发送数据 {data}，正在等待回应……')
-            response = loads(encode(await self.websocket.receive()))
+            response = loads(decode(await self.websocket.receive()))
             if response.get('success'):
                 logger.debug(F'已收到服务器 [{self.name}] 的回应 {response}，数据发送成功！')
                 return response.get('data')
@@ -43,11 +43,15 @@ class Server:
         if response := await self.send_data('command', {'command': command}):
             return response.get('response', {})
 
+    async def send_mcdr_command(self, command: str):
+        return await self.send_data('mcdr', {'command': command})
+
     async def send_message(self, message: str):
         return await self.send_data('message', {'message': message})
 
     async def send_player_list(self):
-        return await self.send_data('player_list')
+        if players := await self.send_data('player_list'):
+            return players.get('players')
 
 
 class ServerManager:
@@ -79,13 +83,14 @@ class ServerManager:
             await server.disconnect()
         logger.success('所有服务器的连接已断开！')
 
-    async def execute(self, command: str, server_flag: Union[str, int] = None):
-        if not server_flag:
-            logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
-            return {name: await server.send_command(command) for name, server in self.servers.items() if server.status}
-        if server := self.get_server(server_flag):
-            logger.debug(F'执行命令 [{command}] 到服务器 [{server.name}]。')
-            return await server.send_command(command)
+    async def execute(self, command: str):
+        logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
+        return {name: await server.send_command(command) for name, server in self.servers.items() if server.status}
+
+    async def execute_mcdr(self, command: str):
+        logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
+        return {name: await server.send_mcdr_command(command) for name, server in self.servers.items() if
+                server.status and server.type == 'McdReforged'}
 
     async def broadcast(self, source: str, player: str = None, message: str = None, except_server: str = None):
         params = [{'color': config.sync_color_source, 'text': F'[{source}] '}]

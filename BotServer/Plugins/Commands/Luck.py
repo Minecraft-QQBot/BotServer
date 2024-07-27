@@ -22,8 +22,8 @@ async def handle_group(event: GroupMessageEvent):
 
 
 def luck_handler(event: GroupMessageEvent):
-    hash = md5(F'{date.today()} {event.group_id} {event.user_id}'.encode())
-    random.seed(seed := int(hash.hexdigest(), 16))
+    seed_hash = md5(F'{date.today()} {event.group_id} {event.user_id}'.encode())
+    random.seed(seed := int(seed_hash.hexdigest(), 16))
     tips = '啧……'
     luck_point = random.randint(10, 100)
     if luck_point > 90: tips = '哇！'

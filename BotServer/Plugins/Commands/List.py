@@ -16,15 +16,14 @@ matcher = on_command('list', force_whitespace=True, rule=rule)
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     server = args if (args := args.extract_plain_text().strip()) else None
-    result = await get_players(server)
-    if isinstance(result, dict):
-        message = turn_message(list_handler(result))
-        await matcher.finish(message)
-    message = turn_message(list_handler(*result))
+    flag, response = await get_players(server)
+    if flag is False:
+        await matcher.finish(response)
+    message = turn_message(list_handler(response, flag))
     await matcher.finish(message)
 
 
-def list_handler(players: Union[dict, list], arg: str = None):
+def list_handler(players: Union[dict, list], name: str = None):
     if isinstance(players, dict):
         player_count = 0
         if players:
@@ -38,11 +37,9 @@ def list_handler(players: Union[dict, list], arg: str = None):
         yield '当前没有已连接的服务器！'
         return None
     if players:
-        yield F'===== [{arg}] 玩家列表 ====='
+        yield F'===== [{name}] 玩家列表 ====='
         yield from format_players(players)
         yield F'当前在线人数共 {len(players)} 人'
-        return None
-    yield F'没有找到已连接的 [{arg}] 服务器！请检查编号或名称是否输入正确。'
 
 
 def format_players(players: list):
@@ -65,23 +62,16 @@ def format_players(players: list):
         yield '    ' + fake_players + '\n'
         return None
     if players:
+        players[0] += '    '
         yield '\n    '.join(players) + '\n'
         return None
     yield '  没有玩家在线！\n'
 
 
-async def get_players(server: str = None):
-    if not server:
-        result = await server_manager.execute('list')
-        for name, value in result.items():
-            players = value.strip().replace(' ', '')
-            if len(players := players.split(':')) == 2:
-                result[name] = players[1].split(',') if players[1] else []
-                continue
-            result[name] = []
-        return result
-    if players := await server_manager.execute('list', server):
-        players = players.strip().replace(' ', '')
-        if len(players := players.split(':')) == 2:
-            return (players[1].split(',') if players[1] else []), server
-        return []
+async def get_players(server_flag: str = None):
+    if server_flag is None:
+        players = {name: await server.get_players() for name, server in server_manager.servers.items() if server.status}
+        return True, players
+    if server := server_manager.get_server(server_flag):
+        return server.name, await server.get_players()
+    return False, F'没有找到已连接的 [{server_flag}] 服务器！请检查编号或名称是否输入正确。'

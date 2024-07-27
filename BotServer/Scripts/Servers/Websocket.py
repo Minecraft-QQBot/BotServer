@@ -15,7 +15,7 @@ from ..Utils import send_synchronous_message, decode, encode
 async def verify(websocket: WebSocket):
     logger.info('检测到 WebSocket 链接，正在验证身份……')
     if info := websocket.request.headers.get('info'):
-        info = loads(encode(info))
+        info = loads(decode(info))
         name = info.get('name')
         if info.get('token') != config.token or (not name):
             await websocket.close()
@@ -43,7 +43,7 @@ async def handle_websocket_bot(websocket: WebSocket):
             while True:
                 response = None
                 receive_message = await websocket.receive()
-                receive_message = loads(encode(receive_message))
+                receive_message = loads(decode(receive_message))
                 logger.debug(F'收到来数据 {receive_message} 。')
                 data = receive_message.get('data')
                 event_type = receive_message.get('type')
@@ -62,17 +62,17 @@ async def handle_websocket_bot(websocket: WebSocket):
                 elif event_type == 'player_left':
                     response = await player_left(name, data)
                 if response is not None:
-                    await websocket.send(decode(dumps({'success': True, 'data': response})))
+                    await websocket.send(encode(dumps({'success': True, 'data': response})))
                     continue
                 logger.warning(F'收到来自 [{name}] 无法解析的数据 {message}')
-                await websocket.send(decode(dumps({'success': False})))
+                await websocket.send(encode(dumps({'success': False})))
         except (ConnectionError, WebSocketClosed):
             logger.info('WebSocket 连接已关闭！')
 
 
 async def message(name: str, data: dict):
     if group_message := data.get('message'):
-        logger.debug(F'发送消息 {message} 到消息群！')
+        logger.debug(F'发送消息 {group_message} 到消息群！')
         if await send_synchronous_message(group_message):
             return {}
     logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')

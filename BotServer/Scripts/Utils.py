@@ -44,16 +44,18 @@ def get_args(args: Message):
     return result
 
 
-def decode(string: str):
+def encode(string: str):
     string = string.encode('Utf-8')
-    string = b64decode(string)
+    string = b64encode(string)
     return string.decode('Utf-8')
 
 
-def encode(string: str):
+def decode(string: str):
     string = string.encode('Utf-8')
-    try: string = b64encode(string)
-    except binascii.Error: return None
+    try:
+        string = b64decode(string)
+    except binascii.Error:
+        return None
     return string.decode('Utf-8')
 
 
