@@ -1,39 +1,41 @@
 from ..Config import config
+from ..Utils import decode, encode
 from .Data import data_manager
-
-from typing import Union
-from json import dumps, loads
 
 from nonebot.log import logger
 from nonebot.drivers import WebSocket
 from nonebot.exception import WebSocketClosed
 
+from typing import Union
+from json import dumps, loads
+
 
 class Server:
     name: str = None
+    type: str = None
     status: bool = True
     websocket: WebSocket = None
 
     def __init__(self, name: str, websocket: WebSocket):
         self.name = name
         self.websocket = websocket
+        self.type = websocket.request.headers.get('type')
 
     async def disconnect(self):
         self.status = False
         await self.websocket.close()
         logger.success(F'已断开与服务器 [{self.name}] 的连接！')
 
-    async def send_data(self, type: str, data: dict = {}):
+    async def send_data(self, event_type: str, data: dict = {}):
         try:
-            await self.websocket.send(dumps({'type': type, 'data': data}))
+            await self.websocket.send(decode(dumps({'type': event_type, 'data': data})))
             logger.debug(F'已向服务器 [{self.name}] 发送数据 {data}，正在等待回应……')
-            response = loads(await self.websocket.receive())
+            response = loads(encode(await self.websocket.receive()))
             if response.get('success'):
                 logger.debug(F'已收到服务器 [{self.name}] 的回应 {response}，数据发送成功！')
                 return response.get('data')
         except (WebSocketClosed, ConnectionError):
             self.status = False
-            self.websocket = None
             logger.warning(F'与服务器 [{self.name}] 的连接已断开！')
             return None
 
