@@ -10,6 +10,10 @@
       "message": "要发送的消息。"
     }
   },
+  "mcdr": {
+    "usage": "mcdr <server> <command>",
+    "description": "在服务器中执行 Mcdr 指令，仅管理员可用。无返回值，请慎用。"
+  },
   "about": {
     "usage": "about",
     "description": "查看关于本机器人的信息。"

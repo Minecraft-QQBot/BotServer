@@ -51,9 +51,10 @@ async def execute_command(args: list):
         return False, '参数不正确！请查看语法后再试。'
     server_flag, * command = args
     if command := parse_command(command):
-        return False, F'命令 {command} 已被禁止！'
-    if server_flag == '*':
-        return True, await server_manager.execute_command(command)
-    if server := server_manager.get(server_flag):
-        return server.name, await server.execute_command(command)
-    return False, F'服务器 [{server_flag}] 不存在！请检查插件配置。'
+        if server_flag == '*':
+            return True, await server_manager.execute_command(command)
+        if server := server_manager.get(server_flag):
+            return server.name, await server.execute_command(command)
+        return False, F'服务器 [{server_flag}] 不存在！请检查插件配置。'
+    return False, F'命令 {command} 已被禁止！'
+

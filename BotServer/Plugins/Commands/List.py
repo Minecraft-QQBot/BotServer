@@ -70,8 +70,8 @@ def format_players(players: list):
 
 async def get_players(server_flag: str = None):
     if server_flag is None:
-        players = {name: await server.get_players() for name, server in server_manager.servers.items() if server.status}
+        players = {name: await server.send_player_list() for name, server in server_manager.servers.items() if server.status}
         return True, players
     if server := server_manager.get_server(server_flag):
-        return server.name, await server.get_players()
+        return server.name, await server.send_player_list()
     return False, F'没有找到已连接的 [{server_flag}] 服务器！请检查编号或名称是否输入正确。'

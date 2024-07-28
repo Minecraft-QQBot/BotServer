@@ -28,7 +28,8 @@ class Server:
 
     async def send_data(self, event_type: str, data: dict = {}):
         try:
-            await self.websocket.send(encode(dumps({'type': event_type, 'data': data})))
+            data = dumps({'type': event_type, 'data': data})
+            await self.websocket.send(encode(data))
             logger.debug(F'已向服务器 [{self.name}] 发送数据 {data}，正在等待回应……')
             response = loads(decode(await self.websocket.receive()))
             if response.get('success'):
@@ -44,7 +45,7 @@ class Server:
             return response.get('response', {})
 
     async def send_mcdr_command(self, command: str):
-        return await self.send_data('mcdr', {'command': command})
+        return await self.send_data('mcdr_command', {'command': command})
 
     async def send_message(self, message: str):
         return await self.send_data('message', {'message': message})

@@ -23,10 +23,11 @@ async def mcdr_handler(args: list):
     if len(args) <= 1:
         return '参数不正确！请查看语法后再试。'
     server_flag, * command = args
+    command = ' '.join(command)
     if server_flag == '*':
         await server_manager.execute_mcdr(command)
         return '命令已发送到所有已连接的服务器！'
-    if server := server_manager.get(server_flag):
+    if server := server_manager.get_server(server_flag):
         await server.send_mcdr_command(command)
         return F'命令发送到服务器 [{server.name}] 完毕！'
-    return F'服务器 [{server_flag}] 不存在！请检查插件配置。'
+    return F'服务器 [{server_flag}] 不存在！'

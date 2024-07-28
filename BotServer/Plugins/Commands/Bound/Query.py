@@ -1,4 +1,4 @@
-from Scripts.Managers import data_manager
+from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.params import CommandArg
 
