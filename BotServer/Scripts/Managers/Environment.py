@@ -1,0 +1,50 @@
+from json import JSONDecodeError, loads, dumps
+from pathlib import Path
+
+from nonebot.log import logger
+
+
+class EnvironmentManager:
+    mapping: list = []
+    environment: dict = {}
+    file_path: Path = Path('.env')
+
+    def init(self):
+        if not self.file_path.exists():
+            logger.error('没有找到配置文件！请重新下载后重试。')
+            exit(1)
+
+    def load(self):
+        with self.file_path.open('r', encoding='Utf-8') as file:
+            for line in file.readlines():
+                if line.startswith('#') or (not line):
+                    self.mapping.append(line)
+                    continue
+                key, value = line.split('=')
+                try: value = loads(value)
+                except JSONDecodeError: pass
+                self.environment[key] = value
+                self.mapping.append(key)
+            logger.success('加载配置文件完毕！')
+
+    def update(self, new: dict):
+        logger.info(F'正在更新配置 {new}')
+        self.load()
+        for key, value in new.items():
+            self.environment[key] = value
+        self.write()
+
+    def write(self):
+        logger.info('正在写入配置……')
+        lines = []
+        for line in self.mapping:
+            if line.startswith('#') or (not line):
+                lines.append(line)
+                continue
+            lines.append(F'{line}={dumps(self.environment[line])}')
+        with self.file_path.open('w', encoding='Utf-8') as file:
+            file.writelines(lines)
+        logger.success('写入配置成功！正在自动重启机器人……')
+
+
+environment_manager = EnvironmentManager()

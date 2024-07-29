@@ -1,6 +1,7 @@
 from json import load, dump
 from pathlib import Path
-
+from hashlib import md5
+from time import time
 from nonebot.log import logger
 
 from ..Config import config
@@ -8,6 +9,7 @@ from ..Config import config
 
 class DataManager:
     version: str = None
+    webui_token: str = None
 
     servers: list = []
     players: dict = {}
@@ -21,13 +23,24 @@ class DataManager:
         if not self.data_dir.exists():
             logger.warning('数据文件目录不存在，正在创建数据目录……')
             self.data_dir.mkdir()
+        count_flag = 0
+        webui_file = (self.data_dir / 'Webui.json')
         server_file = (self.data_dir / 'Server.json')
         player_file = (self.data_dir / 'Player.json')
-        if server_file.exists() and player_file.exists():
+        if webui_file.exists():
+            with webui_file.open(encoding='Utf-8', mode='r') as file:
+                count_flag += 1
+                self.webui_token = load(file)['token']
+        else: self.create_token()
+        if server_file.exists():
             with server_file.open(encoding='Utf-8', mode='r') as file:
+                count_flag += 1
                 self.servers = load(file)
+        if player_file.exists():
             with player_file.open(encoding='Utf-8', mode='r') as file:
+                count_flag += 1
                 self.players = load(file)
+        if count_flag == 3:
             logger.success('加载数据文件完毕！')
             return None
         logger.warning('服务器信息文件不存在，正在创建服务器信息文件……')
@@ -49,13 +62,21 @@ class DataManager:
 
     def save(self):
         logger.debug('正在保存数据文件……')
+        webui_file = (self.data_dir / 'Webui.json')
         server_file = (self.data_dir / 'Server.json')
         player_file = (self.data_dir / 'Player.json')
+        with webui_file.open(encoding='Utf-8', mode='w') as file:
+            dump({'token': self.webui_token}, file)
         with server_file.open(encoding='Utf-8', mode='w') as file:
             dump(self.servers, file)
         with player_file.open(encoding='Utf-8', mode='w') as file:
             dump(self.players, file)
         logger.success('保存数据文件完毕！')
+
+    def create_token(self):
+        md5_digest = md5()
+        md5_digest.update(F'{time()} Webui'.encode('Utf-8'))
+        self.webui_token = md5_digest.hexdigest()
 
     def remove_server(self, name: str):
         self.servers.remove(name)
@@ -66,12 +87,6 @@ class DataManager:
             self.servers.append(name)
             self.save()
 
-    def check_player_occupied(self, player: str):
-        for bounded_players in self.players.values():
-            if player in bounded_players:
-                return True
-        return False
-    
     def append_player(self, user: str, player: str):
         if user not in self.players:
             self.players[user] = [player]
@@ -99,6 +114,12 @@ class DataManager:
             self.save()
             return player
         return False
-            
+
+    def check_player_occupied(self, player: str):
+        for bounded_players in self.players.values():
+            if player in bounded_players:
+                return True
+        return False
+
 
 data_manager = DataManager()
