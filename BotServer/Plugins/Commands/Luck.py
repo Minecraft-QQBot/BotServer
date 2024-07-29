@@ -30,8 +30,8 @@ def luck_handler(event: GroupMessageEvent):
     elif luck_point > 60: tips = '喵~'
     elif luck_point > 30: tips = '呜……'
     yield F'你今天的人品为 {luck_point}，{tips}'
-    bad_thing = bad_things[(seed := (seed & event.group_id)) % len(bad_things)]
-    good_thing = good_things[seed % len(good_things)]
+    bad_thing = bad_things[(seed & event.group_id) % len(bad_things)]
+    good_thing = good_things[(seed ^ event.group_id) % len(good_things)]
     yield F'今日宜：{good_thing}'
     if bad_thing.startswith(good_thing[:2]):
         bad_thing = bad_things[seed % len(good_things) - 1]
