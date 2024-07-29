@@ -15,10 +15,8 @@ driver.register_adapter(Adapter)
 def startup():
     from Scripts.Servers import Websocket
     from Scripts.Managers import data_manager
-    from Scripts.ServerWatcher import server_watcher
 
     data_manager.load()
-    server_watcher.start()
     Websocket.setup_websocket_server()
 
 
