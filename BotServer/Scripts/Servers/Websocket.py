@@ -8,7 +8,6 @@ from nonebot.log import logger
 
 from ..Config import config
 from ..Managers import server_manager, data_manager
-from ..ServerWatcher import server_watcher
 from ..Utils import send_synchronous_message, decode, encode
 
 
@@ -49,18 +48,16 @@ async def handle_websocket_bot(websocket: WebSocket):
                 event_type = receive_message.get('type')
                 if event_type == 'message':
                     response = await message(name, data)
-                elif event_type == 'server_pid':
-                    response = await server_pid(name, data)
                 elif event_type == 'server_startup':
                     response = await server_startup(name, data)
                 elif event_type == 'server_shutdown':
                     response = await server_shutdown(name, data)
-                elif event_type == 'player_info':
-                    response = await player_info(name, data)
-                elif event_type == 'player_joined':
-                    response = await player_joined(name, data)
+                elif event_type == 'player_chat':
+                    response = await player_chat(name, data)
                 elif event_type == 'player_left':
                     response = await player_left(name, data)
+                elif event_type == 'player_joined':
+                    response = await player_joined(name, data)
                 if response is not None:
                     await websocket.send(encode(dumps({'success': True, 'data': response})))
                     continue
@@ -79,17 +76,9 @@ async def message(name: str, data: dict):
     return {}
 
 
-async def server_pid(name: str, data: dict):
-    pid = data.get('pid')
-    server_watcher.append_server(name, pid)
-    return {}
-
-
 async def server_startup(name: str, data: dict):
     logger.info('收到服务器开启数据！尝试连接到服务器……')
-    pid = data.get('pid')
     data_manager.append_server(name)
-    server_watcher.append_server(name, pid)
     if config.broadcast_server:
         await server_manager.broadcast(name, message='服务器已开启！', except_server=name)
         if await send_synchronous_message(F'服务器 [{name}] 已开启，喵～'):
@@ -101,7 +90,6 @@ async def server_startup(name: str, data: dict):
 
 async def server_shutdown(name: str, data: dict):
     logger.info('收到服务器关闭信息！正在断开连接……')
-    server_watcher.remove_server(name)
     await server_manager.disconnect_server(name)
     if config.broadcast_server:
         await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
@@ -112,7 +100,7 @@ async def server_shutdown(name: str, data: dict):
     return {}
 
 
-async def player_info(name: str, data: dict):
+async def player_chat(name: str, data: dict):
     player = data.get('player')
     group_message = data.get('message')
     logger.debug(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
