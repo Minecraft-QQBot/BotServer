@@ -1,12 +1,27 @@
 import asyncio
 
+from nonebot import init as nb_init
 import nonebot
+from nonebot import get_app
 from nonebot.adapters.onebot.v11 import Adapter
-from nonebot.log import logger
+from fastapi.middleware.cors import CORSMiddleware
 
-nonebot.init()
 
+# 初始化nb
+nb_init()
 nonebot.load_plugins('Plugins')
+
+# 获取 FastAPI 应用实例
+application = get_app()
+
+# 允许跨域请求
+application.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 driver = nonebot.get_driver()
 driver.register_adapter(Adapter)

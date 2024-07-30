@@ -28,6 +28,8 @@ async def page(request: Request):
 
 def setup_webui_http_server():
     application = get_app()
+
+    # 静态文件目录
     application.mount('/assets', StaticFiles(directory='Resources/WebUi/Assets'), name='static_assets')
     if isinstance((driver := get_driver()), ASGIMixin):
         server = HTTPServerSetup(URL('/webui'), 'GET', 'page', page)
