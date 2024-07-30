@@ -1,5 +1,4 @@
 import asyncio
-from json import loads
 
 from nonebot import get_driver
 from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
@@ -42,7 +41,7 @@ async def handle_websocket_bot(websocket: WebSocket):
             while True:
                 response = None
                 receive_message = await websocket.receive()
-                receive_message = loads(decode(receive_message))
+                receive_message = decode(receive_message)
                 logger.debug(F'收到来数据 {receive_message} 。')
                 data = receive_message.get('data')
                 event_type = receive_message.get('type')

@@ -34,6 +34,10 @@ class EnvironmentManager:
             logger.success('预加载配置文件完毕！')
 
     def update(self, new: dict):
+        if not isinstance(new, dict):
+            print(F'传入的配置不是字典！{new}')
+            logger.error('传入的配置不是字典！')
+            return
         logger.info(F'正在更新配置 {new}')
         for key, value in new.items():
             self.environment[key] = value
@@ -46,7 +50,7 @@ class EnvironmentManager:
             if line.startswith('#') or (not line):
                 lines.append(line)
                 continue
-            lines.append(F'{line}={dumps(self.environment[line])}')
+            lines.append('\n' + F'{line}={dumps(self.environment[line])}' + '\n')
         with self.file_path.open('w', encoding='Utf-8') as file:
             file.writelines(lines)
         logger.success('写入配置成功！正在自动重启机器人……')
