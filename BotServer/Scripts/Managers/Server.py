@@ -26,12 +26,14 @@ class Server:
         await self.websocket.close()
         logger.success(F'已断开与服务器 [{self.name}] 的连接！')
 
-    async def send_data(self, event_type: str, data: dict = {}):
+    async def send_data(self, event_type: str, data: str = None):
         try:
-            data = dumps({'type': event_type, 'data': data})
-            await self.websocket.send(encode(data))
-            logger.debug(F'已向服务器 [{self.name}] 发送数据 {data}，正在等待回应……')
-            response = loads(decode(await self.websocket.receive()))
+            message_data = {'type': event_type}
+            if data is not None:
+                message_data['data'] = data
+            await self.websocket.send(encode(message_data))
+            logger.debug(F'已向服务器 [{self.name}] 发送数据 {message_data}，正在等待回应……')
+            response = decode(await self.websocket.receive())
             if response.get('success'):
                 logger.debug(F'已收到服务器 [{self.name}] 的回应 {response}，数据发送成功！')
                 return response.get('data')
@@ -41,14 +43,13 @@ class Server:
             return None
 
     async def send_command(self, command: str):
-        if response := await self.send_data('command', {'command': command}):
-            return response.get('response', {})
+        return await self.send_data('command', command)
 
     async def send_mcdr_command(self, command: str):
-        return await self.send_data('mcdr_command', {'command': command})
+        return await self.send_data('mcdr_command', command)
 
     async def send_message(self, message: str):
-        return await self.send_data('message', {'message': message})
+        return await self.send_data('message', message)
 
     async def send_player_list(self):
         if players := await self.send_data('player_list'):

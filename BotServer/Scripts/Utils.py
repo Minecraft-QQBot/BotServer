@@ -1,6 +1,7 @@
 import binascii
 from base64 import b64encode, b64decode
 from re import IGNORECASE, compile
+from json import loads, dumps
 
 from nonebot import get_bot
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
@@ -44,7 +45,9 @@ def get_args(args: Message):
     return result
 
 
-def encode(string: str):
+def encode(data: dict):
+    # 编码
+    string = dumps(data)
     string = string.encode('Utf-8')
     string = b64encode(string)
     return string.decode('Utf-8')
@@ -56,7 +59,7 @@ def decode(string: str):
         string = b64decode(string)
     except binascii.Error:
         return None
-    return string.decode('Utf-8')
+    return loads(string.decode('Utf-8'))
 
 
 async def get_user_name(group: int, user: int):

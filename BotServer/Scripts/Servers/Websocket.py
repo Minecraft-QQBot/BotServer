@@ -14,7 +14,7 @@ from ..Utils import send_synchronous_message, decode, encode
 async def verify(websocket: WebSocket):
     logger.info('检测到 WebSocket 链接，正在验证身份……')
     if info := websocket.request.headers.get('info'):
-        info = loads(decode(info))
+        info = decode(info)
         name = info.get('name')
         if info.get('token') != config.token or (not name):
             await websocket.close()
@@ -59,21 +59,24 @@ async def handle_websocket_bot(websocket: WebSocket):
                 elif event_type == 'player_joined':
                     response = await player_joined(name, data)
                 if response is not None:
-                    await websocket.send(encode(dumps({'success': True, 'data': response})))
+                    if response is True:
+                        await websocket.send(encode({'success': True}))
+                        continue
+                    await websocket.send(encode({'success': True, 'data': response}))
                     continue
                 logger.warning(F'收到来自 [{name}] 无法解析的数据 {message}')
-                await websocket.send(encode(dumps({'success': False})))
+                await websocket.send(encode({'success': False}))
         except (ConnectionError, WebSocketClosed):
             logger.info('WebSocket 连接已关闭！')
 
 
-async def message(name: str, data: dict):
-    if group_message := data.get('message'):
+async def message(name: str, group_message: str):
+    if group_message:
         logger.debug(F'发送消息 {group_message} 到消息群！')
         if await send_synchronous_message(group_message):
-            return {}
+            return True
     logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
-    return {}
+    return True
 
 
 async def server_startup(name: str, data: dict):
@@ -82,10 +85,10 @@ async def server_startup(name: str, data: dict):
     if config.broadcast_server:
         await server_manager.broadcast(name, message='服务器已开启！', except_server=name)
         if await send_synchronous_message(F'服务器 [{name}] 已开启，喵～'):
-            return {'flag': config.sync_all_game_message}
+            return config.sync_all_game_message
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
-    return {'flag': config.sync_all_game_message}
+    return config.sync_all_game_message
 
 
 async def server_shutdown(name: str, data: dict):
@@ -94,27 +97,25 @@ async def server_shutdown(name: str, data: dict):
     if config.broadcast_server:
         await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
         if await send_synchronous_message(F'服务器 [{name}] 已关闭，呜……'):
-            return {}
+            return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
-    return {}
+    return True
 
 
-async def player_chat(name: str, data: dict):
-    player = data.get('player')
-    group_message = data.get('message')
+async def player_chat(name: str, data: list):
+    player, chat_message = data
     logger.debug(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
     if config.sync_all_game_message:
-        if not (await send_synchronous_message(F'[{name}] <{player}> {group_message}')):
+        if not (await send_synchronous_message(F'[{name}] <{player}> {chat_message}')):
             logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     if config.sync_message_between_servers:
-        await server_manager.broadcast(name, player, group_message, except_server=name)
-    return {}
+        await server_manager.broadcast(name, player, chat_message, except_server=name)
+    return True
 
 
-async def player_joined(name: str, data: dict):
+async def player_joined(name: str, player: str):
     logger.info('收到玩家加入服务器通知！')
-    player = data.get('player')
     if config.broadcast_player:
         server_message = F'玩家 {player} 加入了游戏。'
         group_message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
@@ -125,15 +126,14 @@ async def player_joined(name: str, data: dict):
         if config.sync_message_between_servers:
             await server_manager.broadcast(name, message=server_message, except_server=name)
         if await send_synchronous_message(group_message):
-            return {}
+            return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
-    return {}
+    return True
 
 
-async def player_left(name: str, data: dict):
+async def player_left(name: str, player: str):
     logger.info('收到玩家离开服务器通知！')
-    player = data.get('player')
     if config.broadcast_player:
         server_message = F'玩家 {player} 离开了游戏。'
         group_message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
@@ -143,10 +143,10 @@ async def player_left(name: str, data: dict):
         if config.sync_message_between_servers:
             await server_manager.broadcast(name, message=server_message, except_server=name)
         if await send_synchronous_message(group_message):
-            return {}
+            return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
-    return {}
+    return True
 
 
 def setup_websocket_server():
