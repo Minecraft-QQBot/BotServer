@@ -1,12 +1,10 @@
 import asyncio
 
 import nonebot
-from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import Adapter
-
+from nonebot.log import logger
 
 from Scripts.Managers import environment_manager
-
 
 nonebot.init()
 
@@ -20,9 +18,11 @@ driver.register_adapter(Adapter)
 def startup():
     from Scripts.Servers import Websocket
     from Scripts.Managers import data_manager
+    from Scripts.Servers.Http import WebUi
 
     data_manager.load()
     environment_manager.init()
+    WebUi.setup_webui_http_server()
     Websocket.setup_websocket_server()
     webui_url = F'http://127.0.0.1:{driver.config.host}/webui?token={data_manager.webui_token}'
     logger.info(F'WebUi 网址为 <yellow><b>{webui_url}</b></yellow> ，请保护好否则可能遭受攻击。')

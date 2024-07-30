@@ -1,7 +1,8 @@
+from hashlib import md5
 from json import load, dump
 from pathlib import Path
-from hashlib import md5
 from time import time
+
 from nonebot.log import logger
 
 from ..Config import config
@@ -15,7 +16,7 @@ class DataManager:
     players: dict = {}
     commands: dict = {}
 
-    data_dir = Path('./Data/')
+    data_dir = Path('Data')
 
     def load(self):
         self.load_bot_data()
@@ -48,7 +49,7 @@ class DataManager:
 
     def load_bot_data(self):
         logger.debug('正在加载机器人数据……')
-        config_path = Path('./Config/')
+        config_path = Path('Resources/Config')
         version_path = (config_path / 'Version.json')
         commands_path = (config_path / 'Commands.json')
         if not commands_path.exists() or not version_path.exists():
