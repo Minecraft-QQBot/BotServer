@@ -1,7 +1,7 @@
 from json import dumps
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from nonebot import get_driver, get_app
 from nonebot.drivers import URL, Request, Response, ASGIMixin, HTTPServerSetup
@@ -27,11 +27,16 @@ async def page(request: Request):
 
 
 def setup_webui_http_server():
-    application = get_app()
 
+    application = get_app()
     # 静态文件目录
     application.mount('/assets', StaticFiles(directory='Resources/WebUi/Assets'), name='static_assets')
     if isinstance((driver := get_driver()), ASGIMixin):
+        application = get_app()
+        application.mount('/assets', StaticFiles(directory='Resources/WebUi/Assets'), name='static_assets')
+        application.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=True,
+                                   allow_methods=['GET', 'POST'], allow_headers=['*'])
+
         server = HTTPServerSetup(URL('/webui'), 'GET', 'page', page)
         driver.setup_http_server(server)
         server = HTTPServerSetup(URL('/webui/api'), 'GET', 'get_api', api)
