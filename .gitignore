@@ -1,4 +1,6 @@
-**\.DS_Store
+**/.DS_Store
+**/__pycache__
+BotServer/Data/**.json
 BotServer-v*.*.*.zip
 Test.py
 .DS_Store

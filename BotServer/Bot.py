@@ -2,7 +2,6 @@ import asyncio
 
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
-from nonebot.log import logger
 
 nonebot.init()
 
