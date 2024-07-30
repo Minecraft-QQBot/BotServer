@@ -1,4 +1,4 @@
-from json import dumps, loads
+from json import dumps
 from typing import Union
 
 from nonebot.drivers import WebSocket

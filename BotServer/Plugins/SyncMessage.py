@@ -17,6 +17,13 @@ async def sync_message(event: GroupMessageEvent):
     for start in config.command_start:
         if plain_text.startswith(start):
             return None
+    plain_text = await turn_text(event)
+    name = data_manager.players.get(str(event.user_id), get_player_name(event.sender.card))
+    await server_manager.broadcast('QQ', (event.sender.nickname if name is None else name), plain_text)
+    logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')
+
+
+async def turn_text(event: GroupMessageEvent):
     plain_texts = []
     for segment in event.get_message():
         if segment.type == 'text':
@@ -34,7 +41,4 @@ async def sync_message(event: GroupMessageEvent):
             plain_texts.append(F'[@未知用户]')
             continue
         plain_texts.append(F'[{mapping.get(segment.type, "未知类型")}]')
-    plain_text = ' '.join(plain_texts)
-    name = data_manager.players.get(str(event.user_id), get_player_name(event.sender.card))[0]
-    await server_manager.broadcast('QQ', name, plain_text)
-    logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')
+    return ' '.join(plain_texts)

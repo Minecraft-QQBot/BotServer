@@ -19,10 +19,12 @@ class EnvironmentManager:
     def load(self):
         with self.file_path.open('r', encoding='Utf-8') as file:
             for line in file.readlines():
+                line = line.strip()
                 if line.startswith('#') or (not line):
                     self.mapping.append(line)
                     continue
                 key, value = line.split('=')
+                key, value = key.strip(), value.strip()
                 try:
                     value = loads(value)
                 except JSONDecodeError:
