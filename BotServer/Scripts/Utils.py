@@ -47,7 +47,7 @@ def get_args(args: Message):
 
 def encode(data: dict):
     # 编码
-    string = dumps(data)
+    string = dumps(data, ensure_ascii=False)
     string = string.encode('Utf-8')
     string = b64encode(string)
     return string.decode('Utf-8')
@@ -66,9 +66,8 @@ async def get_user_name(group: int, user: int):
     bot = get_bot()
     try:
         response = await bot.get_group_member_info(group_id=group, user_id=user)
-    except (NetworkError, ActionFailed):
-        return None
-    return response.get('card')
+    except (NetworkError, ActionFailed): return None
+    return response.get('card') or response.get('nickname')
 
 
 async def send_synchronous_message(message: str):

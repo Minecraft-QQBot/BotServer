@@ -48,8 +48,8 @@ class EnvironmentManager:
                 continue
             lines.append(F'{line}={dumps(self.environment[line])}')
         with self.file_path.open('w', encoding='Utf-8') as file:
-            file.writelines(lines)
-        logger.success('写入配置成功！正在自动重启机器人……')
+            file.write('\n'.join(lines))
+        logger.success('写入配置成功！手动重启机器人后修改才会生效。')
 
 
 environment_manager = EnvironmentManager()

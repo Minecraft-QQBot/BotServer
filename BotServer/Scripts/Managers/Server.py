@@ -52,8 +52,10 @@ class Server:
         return await self.send_data('message', message)
 
     async def send_player_list(self):
-        if players := await self.send_data('player_list'):
-            return players.get('players')
+        return await self.send_data('player_list')
+
+    async def send_server_occupation(self):
+        return (round(percent, 2) for percent in await self.send_data('server_occupation'))
 
 
 class ServerManager:

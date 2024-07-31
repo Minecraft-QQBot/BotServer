@@ -1,3 +1,4 @@
+import asyncio
 from io import BytesIO
 from os.path import exists
 
@@ -40,8 +41,9 @@ async def handle_group(event: MessageEvent, args: Message = CommandArg()):
 
 
 def draw_chart(data: dict):
+    cpu_bar, ram_bar = None, None
     logger.debug('正在绘制服务器占比柱状图……')
-    pyplot.xlabel('Perventage(%)', loc='right')
+    pyplot.xlabel('Percentage(%)', loc='right')
     pyplot.title('Server Usage Percentage')
     for count, (cpu, ram) in enumerate(data.values()):
         pos = (count * 2)
@@ -64,7 +66,7 @@ def draw_history_chart(name: str):
         pyplot.ylim(0, 100)
         pyplot.xlabel('Time', loc='right')
         pyplot.ylabel('Percentage(%)', loc='top')
-        pyplot.title('CPU & RAM Precentage')
+        pyplot.title('CPU & RAM Percentage')
         pyplot.plot(cpu, color='red', label='CPU')
         pyplot.plot(ram, color='blue', label='RAM')
         pyplot.legend()
@@ -77,7 +79,7 @@ def draw_history_chart(name: str):
 
 
 def status_handler():
-    if data := server_watcher.get_data():
+    if data := asyncio.run(server_watcher.get_data()):
         yield '已连接的所有服务器信息：'
         for name, (cpu, ram) in data.items():
             yield F'————— {name} —————'
@@ -94,7 +96,7 @@ def status_handler():
 def detailed_handler(server_flag: str):
     if server := server_manager.get_server(server_flag):
         name = server.name
-        if data := server_watcher.get_data(name):
+        if data := asyncio.run(server_watcher.get_data(name)):
             cpu, ram = data
             yield F'服务器 [{name}] 的详细信息：'
             yield F'  内存使用率：{ram:.1f}%'

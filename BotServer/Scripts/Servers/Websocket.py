@@ -31,7 +31,7 @@ async def handle_websocket_minecraft(websocket: WebSocket):
         await websocket.receive()
         while not websocket.closed:
             await asyncio.sleep(30)
-        logger.info(F'检测到连接 [{name}] 已断开！')
+        logger.info(F'检测到连接与 [{name}] 已断开！')
 
 
 async def handle_websocket_bot(websocket: WebSocket):
@@ -40,9 +40,7 @@ async def handle_websocket_bot(websocket: WebSocket):
         try:
             while True:
                 response = None
-                receive_message = await websocket.receive()
-                receive_message = decode(receive_message)
-                logger.debug(F'收到来数据 {receive_message} 。')
+                receive_message = decode(await websocket.receive())
                 data = receive_message.get('data')
                 event_type = receive_message.get('type')
                 if event_type == 'message':
@@ -53,17 +51,20 @@ async def handle_websocket_bot(websocket: WebSocket):
                     response = await server_shutdown(name, data)
                 elif event_type == 'player_chat':
                     response = await player_chat(name, data)
+                elif event_type == 'player_death':
+                    response = await player_death(name, data)
                 elif event_type == 'player_left':
                     response = await player_left(name, data)
                 elif event_type == 'player_joined':
                     response = await player_joined(name, data)
                 if response is not None:
+                    logger.debug(F'对来自 [{name}] 的数据 {receive_message}')
                     if response is True:
                         await websocket.send(encode({'success': True}))
                         continue
                     await websocket.send(encode({'success': True, 'data': response}))
                     continue
-                logger.warning(F'收到来自 [{name}] 无法解析的数据 {message}')
+                logger.warning(F'收到来自 [{name}] 无法解析的数据 {receive_message}')
                 await websocket.send(encode({'success': False}))
         except (ConnectionError, WebSocketClosed):
             logger.info('WebSocket 连接已关闭！')
@@ -72,8 +73,7 @@ async def handle_websocket_bot(websocket: WebSocket):
 async def message(name: str, group_message: str):
     if group_message:
         logger.debug(F'发送消息 {group_message} 到消息群！')
-        if await send_synchronous_message(group_message):
-            return True
+        return await send_synchronous_message(group_message) or None
     logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     return True
 
@@ -110,6 +110,18 @@ async def player_chat(name: str, data: list):
             logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     if config.sync_message_between_servers:
         await server_manager.broadcast(name, player, chat_message, except_server=name)
+    return True
+
+
+async def player_death(name: str, data: list):
+    player, death_message = data
+    logger.debug(F'收到玩家死亡 {death_message} 消息！')
+    if config.broadcast_player and (not config.bot_prefix or not player.upper().startswith(config.bot_prefix)):
+        server_message = F'玩家 {player} 死亡了，呜……'
+        if not (await send_synchronous_message(server_message)):
+            logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+        if config.sync_message_between_servers:
+            await server_manager.broadcast(name, message=server_message, except_server=name)
     return True
 
 

@@ -1,5 +1,3 @@
-import asyncio
-
 from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.params import CommandArg
@@ -7,8 +5,8 @@ from nonebot.params import CommandArg
 from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
 from Scripts.Utils import get_user_name, check_player, get_args, rule
+from .Base import async_lock
 
-async_lock = asyncio.Lock()
 matcher = on_command('bound append', force_whitespace=True, block=True, priority=5, rule=rule)
 
 

@@ -6,7 +6,7 @@ from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
 from Scripts.Utils import get_player_name, get_user_name
 
-mapping = {'record': '聊天记录', 'image': '图片', 'reply': '回复', 'face': '表情', 'file': '文件'}
+mapping = {'record': '语音', 'image': '图片', 'reply': '回复', 'face': '表情', 'file': '文件'}
 
 
 @on_message
@@ -19,18 +19,17 @@ async def sync_message(event: GroupMessageEvent):
             return None
     plain_text = await turn_text(event)
     name = data_manager.players.get(str(event.user_id), get_player_name(event.sender.card))
-    await server_manager.broadcast('QQ', (event.sender.nickname if name is None else name), plain_text)
+    await server_manager.broadcast('QQ', (name or event.sender.nickname), plain_text)
     logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')
 
 
 async def turn_text(event: GroupMessageEvent):
     plain_texts = []
     for segment in event.get_message():
-        if segment.type == 'text':
-            if text := segment.data['text']:
-                plain_texts.append(text)
+        if segment.type == 'text' and (text := segment.data['text']):
+            plain_texts.append(text)
             continue
-        elif segment.type == 'at':
+        if segment.type == 'at':
             user_id = str(segment.data['qq'])
             if player := data_manager.players.get(user_id):
                 plain_texts.append(F'[@{player[0]}]')

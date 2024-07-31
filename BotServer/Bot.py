@@ -5,7 +5,7 @@ from nonebot.adapters.onebot.v11 import Adapter
 
 nonebot.init()
 
-nonebot.load_plugins('Plugins')
+# nonebot.load_plugins('Plugins')
 
 driver = nonebot.get_driver()
 driver.register_adapter(Adapter)

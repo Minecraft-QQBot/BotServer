@@ -1,5 +1,3 @@
-import asyncio
-
 from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.params import CommandArg
@@ -7,8 +5,8 @@ from nonebot.params import CommandArg
 from Scripts.Config import config
 from Scripts.Managers import data_manager, server_manager
 from Scripts.Utils import get_user_name, get_args, rule
+from .Base import async_lock
 
-async_look = asyncio.Lock()
 matcher = on_command('bound remove', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
@@ -17,6 +15,7 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if args := get_args(args):
         if (len(args) == 1) and (not args[0].isdigit()):
             message = await bound_remove_handler(event, args)
+            await matcher.finish(message)
         if str(event.user_id) not in config.superusers:
             await matcher.finish('你没有权限执行此命令！')
         message = await bound_remove_handler(event, args)
@@ -26,7 +25,7 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
 
 
 async def bound_remove_handler(event: GroupMessageEvent, args: list):
-    async with async_look:
+    async with async_lock:
         if not (0 <= len(args) <= 2):
             return '参数错误！请检查语法是否正确。'
         if not server_manager.check_online():
