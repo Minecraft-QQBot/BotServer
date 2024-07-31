@@ -41,6 +41,8 @@ async def handle_websocket_bot(websocket: WebSocket):
             while True:
                 response = None
                 receive_message = decode(await websocket.receive())
+                if receive_message is None:
+                    continue
                 data = receive_message.get('data')
                 event_type = receive_message.get('type')
                 if event_type == 'message':

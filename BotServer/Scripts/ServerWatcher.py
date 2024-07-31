@@ -1,6 +1,5 @@
-from threading import Thread
-from time import sleep
 import asyncio
+from threading import Thread
 
 from nonebot.log import logger
 
@@ -22,7 +21,7 @@ class ServerWatcher(Thread):
     async def main_loop(self):
         while True:
             logger.debug('定时获取更新服务器信息。')
-            data = await self.get_data()
+            data = await self.get_occupation_data()
             for name, (cpu, ram) in data.items():
                 if len(self.cpus[name]) > config.server_watcher_max_cache:
                     self.cpus[name].pop(0)
@@ -32,14 +31,11 @@ class ServerWatcher(Thread):
             await asyncio.sleep(config.server_watcher_update_interval)
 
     @staticmethod
-    async def get_data(server_flag: str = None):
-        if server_flag is None:
-            data = {}
-            for name, server in server_manager.servers.items():
-                data[name] = await server.send_server_occupation()
-            return data
-        if server := server_manager.get_server(server_flag):
-            return await server.send_server_occupation()
+    async def get_occupation_data():
+        data = {}
+        for name, server in server_manager.servers.items():
+            data[name] = await server.send_server_occupation()
+        return data
 
 
 server_watcher = ServerWatcher()

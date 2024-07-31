@@ -1,4 +1,3 @@
-import asyncio
 from io import BytesIO
 from os.path import exists
 
@@ -15,10 +14,10 @@ from Scripts.Utils import turn_message, rule
 
 
 def choose_font():
-    for type in ('ttf', 'ttc'):
-        if exists(F'./Font.{type}'):
+    for font_format in ('ttf', 'ttc'):
+        if exists(F'./Font.{font_format}'):
             logger.info(F'已找到用户设置字体文件，将自动选择该字体作为图表字体。')
-            return FontProperties(fname=F'./Font.{type}', size=15)
+            return FontProperties(fname=F'./Font.{font_format}', size=15)
     for font_path in findSystemFonts():
         if 'KAITI' in font_path.upper():
             logger.success(F'自动选择系统字体 {font_path} 设为图表字体。')
@@ -32,12 +31,42 @@ matcher = on_command('server status', force_whitespace=True, block=True, priorit
 @matcher.handle()
 async def handle_group(event: MessageEvent, args: Message = CommandArg()):
     if args := args.extract_plain_text().strip():
-        if server := server_manager.get_server(args):
-            message = turn_message(detailed_handler(server.name))
-            await matcher.finish(message)
-        await matcher.finish(F'未找到服务器 [{args}]，请检查输入是否正确！或是因为服务器的 PID 没有被记录，请重启服务器后尝试。')
-    message = turn_message(status_handler())
+        flag, response = await get_status(args)
+        if flag is False:
+            await matcher.finish(response)
+        message = turn_message(detailed_handler(flag, response))
+        await matcher.finish(message)
+    flag, response = await get_status()
+    if flag is False:
+        await matcher.finish(response)
+    message = turn_message(status_handler(response))
     await matcher.finish(message)
+
+
+def status_handler(data: dict):
+    yield '已连接的所有服务器信息：'
+    for name, (cpu, ram) in data.items():
+        yield F'————— {name} —————'
+        yield F'  内存使用率：{ram:.1f}%'
+        yield F'  CPU 使用率：{cpu:.1f}%'
+    if font is None:
+        yield '\n由于系统中没有找到可用的中文字体，无法显示中文标题。请查看文档自行配置！'
+    yield '\n所有服务器的占用柱状图：'
+    yield str(MessageSegment.image(draw_chart(data)))
+    return None
+
+
+def detailed_handler(name: str, data: list):
+    cpu, ram = data
+    yield F'服务器 [{name}] 的详细信息：'
+    yield F'  内存使用率：{ram:.1f}%'
+    yield F'  CPU 使用率：{cpu:.1f}%'
+    if image := draw_history_chart(name):
+        yield '\n服务器的占用历史记录：'
+        yield str(MessageSegment.image(image))
+        return None
+    yield '\n未找到服务器的占用历史记录，无法绘制图表。请稍后再试！'
+    return None
 
 
 def draw_chart(data: dict):
@@ -78,34 +107,13 @@ def draw_history_chart(name: str):
         return buffer
 
 
-def status_handler():
-    if data := asyncio.run(server_watcher.get_data()):
-        yield '已连接的所有服务器信息：'
-        for name, (cpu, ram) in data.items():
-            yield F'————— {name} —————'
-            yield F'  内存使用率：{ram:.1f}%'
-            yield F'  CPU 使用率：{cpu:.1f}%'
-        if font is None:
-            yield '\n由于系统中没有找到可用的中文字体，无法显示中文标题。请查看文档自行配置！'
-        yield '\n所有服务器的占用柱状图：'
-        yield str(MessageSegment.image(draw_chart(data)))
-        return None
-    yield '当前没有被监视的服务器！'
-
-
-def detailed_handler(server_flag: str):
+async def get_status(server_flag: str = None):
+    if server_flag is None:
+        if data := await server_watcher.get_data():
+            return True, data
+        return False, '当前没有已连接的服务器！'
     if server := server_manager.get_server(server_flag):
-        name = server.name
-        if data := asyncio.run(server_watcher.get_data(name)):
-            cpu, ram = data
-            yield F'服务器 [{name}] 的详细信息：'
-            yield F'  内存使用率：{ram:.1f}%'
-            yield F'  CPU 使用率：{cpu:.1f}%'
-            if image := draw_history_chart(name):
-                yield '\n服务器的占用历史记录：'
-                yield str(MessageSegment.image(image))
-                return None
-            yield '\n未找到服务器的占用历史记录，无法绘制图表。请稍后再试！'
-            return None
-        yield F'服务器 [{name}] 未处于被监视状态！请重启服务器后尝试。'
-        return None
+        if data := await server.send_server_occupation():
+            return server.name, data
+        return False, F'服务器 [{server_flag}] 未处于监视状态！请重启服务器后再试。'
+    return False, F'服务器 [{server_flag}] 未找到！请重启服务器后尝试。'
