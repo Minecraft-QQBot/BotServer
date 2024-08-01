@@ -7,8 +7,8 @@ from nonebot.log import logger
 
 from ..Config import config
 from ..Managers import server_manager, data_manager
-from ..Utils import send_synchronous_message, decode, encode
 from ..ServerWatcher import server_watcher
+from ..Utils import send_synchronous_message, decode, encode
 
 
 async def verify(websocket: WebSocket):
