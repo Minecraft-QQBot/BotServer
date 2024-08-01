@@ -7,4 +7,4 @@ def init():
     log_path = Path('./Logs/')
     if not log_path.exists():
         log_path.mkdir()
-    logger.add((log_path / '{time}.log'), ratition='1 day')
+    logger.add((log_path / '{time}.log'), rotation='1 day')
