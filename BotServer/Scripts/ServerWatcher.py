@@ -30,6 +30,10 @@ class ServerWatcher(Thread):
                 self.rams[name].append(ram)
             await asyncio.sleep(config.server_watcher_update_interval)
 
+    def remove_server(self, name: str):
+        self.cpus.pop(name, None)
+        self.rams.pop(name, None)
+
     @staticmethod
     async def get_occupation_data():
         data = {}

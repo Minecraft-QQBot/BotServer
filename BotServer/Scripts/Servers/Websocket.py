@@ -8,6 +8,7 @@ from nonebot.log import logger
 from ..Config import config
 from ..Managers import server_manager, data_manager
 from ..Utils import send_synchronous_message, decode, encode
+from ..ServerWatcher import server_watcher
 
 
 async def verify(websocket: WebSocket):
@@ -94,6 +95,7 @@ async def server_startup(name: str, data: dict):
 
 async def server_shutdown(name: str, data: dict):
     logger.info('收到服务器关闭信息！正在断开连接……')
+    server_watcher.remove_server(name)
     await server_manager.disconnect_server(name)
     if config.broadcast_server:
         await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)

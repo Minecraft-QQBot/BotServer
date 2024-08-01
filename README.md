@@ -21,20 +21,24 @@
 
 本机器人可通过各种方式与 Minecraft 服务器进行交互，包括：
 
-- [Fabric](https://www.github.com/Minecraft-QQBot/Fabric) 模组（也在开发中）
-- [Spigot](https://www.github.com/Minecraft-QQBot/Spigot) 插件（还在开发中）
+- [Fabric](https://www.github.com/Minecraft-QQBot/Fabric) 模组（开发中）
+- [Spigot](https://www.github.com/Minecraft-QQBot/Spigot) 插件
 - [McdReforged](https://www.github.com/Minecraft-QQBot/McdReforged) 插件
 
 请前往你需要插件的仓库按照说明进行安装。请注意，不同的插件所提供的功能可能是不一样的，您可根据需求选择安装。
 
 如你有能力开发其他的对接插件，欢迎联系并加入我们！
 
+> [!WARNING]
+> 本机器人 V2.x.x 并不向下兼容 V1.x.x，请在更新后重新配置。只有新版的机器人可以支持多种对接的方式，旧版机器人仅支持 Mcdr 插件。
+> 如需从 V1 升级，请查看 [V1 升级指南](https://github.com/Minecraft-QQBot/BotServer/blob/main/Docs/Upgrade.md)
+
 ## 安装依赖
 
 在命令行内输入以下指令安装依赖：
 
 ```bash
-pip3 install "nonebot2[fastapi]>=2.3.1", "nonebot-adapter-onebot>=2.4.3"
+pip3 install "nonebot2[fastapi]>=2.3.1", "nonebot-adapter-onebot>=2.4.3", "requests>=2.32.3"
 ```
 
 以上是运行本机器所必须的。此外，您可以自行选择是否安装其他依赖库，一些拓展的指令需要额外安装。不安装也仅会影响那部分指令的使用。
@@ -48,16 +52,30 @@ pip3 install matplotlib
 > [!WARNING]
 > 此机器人仅支持 Python 3.8 及以上版本。若版本过低，否则可能会出现不可预知的错误。
 
-### 配置环境
+## 配置环境
 
 你可以到 [Releases](https://github.com/Minecraft-QQBot/BotServer/releases) 下载最新版本的机器人服务器。
 
-解压下载的 `BotServer.zip` 到任意位置，进入 `BotServer` 文件夹，编辑文件夹下的 [`.env`](https://github.com/Minecraft-QQBot/BotServer/blob/main/BotServer/.env) 文件，按照注释配置即可。
+### 使用 WebUi 配置（推荐）
 
-对于 QQ 机器人（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
-适配器文档。
+在 V2.0.0 版本中，我们加入了 Webui 配置界面，帮助使用者更容易的调整配置。
+
+要想使用 WebUi 请先运行机器人，双击解压后的 `BotServer` 文件夹内的 `Start.bat` 运行。在控制台中会打印出一串类似
+
+```log
+05-25 19:49:08 [INFO] WebUi http://host:port/webui?token=********
+```
+
+复制链接到浏览器里，就可以使用 WebUi 进行配置。注意，配置完成后请重启机器人配置才会生效。
 
 > 本机器人仅支持 Onebot V11 协议，建议用 Websocket 反向链接。
+
+### 手动配置（不推荐）
+
+解压下载的 `BotServer.zip` 到任意位置，进入 `BotServer` 文件夹，编辑文件夹下的 [`.env`](https://github.com/Minecraft-QQBot/BotServer/blob/main/BotServer/.env) 文件，按照注释配置即可。
+
+对于 QQ 机器人（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup) 适配器文档。
+
 
 ### 运行服务
 

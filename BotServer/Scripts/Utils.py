@@ -1,7 +1,7 @@
+import os, re
 import binascii
 from base64 import b64encode, b64decode
 from json import loads, dumps
-from re import IGNORECASE, compile
 
 from nonebot import get_bot
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
@@ -10,7 +10,7 @@ from nonebot.log import logger
 
 from .Config import config
 
-regex = compile(R'[A-Z0-9_]+', IGNORECASE)
+regex = re.compile(R'[A-Z0-9_]+', re.IGNORECASE)
 
 
 def rule(event: GroupMessageEvent):
@@ -62,17 +62,27 @@ def decode(string: str):
     return loads(string.decode('Utf-8'))
 
 
+def restart():
+    if os.name == 'nt':
+        os.system('start "python Bot.py"')
+        exit()
+    return False
+
+
 async def get_user_name(group: int, user: int):
     bot = get_bot()
     try:
         response = await bot.get_group_member_info(group_id=group, user_id=user)
-    except (NetworkError, ActionFailed): return None
+    except (NetworkError, ActionFailed):
+        return None
     return response.get('card') or response.get('nickname')
 
 
 async def send_synchronous_message(message: str):
-    try: bot = get_bot()
-    except ValueError: return False
+    try:
+        bot = get_bot()
+    except ValueError:
+        return False
     for group in config.message_groups:
         try:
             await bot.send_group_msg(group_id=group, message=message)
