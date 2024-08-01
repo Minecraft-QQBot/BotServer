@@ -48,7 +48,7 @@ def get_args(args: Message):
 
 def encode(data: dict):
     # 编码
-    string = dumps(data, ensure_ascii=False)
+    string = dumps(data)
     string = string.encode('Utf-8')
     string = b64encode(string)
     return string.decode('Utf-8')

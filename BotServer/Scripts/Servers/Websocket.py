@@ -28,6 +28,7 @@ async def handle_websocket_minecraft(websocket: WebSocket):
     await websocket.accept()
     if name := await verify(websocket):
         data_manager.append_server(name)
+        server_watcher.append_server(name)
         server_manager.append_server(name, websocket)
         await websocket.receive()
         while not websocket.closed:

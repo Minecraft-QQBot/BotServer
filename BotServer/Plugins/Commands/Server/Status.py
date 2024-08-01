@@ -39,6 +39,7 @@ async def handle_group(event: MessageEvent, args: Message = CommandArg()):
     flag, response = await get_status()
     if flag is False:
         await matcher.finish(response)
+    logger.error(response)
     message = turn_message(status_handler(response))
     await matcher.finish(message)
 
@@ -51,6 +52,7 @@ def status_handler(data: dict):
         yield F'  CPU 使用率：{cpu:.1f}%'
     if font is None:
         yield '\n由于系统中没有找到可用的中文字体，无法显示中文标题。请查看文档自行配置！'
+        return None
     yield '\n所有服务器的占用柱状图：'
     yield str(MessageSegment.image(draw_chart(data)))
     return None
@@ -70,6 +72,7 @@ def detailed_handler(name: str, data: list):
 
 
 def draw_chart(data: dict):
+    print(data)
     cpu_bar, ram_bar = None, None
     logger.debug('正在绘制服务器占比柱状图……')
     pyplot.xlabel('Percentage(%)', loc='right')

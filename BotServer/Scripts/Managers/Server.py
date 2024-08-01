@@ -55,7 +55,7 @@ class Server:
         return await self.send_data('player_list')
 
     async def send_server_occupation(self):
-        return (round(percent, 2) for percent in await self.send_data('server_occupation'))
+        return tuple(round(percent, 2) for percent in await self.send_data('server_occupation'))
 
 
 class ServerManager:

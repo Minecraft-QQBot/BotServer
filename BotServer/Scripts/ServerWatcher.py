@@ -34,11 +34,17 @@ class ServerWatcher(Thread):
         self.cpus.pop(name, None)
         self.rams.pop(name, None)
 
+    def append_server(self, name: str):
+        if name not in self.cpus:
+            self.cpus[name] = []
+            self.rams[name] = []
+
     @staticmethod
     async def get_occupation_data():
         data = {}
         for name, server in server_manager.servers.items():
-            data[name] = await server.send_server_occupation()
+            if occupation := await server.send_server_occupation():
+                data[name] = occupation
         return data
 
 
