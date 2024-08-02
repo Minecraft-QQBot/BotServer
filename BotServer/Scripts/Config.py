@@ -37,7 +37,7 @@ class Config(BaseModel):
 
 config: Config = get_plugin_config(Config)
 
-config.server_watcher_update_interval *= 2
+config.server_memory_update_interval *= 2
 config.bot_prefix = config.bot_prefix.upper()
 if config.sync_all_qq_message and ('send' in config.command_enabled):
     config.command_enabled.remove('send')

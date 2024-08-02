@@ -44,10 +44,12 @@ async def handle_websocket_minecraft(websocket: WebSocket):
                 cpu, ram = data
                 Memory.cpu_occupation[name].append(cpu)
                 Memory.ram_occupation[name].append(ram)
-                if len(Memory.cpu_occupation[name]) > config.server_data_max_cache:
+                if len(Memory.cpu_occupation[name]) > config.server_memory_max_cache:
                     Memory.cpu_occupation[name].pop(0)
                     Memory.ram_occupation[name].pop(0)
-        logger.info(F'检测到连接与 [{name}] 已断开！')
+        Memory.cpu_occupation.pop(name, None)
+        Memory.ram_occupation.pop(name, None)
+        logger.info(F'检测到连接与 [{name}] 已断开！移除此服务器内存数据。')
 
 
 async def handle_websocket_bot(websocket: WebSocket):

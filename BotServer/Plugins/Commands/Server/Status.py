@@ -111,7 +111,7 @@ def draw_history_chart(name: str):
 
 async def get_status(server_flag: str = None):
     if server_flag is None:
-        if data := await server_manager.get_occupation_data():
+        if data := await server_manager.get_server_occupation():
             return True, data
         return False, '当前没有已连接的服务器！'
     if server := server_manager.get_server(server_flag):
