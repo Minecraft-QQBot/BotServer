@@ -7,7 +7,7 @@ from nonebot.params import CommandArg
 
 from Scripts.Config import config
 from Scripts.Managers import server_manager
-from Scripts.Utils import turn_message, get_args, rule
+from Scripts.Utils import turn_message, get_permission, get_args, rule
 
 logger.debug('命令 Command 加载完毕！')
 matcher = on_command('command', force_whitespace=True, rule=rule)
@@ -15,7 +15,7 @@ matcher = on_command('command', force_whitespace=True, rule=rule)
 
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
-    if str(event.user_id) not in config.superusers:
+    if not get_permission(event):
         await matcher.finish('你没有权限执行此命令！')
     flag, response = await execute_command(get_args(args))
     if flag is False:

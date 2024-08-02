@@ -1,11 +1,10 @@
-import binascii
-import os
 import re
+import binascii
 from base64 import b64encode, b64decode
 from json import loads, dumps
 
 from nonebot import get_bot
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageEvent, Message
 from nonebot.exception import NetworkError, ActionFailed
 from nonebot.log import logger
 
@@ -63,11 +62,9 @@ def decode(string: str):
     return loads(string.decode('Utf-8'))
 
 
-def restart():
-    if os.name == 'nt':
-        os.system('start "python Bot.py"')
-        exit()
-    return False
+def get_permission(event: MessageEvent):
+    return str(event.user_id) in config.superusers or (
+                config.admin_superusers and event.sender.role in ('admin', 'owner'))
 
 
 async def get_user_name(group: int, user: int):

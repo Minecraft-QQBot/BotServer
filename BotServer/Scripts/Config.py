@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class Config(BaseModel):
     token: str = ''
     bot_prefix: str = None
+    admin_superusers: bool = True
 
     superusers: list[str] = []
     command_start: list[str] = ['.']

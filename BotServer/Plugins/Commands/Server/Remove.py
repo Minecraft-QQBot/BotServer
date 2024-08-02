@@ -2,16 +2,15 @@ from nonebot import on_command
 from nonebot.adapters.onebot.v11 import MessageEvent, Message
 from nonebot.params import CommandArg
 
-from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
-from Scripts.Utils import rule
+from Scripts.Utils import get_permission, rule
 
 matcher = on_command('server remove', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
 @matcher.handle()
 async def handle_group(event: MessageEvent, args: Message = CommandArg()):
-    if str(event.user_id) not in config.superusers:
+    if not get_permission(event):
         await matcher.finish('你没有权限执行此命令！')
     if server_flag := args.extract_plain_text().strip():
         if server := server_manager.get_server(server_flag):

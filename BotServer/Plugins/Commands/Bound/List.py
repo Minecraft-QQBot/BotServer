@@ -1,16 +1,15 @@
 from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent
 
-from Scripts.Config import config
 from Scripts.Managers import data_manager
-from Scripts.Utils import turn_message, rule
+from Scripts.Utils import turn_message, get_permission, rule
 
 matcher = on_command('bound list', force_whitespace=True, block=True, priority=5, rule=rule)
 
 
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent):
-    if str(event.user_id) not in config.superusers:
+    if not get_permission(event):
         await matcher.finish('你没有权限执行此命令！')
     message = turn_message(bound_list_handler())
     await matcher.finish(message)

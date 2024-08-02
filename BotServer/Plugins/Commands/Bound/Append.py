@@ -4,7 +4,7 @@ from nonebot.params import CommandArg
 
 from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
-from Scripts.Utils import get_user_name, check_player, get_args, rule
+from Scripts.Utils import get_permission, get_user_name, get_args, check_player, rule
 from .Base import async_lock
 
 matcher = on_command('bound append', force_whitespace=True, block=True, priority=5, rule=rule)
@@ -12,7 +12,7 @@ matcher = on_command('bound append', force_whitespace=True, block=True, priority
 
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
-    if str(event.user_id) not in config.superusers:
+    if not get_permission(event):
         await matcher.finish('你没有权限执行此命令！')
     args = get_args(args)
     message = await bound_append_handler(args, event.group_id)

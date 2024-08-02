@@ -3,9 +3,8 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
 
-from Scripts.Config import config
 from Scripts.Managers import server_manager
-from Scripts.Utils import get_args, rule
+from Scripts.Utils import get_permission, get_args, rule
 
 logger.debug('命令 Mcdr 加载完毕！')
 matcher = on_command('mcdr', force_whitespace=True, rule=rule)
@@ -13,7 +12,7 @@ matcher = on_command('mcdr', force_whitespace=True, rule=rule)
 
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
-    if str(event.user_id) not in config.superusers:
+    if not get_permission(event):
         await matcher.finish('你没有权限执行此命令！')
     message = await mcdr_handler(get_args(args))
     await matcher.finish(message)
