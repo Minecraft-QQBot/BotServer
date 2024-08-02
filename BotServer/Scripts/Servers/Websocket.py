@@ -5,9 +5,9 @@ from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 from nonebot.exception import WebSocketClosed
 from nonebot.log import logger
 
+from .. import Memory
 from ..Config import config
 from ..Managers import server_manager, data_manager
-from ..ServerWatcher import server_watcher
 from ..Utils import send_synchronous_message, decode, encode
 
 
@@ -27,12 +27,26 @@ async def verify(websocket: WebSocket):
 async def handle_websocket_minecraft(websocket: WebSocket):
     await websocket.accept()
     if name := await verify(websocket):
+        time_count = 0
         data_manager.append_server(name)
-        server_watcher.append_server(name)
-        server_manager.append_server(name, websocket)
+        server = server_manager.append_server(name, websocket)
+        Memory.cpu_occupation[name] = []
+        Memory.ram_occupation[name] = []
         await websocket.receive()
         while not websocket.closed:
+            time_count += 1
             await asyncio.sleep(30)
+            if time_count <= config.server_memory_update_interval:
+                continue
+            logger.debug(F'正在尝试获取服务器 [{name}] 的占用数据！')
+            if data := await server.send_server_occupation():
+                time_count = 0
+                cpu, ram = data
+                Memory.cpu_occupation[name].append(cpu)
+                Memory.ram_occupation[name].append(ram)
+                if len(Memory.cpu_occupation[name]) > config.server_data_max_cache:
+                    Memory.cpu_occupation[name].pop(0)
+                    Memory.ram_occupation[name].pop(0)
         logger.info(F'检测到连接与 [{name}] 已断开！')
 
 
@@ -96,7 +110,6 @@ async def server_startup(name: str, data: dict):
 
 async def server_shutdown(name: str, data: dict):
     logger.info('收到服务器关闭信息！正在断开连接……')
-    server_watcher.remove_server(name)
     await server_manager.disconnect_server(name)
     if config.broadcast_server:
         await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)

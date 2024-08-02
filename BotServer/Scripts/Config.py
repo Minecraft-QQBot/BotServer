@@ -23,8 +23,8 @@ class Config(BaseModel):
     sync_all_game_message: bool = False
     sync_message_between_servers: bool = True
 
-    server_watcher_max_cache: int = 200
-    server_watcher_update_interval: int = 1
+    server_memory_max_cache: int = 200
+    server_memory_update_interval: int = 1
 
     whitelist_command: str = 'whitelist'
 
@@ -37,7 +37,7 @@ class Config(BaseModel):
 
 config: Config = get_plugin_config(Config)
 
-config.server_watcher_update_interval *= 60
+config.server_watcher_update_interval *= 2
 config.bot_prefix = config.bot_prefix.upper()
 if config.sync_all_qq_message and ('send' in config.command_enabled):
     config.command_enabled.remove('send')

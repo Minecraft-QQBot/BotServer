@@ -37,6 +37,7 @@ class Server:
             if response.get('success'):
                 logger.debug(F'已收到服务器 [{self.name}] 的回应 {response}，数据发送成功！')
                 return response.get('data')
+            logger.debug(F'向服务器 [{self.name}] 发送数据 {event_type} 失败！')
         except (WebSocketClosed, ConnectionError):
             self.status = False
             logger.warning(F'与服务器 [{self.name}] 的连接已断开！')
@@ -66,7 +67,9 @@ class ServerManager:
         return any(server.status for server in self.servers.values())
 
     def append_server(self, name: str, websocket: WebSocket):
-        self.servers[name] = Server(name, websocket)
+        server = Server(name, websocket)
+        self.servers[name] = server
+        return server
 
     def get_server(self, server_flag: Union[str, int]):
         if isinstance(server_flag, int) or server_flag.isdigit():
@@ -96,6 +99,10 @@ class ServerManager:
         logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
         return {name: await server.send_mcdr_command(command) for name, server in self.servers.items() if
                 server.status and server.type == 'McdReforged'}
+
+    async def get_server_occupation(self):
+        logger.debug('获取所有已连接服务器的占用率。')
+        return {name: await server.send_server_occupation() for name, server in self.servers.items() if server.status}
 
     async def broadcast(self, source: str, player: str = None, message: str = None, except_server: str = None):
         params = [{'color': config.sync_color_source, 'text': F'[{source}] '}]

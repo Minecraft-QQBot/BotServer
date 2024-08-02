@@ -8,8 +8,8 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
 
+from Scripts import Memory
 from Scripts.Managers import server_manager
-from Scripts.ServerWatcher import server_watcher
 from Scripts.Utils import turn_message, rule
 
 
@@ -72,7 +72,6 @@ def detailed_handler(name: str, data: list):
 
 
 def draw_chart(data: dict):
-    print(data)
     cpu_bar, ram_bar = None, None
     logger.debug('正在绘制服务器占比柱状图……')
     pyplot.xlabel('Percentage(%)', loc='right')
@@ -92,8 +91,8 @@ def draw_chart(data: dict):
 
 def draw_history_chart(name: str):
     logger.debug(F'正在绘制服务器 [{name}] 状态图表……')
-    cpu = server_watcher.cpus.get(name)
-    ram = server_watcher.rams.get(name)
+    cpu = Memory.cpu_occupation.get(name)
+    ram = Memory.ram_occupation.get(name)
     if len(cpu) >= 5:
         pyplot.ylim(0, 100)
         pyplot.xlabel('Time', loc='right')
@@ -112,7 +111,7 @@ def draw_history_chart(name: str):
 
 async def get_status(server_flag: str = None):
     if server_flag is None:
-        if data := await server_watcher.get_occupation_data():
+        if data := await server_manager.get_occupation_data():
             return True, data
         return False, '当前没有已连接的服务器！'
     if server := server_manager.get_server(server_flag):
