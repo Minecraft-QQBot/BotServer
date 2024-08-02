@@ -62,8 +62,7 @@ def format_players(players: list):
         yield '    ' + fake_players + '\n'
         return None
     if players:
-        players[0] += '    '
-        yield '\n    '.join(players) + '\n'
+        yield '    ' + '\n    '.join(players) + '\n'
         return None
     yield '  没有玩家在线！\n'
 
