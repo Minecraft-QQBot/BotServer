@@ -40,5 +40,8 @@ config: Config = get_plugin_config(Config)
 
 config.server_memory_update_interval *= 2
 config.bot_prefix = config.bot_prefix.upper()
+config.sync_color_source = config.sync_color_source.lower()
+config.sync_color_player = config.sync_color_player.lower()
+config.sync_color_message = config.sync_color_message.lower()
 if config.sync_all_qq_message and ('send' in config.command_enabled):
     config.command_enabled.remove('send')

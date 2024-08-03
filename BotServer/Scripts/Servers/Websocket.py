@@ -1,8 +1,8 @@
 import asyncio
 
 from nonebot import get_driver
-from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 from nonebot.exception import WebSocketClosed
+from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 from nonebot.log import logger
 
 from .. import Memory
@@ -32,7 +32,6 @@ async def handle_websocket_minecraft(websocket: WebSocket):
         server = server_manager.append_server(name, websocket)
         Memory.cpu_occupation[name] = []
         Memory.ram_occupation[name] = []
-        await websocket.receive()
         while not websocket.closed:
             time_count += 1
             await asyncio.sleep(30)

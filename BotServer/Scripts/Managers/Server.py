@@ -26,18 +26,21 @@ class Server:
         await self.websocket.close()
         logger.success(F'已断开与服务器 [{self.name}] 的连接！')
 
-    async def send_data(self, event_type: str, data: str = None):
+    async def send_data(self, event_type: str, data: object = None, wait: bool = True):
         try:
             message_data = {'type': event_type}
             if data is not None:
                 message_data['data'] = data
             await self.websocket.send(encode(message_data))
-            logger.debug(F'已向服务器 [{self.name}] 发送数据 {message_data}，正在等待回应……')
-            response = decode(await self.websocket.receive())
-            if response.get('success'):
-                logger.debug(F'已收到服务器 [{self.name}] 的回应 {response}，数据发送成功！')
-                return response.get('data')
-            logger.debug(F'向服务器 [{self.name}] 发送数据 {event_type} 失败！')
+            if wait is True:
+                logger.debug(F'已向服务器 [{self.name}] 发送数据 {message_data}，正在等待回应……')
+                response = decode(await self.websocket.receive())
+                if response.get('success'):
+                    logger.debug(F'已收到服务器 [{self.name}] 的回应 {response}，数据发送成功！')
+                    return response.get('data')
+                logger.debug(F'向服务器 [{self.name}] 发送数据 {event_type} 失败！')
+                return None
+            logger.debug(F'向服务器 [{self.name}] 发送数据 {message_data}')
         except (WebSocketClosed, ConnectionError):
             self.status = False
             logger.warning(F'与服务器 [{self.name}] 的连接已断开！')
@@ -46,11 +49,11 @@ class Server:
     async def send_command(self, command: str):
         return await self.send_data('command', command)
 
+    async def send_message(self, message_data: list):
+        await self.send_data('message', message_data, wait=False)
+
     async def send_mcdr_command(self, command: str):
         return await self.send_data('mcdr_command', command)
-
-    async def send_message(self, message: str):
-        return await self.send_data('message', message)
 
     async def send_player_list(self):
         return await self.send_data('player_list')
@@ -105,16 +108,12 @@ class ServerManager:
         return {name: await server.send_server_occupation() for name, server in self.servers.items() if server.status}
 
     async def broadcast(self, source: str, player: str = None, message: str = None, except_server: str = None):
-        params = [{'color': config.sync_color_source, 'text': F'[{source}] '}]
-        if player: params.append({'color': config.sync_color_player, 'text': F'<{player}> '})
-        if message: params.append({'color': config.sync_color_message, 'text': message})
-        command = F'tellraw @a {dumps(params)}'
-        if not except_server:
-            await self.execute(command)
-            return None
+        message_data = [{'color': config.sync_color_source, 'text': F'[{source}] '}]
+        if player: message_data.append({'color': config.sync_color_player, 'text': F'<{player}> '})
+        if message: message_data.append({'color': config.sync_color_message, 'text': message})
         for name, server in self.servers.items():
-            if name != except_server and server.status:
-                await server.send_command(command)
+            if ((except_server is None) or name != except_server) and server.status:
+                await server.send_message(message_data)
 
 
 server_manager = ServerManager()

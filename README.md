@@ -3,6 +3,7 @@
 **一款基于 Nonebot2 用多种方式与 Minecraft 交互的 Python QQ 机器人**。功能丰富，使用简单且可以自行配置，仅需简单配置即可使用。目前已实现的功能有：
 
 - 多服互联。
+- 使用 WebUi 简单配置。
 - 戳一戳机器人发送一言卡片。
 - 可使用指令在游戏内向 QQ 群发送消息。
 - 把 QQ 群内的消息转发到游戏内。
@@ -48,7 +49,7 @@ pip3 install "requests>=2.32.3"
 如若你需要使用 server status 指令，您需安装 `matplotlib` 库。使用如下指令安装：
 
 ```bash
-pip3 install matplotlib
+pip3 install "matplotlib>=3.9.1"
 ```
 
 > [!WARNING]
@@ -103,8 +104,9 @@ A: 请检查你是否加上了指令前缀（即 .env 内的 COMMAND_START）。
 
 感谢以下人员为此机器人开发提供帮助，在此特别鸣谢：
 
+- [Msg_Lbo](https://github.com/Msg-Lbo) 提供网站服务器以及域名，贡献 WebUi 代码。
 - [meng877](https://github.com/meng877) 提出意见，贡献部分代码。
-- [Decent_Kook](https://github.com/AISophon) 提供测试环境，提出意见。
+- [Decent_Kook](https://github.com/AISophon) 提供测试环境，提出意见，帮忙宣传。
 - [creepebucket](https://github.com/creepebucket) 提供测试环境。
 
 > [!TIP]

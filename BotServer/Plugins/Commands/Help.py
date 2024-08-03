@@ -51,5 +51,5 @@ def format_info(info: dict):
     yield F'{prefix}  +-- 语法：{info["usage"]}'
     if parameters := info.get('parameters'):
         yield F'{prefix}  参数说明：'
-        for parmeter, usage in parameters.items():
-            yield F'{prefix}    +-- {parmeter} — {usage}'
+        for parameter, usage in parameters.items():
+            yield F'{prefix}    +-- {parameter} — {usage}'
