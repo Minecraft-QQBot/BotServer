@@ -92,7 +92,7 @@ def draw_chart(data: dict):
             ram_bar = pyplot.barh(pos + 1, ram, color='blue')
             count += 1
     pyplot.legend((cpu_bar, ram_bar), ('CPU', 'RAM'))
-    pyplot.yticks([(count * 2 + 0.5) for count in range(len(data))], names, fontproperties=font)
+    pyplot.yticks([(count * 2 + 0.5) for count in range(len(names))], names, fontproperties=font)
     buffer = BytesIO()
     pyplot.savefig(buffer, format='png')
     pyplot.clf()
