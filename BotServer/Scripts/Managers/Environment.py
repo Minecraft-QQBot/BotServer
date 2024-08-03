@@ -18,17 +18,15 @@ class EnvironmentManager:
 
     def load(self):
         with self.file_path.open('r', encoding='Utf-8') as file:
-            for line in file.readlines():
+            for line in file:
                 line = line.strip()
                 if line.startswith('#') or (not line):
                     self.mapping.append(line)
                     continue
                 key, value = line.split('=')
                 key, value = key.strip(), value.strip()
-                try:
-                    value = loads(value)
-                except JSONDecodeError:
-                    pass
+                try: value = loads(value)
+                except JSONDecodeError: pass
                 self.environment[key] = value
                 self.mapping.append(key)
             logger.success('预加载配置文件完毕！')

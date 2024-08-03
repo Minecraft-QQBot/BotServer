@@ -38,7 +38,9 @@
 在命令行内输入以下指令安装依赖：
 
 ```bash
-pip3 install "nonebot2[fastapi]>=2.3.1", "nonebot-adapter-onebot>=2.4.3", "requests>=2.32.3"
+pip3 install "nonebot2[fastapi]>=2.3.1"
+pip3 install "nonebot-adapter-onebot>=2.4.3"
+pip3 install "requests>=2.32.3"
 ```
 
 以上是运行本机器所必须的。此外，您可以自行选择是否安装其他依赖库，一些拓展的指令需要额外安装。不安装也仅会影响那部分指令的使用。
