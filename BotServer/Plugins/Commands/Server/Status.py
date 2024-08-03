@@ -46,13 +46,19 @@ async def handle_group(event: MessageEvent, args: Message = CommandArg()):
 
 def status_handler(data: dict):
     yield '已连接的所有服务器信息：'
-    for name, (cpu, ram) in data.items():
+    for name, occupation in data.items():
         yield F'————— {name} —————'
-        yield F'  内存使用率：{ram:.1f}%'
-        yield F'  CPU 使用率：{cpu:.1f}%'
+        if occupation:
+            cpu, ram = occupation
+            yield F'  内存使用率：{ram:.1f}%'
+            yield F'  CPU 使用率：{cpu:.1f}%'
+            continue
+        yield F'  此服务器未处于监视状态！'
     if font is None:
         yield '\n由于系统中没有找到可用的中文字体，无法显示中文标题。请查看文档自行配置！'
         return None
+    if not any(data.values()):
+        yield '\n当前没有服务器处于监视状态！无法绘制柱状图。'
     yield '\n所有服务器的占用柱状图：'
     yield str(MessageSegment.image(draw_chart(data)))
     return None
@@ -72,16 +78,21 @@ def detailed_handler(name: str, data: list):
 
 
 def draw_chart(data: dict):
+    count, names = 0, []
     cpu_bar, ram_bar = None, None
     logger.debug('正在绘制服务器占比柱状图……')
     pyplot.xlabel('Percentage(%)', loc='right')
     pyplot.title('Server Usage Percentage')
-    for count, (cpu, ram) in enumerate(data.values()):
-        pos = (count * 2)
-        cpu_bar = pyplot.barh(pos, cpu, color='red')
-        ram_bar = pyplot.barh(pos + 1, ram, color='blue')
+    for name, occupation in data.items():
+        if occupation:
+            pos = (count * 2)
+            cpu, ram = occupation
+            names.append(name)
+            cpu_bar = pyplot.barh(pos, cpu, color='red')
+            ram_bar = pyplot.barh(pos + 1, ram, color='blue')
+            count += 1
     pyplot.legend((cpu_bar, ram_bar), ('CPU', 'RAM'))
-    pyplot.yticks([(count * 2 + 0.5) for count in range(len(data))], data.keys(), fontproperties=font)
+    pyplot.yticks([(count * 2 + 0.5) for count in range(len(data))], names, fontproperties=font)
     buffer = BytesIO()
     pyplot.savefig(buffer, format='png')
     pyplot.clf()
