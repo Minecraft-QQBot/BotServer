@@ -43,15 +43,10 @@
 pip3 install "nonebot2[fastapi]>=2.3.1"
 pip3 install "nonebot-adapter-onebot>=2.4.3"
 pip3 install "requests>=2.32.3"
-```
-
-以上是运行本机器所必须的。此外，您可以自行选择是否安装其他依赖库，一些拓展的指令需要额外安装。不安装也仅会影响那部分指令的使用。
-
-如若你需要使用 server status 指令，您需安装 `matplotlib` 库。使用如下指令安装：
-
-```bash
 pip3 install "matplotlib>=3.9.1"
 ```
+
+如果你看到控制台输出 `install successfully` 类似的日志，说明你安装依赖完毕，可以正常使用机器人。
 
 > [!WARNING]
 > 此机器人仅支持 Python 3.8 及以上版本。若版本过低，否则可能会出现不可预知的错误。
