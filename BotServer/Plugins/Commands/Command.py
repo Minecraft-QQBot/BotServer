@@ -49,7 +49,7 @@ def parse_command(command: list):
 async def execute_command(args: list):
     if len(args) <= 1:
         return False, '参数不正确！请查看语法后再试。'
-    server_flag, * command = args
+    server_flag, *command = args
     if command := parse_command(command):
         if server_flag == '*':
             return True, await server_manager.execute(command)
@@ -57,4 +57,3 @@ async def execute_command(args: list):
             return server.name, await server.send_command(command)
         return False, F'服务器 [{server_flag}] 不存在！请检查插件配置。'
     return False, F'命令 {command} 已被禁止！'
-

@@ -49,16 +49,14 @@ class DataManager:
 
     def load_bot_data(self):
         logger.debug('正在加载机器人数据……')
-        config_path = Path('Resources/Config')
-        version_path = (config_path / 'Version.json')
-        commands_path = (config_path / 'Commands.json')
-        if not commands_path.exists() or not version_path.exists():
+        bot_data = Path('Resources/Bot.json')
+        if not bot_data.exists():
             logger.error('加载机器人数据失败，请重新安装后再试！')
             exit(1)
-        with commands_path.open(encoding='Utf-8', mode='r') as file:
-            self.commands = load(file)
-        with version_path.open(encoding='Utf-8', mode='r') as file:
-            self.version = load(file)['version']
+        with bot_data.open('r', encoding='Utf-8') as file:
+            data = load(file)
+            self.version = data['version']
+            self.commands = data['commands']
         logger.success('加载正在加载机器人数据完毕！')
 
     def save(self):
@@ -66,11 +64,11 @@ class DataManager:
         webui_file = (self.data_dir / 'Webui.json')
         server_file = (self.data_dir / 'Server.json')
         player_file = (self.data_dir / 'Player.json')
-        with webui_file.open(encoding='Utf-8', mode='w') as file:
+        with webui_file.open('w', encoding='Utf-8') as file:
             dump({'token': self.webui_token}, file)
-        with server_file.open(encoding='Utf-8', mode='w') as file:
+        with server_file.open('w', encoding='Utf-8') as file:
             dump(self.servers, file)
-        with player_file.open(encoding='Utf-8', mode='w') as file:
+        with player_file.open('w', encoding='Utf-8') as file:
             dump(self.players, file)
         logger.success('保存数据文件完毕！')
 

@@ -1,8 +1,8 @@
 import asyncio
 
 from nonebot import get_driver
-from nonebot.exception import WebSocketClosed
 from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
+from nonebot.exception import WebSocketClosed
 from nonebot.log import logger
 
 from .. import Memory

@@ -6,6 +6,7 @@ from nonebot import get_driver, get_app
 from nonebot.drivers import URL, Request, Response, ASGIMixin, HTTPServerSetup
 from nonebot.log import logger
 
+from Scripts.Utils import restart
 from Scripts.Managers import environment_manager, data_manager
 
 
@@ -14,7 +15,8 @@ async def api(request: Request):
         return Response(403, content=dumps({'success': False}))
     if request.method == 'POST':
         environment_manager.update(request.json)
-        return Response(200, content=dumps({'success': True}))
+        message = '机器人即将自动重启！' if restart() else '当前系统不支持自动重启，请手动重启机器人！'
+        return Response(200, content=dumps({'success': True, 'message': message}))
     response = {'success': True, 'data': environment_manager.environment}
     return Response(200, content=dumps(response))
 

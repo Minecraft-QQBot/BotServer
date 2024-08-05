@@ -26,13 +26,16 @@ def luck_handler(event: GroupMessageEvent):
     random.seed(seed := int(seed_hash.hexdigest(), 16))
     tips = '啧……'
     luck_point = random.randint(10, 100)
-    if luck_point > 90: tips = '哇！'
-    elif luck_point > 60: tips = '喵~'
-    elif luck_point > 30: tips = '呜……'
+    if luck_point > 90:
+        tips = '哇！'
+    elif luck_point > 60:
+        tips = '喵~'
+    elif luck_point > 30:
+        tips = '呜……'
     yield F'你今天的人品为 {luck_point}，{tips}'
     bad_thing = bad_things[(seed & event.group_id) % len(bad_things)]
     good_thing = good_things[(seed ^ event.group_id) % len(good_things)]
     yield F'今日宜：{good_thing}'
     if bad_thing.startswith(good_thing[:2]):
-        bad_thing = bad_things[seed % len(good_things) - 1]
+        bad_thing = bad_things[bad_things.index(bad_thing) - 1]
     yield F'今日忌：{bad_thing}'

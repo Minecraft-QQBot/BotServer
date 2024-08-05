@@ -9,12 +9,12 @@
 - 把 QQ 群内的消息转发到游戏内。
 - 禁用 QQ 群内的特定命令。
 - 对 QQ 群指令相应。目前已实现的指令有：
-  - `luck` 查看今日幸运指数。
-  - `list` 查询每个服务器的玩家在线情况。（依靠原版 list 指令实现）
-  - `help` 查看帮助信息。
-  - `server` 查看当前在线的服务器并显示对应编号，也可用于查看服务器占用。
-  - `bound` 有关绑定白名单的指令。
-  - `command` 发送指令到服务器。
+    - `luck` 查看今日幸运指数。
+    - `list` 查询每个服务器的玩家在线情况。（依靠原版 list 指令实现）
+    - `help` 查看帮助信息。
+    - `server` 查看当前在线的服务器并显示对应编号，也可用于查看服务器占用。
+    - `bound` 有关绑定白名单的指令。
+    - `command` 发送指令到服务器。
 
 更多功能还在探索中……
 
@@ -31,7 +31,8 @@
 如你有能力开发其他的对接插件，欢迎联系并加入我们！
 
 > [!WARNING]
-> 本机器人 V2.x.x 并不向下兼容 V1.x.x，请在更新后重新配置。只有新版的机器人可以支持多种对接的方式，旧版机器人仅支持 Mcdr 插件。
+> 本机器人 V2.x.x 并不向下兼容 V1.x.x，请在更新后重新配置。只有新版的机器人可以支持多种对接的方式，旧版机器人仅支持 Mcdr
+> 插件。
 > 如需从 V1 升级，请查看 [V1 升级指南](https://github.com/Minecraft-QQBot/BotServer/blob/main/Docs/Upgrade.md)
 
 ## 安装依赖
@@ -75,10 +76,11 @@ pip3 install "matplotlib>=3.9.1"
 
 ### 手动配置（不推荐）
 
-解压下载的 `BotServer.zip` 到任意位置，进入 `BotServer` 文件夹，编辑文件夹下的 [`.env`](https://github.com/Minecraft-QQBot/BotServer/blob/main/BotServer/.env) 文件，按照注释配置即可。
+解压下载的 `BotServer.zip` 到任意位置，进入 `BotServer`
+文件夹，编辑文件夹下的 [`.env`](https://github.com/Minecraft-QQBot/BotServer/blob/main/BotServer/.env) 文件，按照注释配置即可。
 
-对于 QQ 机器人（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup) 适配器文档。
-
+对于 QQ 机器人（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
+适配器文档。
 
 ### 运行服务
 
@@ -110,7 +112,8 @@ A: 请检查你是否加上了指令前缀（即 .env 内的 COMMAND_START）。
 - [creepebucket](https://github.com/creepebucket) 提供测试环境。
 
 > [!TIP]
-> 若遇到问题，或有更好的想法，可以加入 QQ 群 [`962802248`](https://qm.qq.com/q/B3kmvJl2xO) 或者提交 Issues 向作者反馈。若你有能力，欢迎为本项目提供代码贡献！
+> 若遇到问题，或有更好的想法，可以加入 QQ 群 [`962802248`](https://qm.qq.com/q/B3kmvJl2xO) 或者提交 Issues
+> 向作者反馈。若你有能力，欢迎为本项目提供代码贡献！
 
 ## 友链
 

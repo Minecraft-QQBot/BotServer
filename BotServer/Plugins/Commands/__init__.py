@@ -1,7 +1,7 @@
 from Scripts.Config import config
 
-
 from .About import *
+
 if 'send' in config.command_enabled:
     from .Send import *
 if 'help' in config.command_enabled:

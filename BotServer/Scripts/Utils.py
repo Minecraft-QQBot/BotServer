@@ -1,12 +1,17 @@
-import re
 import binascii
+import inspect
+import os
+import re
 from base64 import b64encode, b64decode
+from threading import Timer
 from json import loads, dumps
+from pathlib import Path
 
 from nonebot import get_bot
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageEvent, Message
 from nonebot.exception import NetworkError, ActionFailed
 from nonebot.log import logger
+from uvicorn.server import Server
 
 from .Config import config
 
@@ -15,6 +20,23 @@ regex = re.compile(R'[A-Z0-9_]+', re.IGNORECASE)
 
 def rule(event: GroupMessageEvent):
     return event.group_id in config.command_groups
+
+
+def restart():
+    frames = inspect.getouterframes(inspect.currentframe())
+    servers = (info.frame.f_locals.get('server') for info in frames[::-1])
+    server = next(server for server in servers if isinstance(server, Server))
+
+    def core():
+        file = Path('Bot.py').absolute()
+        os.system(F'start python {file}')
+        server.should_exit = True
+
+    if os.name == 'nt':
+        timer = Timer(2, core)
+        timer.start()
+        return True
+    return False
 
 
 def turn_message(iterator: iter):
@@ -58,20 +80,21 @@ def decode(string: str):
     try:
         string = b64decode(string)
     except binascii.Error:
+        logger.warning(F'无法解码字符串 {string}')
         return None
     return loads(string.decode('Utf-8'))
 
 
 def get_permission(event: MessageEvent):
-    return str(event.user_id) in config.superusers or (
-                config.admin_superusers and event.sender.role in ('admin', 'owner'))
+    return (str(event.user_id) in config.superusers) or (
+            config.admin_superusers and event.sender.role in ('admin', 'owner'))
 
 
 async def get_user_name(group: int, user: int):
-    bot = get_bot()
     try:
+        bot = get_bot()
         response = await bot.get_group_member_info(group_id=group, user_id=user)
-    except (NetworkError, ActionFailed):
+    except (NetworkError, ActionFailed, ValueError):
         return None
     return response.get('card') or response.get('nickname')
 
@@ -79,11 +102,8 @@ async def get_user_name(group: int, user: int):
 async def send_synchronous_message(message: str):
     try:
         bot = get_bot()
-    except ValueError:
-        return False
-    for group in config.message_groups:
-        try:
+        for group in config.message_groups:
             await bot.send_group_msg(group_id=group, message=message)
-        except (NetworkError, ActionFailed):
-            return False
+    except (NetworkError, ActionFailed, ValueError):
+        return False
     return True

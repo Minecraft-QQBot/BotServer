@@ -15,7 +15,7 @@ matcher = on_command('list', force_whitespace=True, rule=rule)
 
 @matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
-    server = args if (args := args.extract_plain_text().strip()) else None
+    server = (args.extract_plain_text().strip()) or None
     flag, response = await get_players(server)
     if flag is False:
         await matcher.finish(response)
@@ -69,7 +69,8 @@ def format_players(players: list):
 
 async def get_players(server_flag: str = None):
     if server_flag is None:
-        players = {name: await server.send_player_list() for name, server in server_manager.servers.items() if server.status}
+        players = {name: await server.send_player_list() for name, server in server_manager.servers.items() if
+                   server.status}
         return True, players
     if server := server_manager.get_server(server_flag):
         return server.name, await server.send_player_list()

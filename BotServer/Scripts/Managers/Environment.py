@@ -25,8 +25,10 @@ class EnvironmentManager:
                     continue
                 key, value = line.split('=')
                 key, value = key.strip(), value.strip()
-                try: value = loads(value)
-                except JSONDecodeError: pass
+                try:
+                    value = loads(value)
+                except JSONDecodeError:
+                    pass
                 self.environment[key] = value
                 self.mapping.append(key)
             logger.success('预加载配置文件完毕！')

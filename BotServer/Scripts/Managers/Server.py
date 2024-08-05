@@ -1,4 +1,3 @@
-from json import dumps
 from typing import Union
 
 from nonebot.drivers import WebSocket
@@ -74,15 +73,14 @@ class ServerManager:
         self.servers[name] = server
         return server
 
-    def get_server(self, server_flag: Union[str, int], check_status: bool = True):
+    def get_server(self, server_flag: Union[str, int]):
         if isinstance(server_flag, int) or server_flag.isdigit():
             index = int(server_flag)
             if index > len(data_manager.servers):
                 return None
             server_flag = data_manager.servers[index - 1]
-        if server := self.servers.get(server_flag):
-            if check_status is False or server.status:
-                return server
+        if (server := self.servers.get(server_flag)) and server.status:
+            return server
 
     async def disconnect_server(self, name: str):
         if server := self.servers.get(name):

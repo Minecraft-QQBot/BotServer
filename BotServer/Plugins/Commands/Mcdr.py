@@ -21,7 +21,7 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
 async def mcdr_handler(args: list):
     if len(args) <= 1:
         return '参数不正确！请查看语法后再试。'
-    server_flag, * command = args
+    server_flag, *command = args
     command = ' '.join(command)
     if server_flag == '*':
         await server_manager.execute_mcdr(command)
