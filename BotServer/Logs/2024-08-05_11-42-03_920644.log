@@ -1,0 +1,27 @@
+2024-08-05 11:42:03.921 | DEBUG    | Scripts:load_bot_data:51 - 正在加载机器人数据……
+2024-08-05 11:42:03.922 | SUCCESS  | Scripts:load_bot_data:60 - 加载正在加载机器人数据完毕！
+2024-08-05 11:42:03.922 | INFO     | Scripts:load:23 - 加载数据文件……
+2024-08-05 11:42:03.923 | SUCCESS  | Scripts:load:45 - 加载数据文件完毕！
+2024-08-05 11:42:03.923 | SUCCESS  | Scripts:load:34 - 预加载配置文件完毕！
+2024-08-05 11:42:03.924 | SUCCESS  | Scripts:setup_webui_http_server:41 - 载入 WebUi 成功！请保管好下方的链接，以供使用。
+2024-08-05 11:42:03.925 | INFO     | Scripts:setup_webui_http_server:43 - WebUi http://127.0.0.1:8000/webui?token=25dd04c231f5ee8d76329ae250cbd184
+2024-08-05 11:42:03.928 | SUCCESS  | Scripts:setup_websocket_server:188 - 装载 WebSocket 服务器成功！
+2024-08-05 11:42:03.929 | INFO     | uvicorn:startup:62 - Application startup complete.
+2024-08-05 11:42:03.929 | INFO     | uvicorn:_log_started_message:214 - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2024-08-05 11:42:06.840 | INFO     | uvicorn:send:466 - 127.0.0.1:57611 - "GET /webui?token=25dd04c231f5ee8d76329ae250cbd184 HTTP/1.1" 200
+2024-08-05 11:42:07.011 | INFO     | uvicorn:send:466 - 127.0.0.1:57611 - "GET /assets/index.js HTTP/1.1" 200
+2024-08-05 11:42:07.013 | INFO     | uvicorn:send:466 - 127.0.0.1:57612 - "GET /assets/index.css HTTP/1.1" 200
+2024-08-05 11:42:07.439 | INFO     | uvicorn:send:466 - 127.0.0.1:57611 - "GET /webui/api HTTP/1.1" 200
+2024-08-05 11:42:07.954 | INFO     | uvicorn:send:466 - 127.0.0.1:57611 - "GET /assets/favicon.ico HTTP/1.1" 200
+2024-08-05 11:42:08.491 | INFO     | Scripts:update:37 - 正在更新配置 {'PORT': 8000, 'HOST': '127.0.0.1', 'SUPERUSERS': ['123456789'], 'ADMIN_SUPERUSERS': True, 'COMMAND_SEP': [' '], 'COMMAND_START': ['.'], 'LOG_LEVEL': 'INFO', 'COMMAND_GROUPS': [123456789], 'MESSAGE_GROUPS': [123456789], 'SYNC_ALL_GAME_MESSAGE': True, 'SYNC_MESSAGE_BETWEEN_SERVERS': True, 'COMMAND_ENABLED': ['list', 'luck', 'server', 'help', 'bound', 'command', 'send'], 'BROADCAST_SERVER': True, 'BROADCAST_PLAYER': True, 'SERVER_MEMORY_UPDATE_INTERVAL': 5, 'SERVER_MEMORY_MAX_CACHE': 200, 'WHITELIST_COMMAND': 'whitelist', 'SYNC_COLOR_SOURCE': 'gray', 'SYNC_COLOR_PLAYER': 'gray', 'SYNC_COLOR_MESSAGE': 'gray', 'BOT_PREFIX': 'bot_', 'QQ_BOUND_MAX_NUMBER': 1}
+2024-08-05 11:42:08.492 | INFO     | Scripts:write:43 - 正在写入配置……
+2024-08-05 11:42:08.493 | SUCCESS  | Scripts:write:52 - 写入配置成功！手动重启机器人后修改才会生效。
+2024-08-05 11:42:08.541 | INFO     | uvicorn:send:466 - 127.0.0.1:57611 - "POST /webui/api HTTP/1.1" 200
+2024-08-05 11:42:10.612 | INFO     | uvicorn:shutdown:258 - Shutting down
+2024-08-05 11:42:10.724 | INFO     | uvicorn:shutdown:67 - Waiting for application shutdown.
+2024-08-05 11:42:10.724 | DEBUG    | Scripts:save:63 - 正在保存数据文件……
+2024-08-05 11:42:10.726 | SUCCESS  | Scripts:save:73 - 保存数据文件完毕！
+2024-08-05 11:42:10.727 | INFO     | Scripts:unload:90 - 正在断开所有服务器的连接……
+2024-08-05 11:42:10.728 | SUCCESS  | Scripts:unload:93 - 所有服务器的连接已断开！
+2024-08-05 11:42:10.730 | INFO     | uvicorn:shutdown:76 - Application shutdown complete.
+2024-08-05 11:42:10.730 | INFO     | uvicorn:_serve:92 - Finished server process [14060]

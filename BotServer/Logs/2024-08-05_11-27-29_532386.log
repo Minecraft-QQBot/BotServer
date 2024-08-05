@@ -1,0 +1,18 @@
+2024-08-05 11:27:29.534 | DEBUG    | Scripts:load_bot_data:51 - 正在加载机器人数据……
+2024-08-05 11:27:29.535 | SUCCESS  | Scripts:load_bot_data:60 - 加载正在加载机器人数据完毕！
+2024-08-05 11:27:29.535 | INFO     | Scripts:load:23 - 加载数据文件……
+2024-08-05 11:27:29.536 | SUCCESS  | Scripts:load:45 - 加载数据文件完毕！
+2024-08-05 11:27:29.537 | SUCCESS  | Scripts:load:34 - 预加载配置文件完毕！
+2024-08-05 11:27:29.538 | SUCCESS  | Scripts:setup_webui_http_server:41 - 载入 WebUi 成功！请保管好下方的链接，以供使用。
+2024-08-05 11:27:29.538 | INFO     | Scripts:setup_webui_http_server:43 - WebUi http://127.0.0.1:8000/webui?token=25dd04c231f5ee8d76329ae250cbd184
+2024-08-05 11:27:29.542 | SUCCESS  | Scripts:setup_websocket_server:188 - 装载 WebSocket 服务器成功！
+2024-08-05 11:27:29.543 | INFO     | uvicorn:startup:62 - Application startup complete.
+2024-08-05 11:27:29.545 | INFO     | uvicorn:_log_started_message:214 - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2024-08-05 11:32:59.666 | INFO     | uvicorn:shutdown:258 - Shutting down
+2024-08-05 11:32:59.777 | INFO     | uvicorn:shutdown:67 - Waiting for application shutdown.
+2024-08-05 11:32:59.778 | DEBUG    | Scripts:save:63 - 正在保存数据文件……
+2024-08-05 11:32:59.779 | SUCCESS  | Scripts:save:73 - 保存数据文件完毕！
+2024-08-05 11:32:59.780 | INFO     | Scripts:unload:90 - 正在断开所有服务器的连接……
+2024-08-05 11:32:59.781 | SUCCESS  | Scripts:unload:93 - 所有服务器的连接已断开！
+2024-08-05 11:32:59.781 | INFO     | uvicorn:shutdown:76 - Application shutdown complete.
+2024-08-05 11:32:59.782 | INFO     | uvicorn:_serve:92 - Finished server process [13692]
