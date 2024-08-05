@@ -1,6 +1,8 @@
 # Minecraft_QQBot
 
-**一款基于 Nonebot2 用多种方式与 Minecraft 交互的 Python QQ 机器人**。功能丰富，使用简单且可以自行配置，仅需简单配置即可使用。目前已实现的功能有：
+### [**文档**](https://qqbot.ylmty.cc)
+
+**一款基于 Nonebot2 用多种方式与 Minecraft 交互的 Python QQ 机器人**。功能丰富，使用简单，性能高强且可以自行配置，仅需简单配置即可使用。目前已实现的功能有：
 
 - 多服互联。
 - 使用 WebUi 简单配置。

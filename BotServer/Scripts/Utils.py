@@ -3,9 +3,9 @@ import inspect
 import os
 import re
 from base64 import b64encode, b64decode
-from threading import Timer
 from json import loads, dumps
 from pathlib import Path
+from threading import Timer
 
 from nonebot import get_bot
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageEvent, Message
