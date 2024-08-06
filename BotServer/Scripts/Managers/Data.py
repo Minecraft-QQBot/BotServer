@@ -9,7 +9,6 @@ from ..Config import config
 
 
 class DataManager:
-    version: str = None
     webui_token: str = None
 
     servers: list = []
@@ -114,7 +113,7 @@ class DataManager:
 
     def check_player_occupied(self, player: str):
         for bounded_players in self.players.values():
-            if player in bounded_players:
+            if player.lower() in (bounded_player.lower() for bounded_player in bounded_players):
                 return True
         return False
 
