@@ -12,7 +12,7 @@
 - 禁用 QQ 群内的特定命令。
 - 对 QQ 群指令相应。目前已实现的指令有：
     - `luck` 查看今日幸运指数。
-    - `list` 查询每个服务器的玩家在线情况。（依靠原版 list 指令实现）
+    - `list` 查询每个服务器的玩家在线情况。
     - `help` 查看帮助信息。
     - `server` 查看当前在线的服务器并显示对应编号，也可用于查看服务器占用。
     - `bound` 有关绑定白名单的指令。
@@ -33,8 +33,7 @@
 如你有能力开发其他的对接插件，欢迎联系并加入我们！
 
 > [!WARNING]
-> 本机器人 V2.x.x 并不向下兼容 V1.x.x，请在更新后重新配置。只有新版的机器人可以支持多种对接的方式，旧版机器人仅支持 Mcdr
-> 插件。
+> 本机器人 V2.x.x 并不向下兼容 V1.x.x，请在更新后重新配置。只有新版的机器人可以支持多种对接的方式，旧版机器人仅支持 Mcdr 插件。
 > 如需从 V1 升级，请查看 [V1 升级指南](https://github.com/Minecraft-QQBot/BotServer/blob/main/Docs/Upgrade.md)
 
 ## 安装依赖
@@ -45,7 +44,7 @@
 pip3 install "nonebot2[fastapi]>=2.3.1"
 pip3 install "nonebot-adapter-onebot>=2.4.3"
 pip3 install "requests>=2.32.3"
-pip3 install "matplotlib>=3.9.1"
+pip3 install "matplotlib>=3.9.0"
 ```
 
 如果你看到控制台输出 `install successfully` 类似的日志，说明你安装依赖完毕，可以正常使用机器人。
