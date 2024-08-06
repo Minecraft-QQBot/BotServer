@@ -49,14 +49,12 @@ class DataManager:
 
     def load_bot_data(self):
         logger.debug('正在加载机器人数据……')
-        bot_data = Path('Resources/Bot.json')
+        bot_data = Path('Resources/Commands.json')
         if not bot_data.exists():
             logger.error('加载机器人数据失败，请重新安装后再试！')
             exit(1)
         with bot_data.open('r', encoding='Utf-8') as file:
-            data = load(file)
-            self.version = data['version']
-            self.commands = data['commands']
+            self.commands = load(file)
         logger.success('加载正在加载机器人数据完毕！')
 
     def save(self):

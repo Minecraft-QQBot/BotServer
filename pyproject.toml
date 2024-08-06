@@ -1,0 +1,14 @@
+[project]
+name = "Minecraft_QQBot"
+version = "2.0.2"
+description = "一款与 Minecraft 互通的 Nonebot2 机器人。"
+readme = "README.md"
+requires-python = ">=3.8, <4.0"
+
+[tool.nonebot]
+adapters = [
+    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" }
+]
+plugins = []
+plugin_dirs = ["BotServer/Plugins"]
+builtin_plugins = []
