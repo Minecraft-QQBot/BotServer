@@ -2,6 +2,7 @@ from datetime import datetime
 
 import requests
 from nonebot import on_notice
+from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import GroupIncreaseNoticeEvent, GroupDecreaseNoticeEvent, PokeNotifyEvent
 
 from Scripts.Config import config
@@ -16,7 +17,8 @@ week_mapping = ('一', '二', '三', '四', '五', '六', '日')
 async def watch_decrease(event: GroupDecreaseNoticeEvent):
     if event.group_id not in config.command_groups:
         return None
-    if player := data_manager.remove_player(event.user_id):
+    logger.info(F'检测到用户 {event.user_id} 离开了群聊！')
+    if player := data_manager.remove_player(str(event.user_id)):
         await server_manager.execute(F'{config.whitelist_command} remove {player}')
         await matcher.finish(F'用户 {event.user_id} 离开了群聊，自动从白名单中移除 {"、".join(player)} 玩家。')
 
