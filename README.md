@@ -37,7 +37,7 @@
 > [!WARNING]
 > 本机器人 V2.x.x 并不向下兼容 V1.x.x，请在更新后重新配置。只有新版的机器人可以支持多种对接的方式，旧版机器人仅支持 Mcdr
 > 插件。
-> 如需从 V1 升级，请查看 [V1 升级指南](https://github.com/Minecraft-QQBot/BotServer/blob/main/Docs/Upgrade.md)
+> 如需从 V1 升级，请查看 [V1 升级指南](https://docs-qqbot.ylmty.cc/文档/升级.html)
 
 ## 安装依赖
 
