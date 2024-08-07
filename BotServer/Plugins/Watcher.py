@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from httpx import AsyncClient, codes
+from httpx import AsyncClient
 from nonebot import on_notice
 from nonebot.adapters.onebot.v11 import GroupDecreaseNoticeEvent, GroupIncreaseNoticeEvent, PokeNotifyEvent
 from nonebot.log import logger
@@ -46,5 +46,5 @@ def poke_handler(sentence):
 async def get_sentence():
     async with AsyncClient() as client:
         response = await client.get('https://v1.jinrishici.com/all.json')
-    if response.status_code == codes.OK:
+    if response.status_code == 200:
         return response.json()

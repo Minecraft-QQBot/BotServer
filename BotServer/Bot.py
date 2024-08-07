@@ -1,3 +1,5 @@
+import asyncio
+
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
 
@@ -17,12 +19,12 @@ def startup():
     from Scripts.Managers import Logger, environment_manager, data_manager
     from Scripts.Servers.Http import WebUi
 
+    asyncio.run(Version.check_update(True))
+
     Logger.init()
     data_manager.load()
     environment_manager.init()
     Websocket.setup_websocket_server()
-
-    Version.check_update()
     WebUi.setup_webui_http_server()
 
 
