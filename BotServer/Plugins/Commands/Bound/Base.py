@@ -6,10 +6,10 @@ from nonebot.params import CommandArg
 
 from Scripts.Config import config
 from Scripts.Managers import data_manager, server_manager
-from Scripts.Utils import check_player, rule
+from Scripts.Utils import Rules, check_player
 
 async_lock = asyncio.Lock()
-matcher = on_command('bound', force_whitespace=True, priority=10, rule=rule)
+matcher = on_command('bound', force_whitespace=True, priority=10, rule=Rules.command_rule)
 
 
 @matcher.handle()

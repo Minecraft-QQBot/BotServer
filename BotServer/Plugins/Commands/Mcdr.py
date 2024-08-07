@@ -4,10 +4,10 @@ from nonebot.log import logger
 from nonebot.params import CommandArg
 
 from Scripts.Managers import server_manager
-from Scripts.Utils import get_permission, get_args, rule
+from Scripts.Utils import Rules, get_permission, get_args
 
-logger.debug('命令 Mcdr 加载完毕！')
-matcher = on_command('mcdr', force_whitespace=True, rule=rule)
+logger.debug('加载命令 Mcdr 完毕！')
+matcher = on_command('mcdr', force_whitespace=True, rule=Rules.command_rule)
 
 
 @matcher.handle()

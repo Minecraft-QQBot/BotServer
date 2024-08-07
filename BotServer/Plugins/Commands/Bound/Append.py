@@ -4,10 +4,10 @@ from nonebot.params import CommandArg
 
 from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
-from Scripts.Utils import get_permission, get_user_name, get_args, check_player, rule
+from Scripts.Utils import Rules, get_permission, get_user_name, get_args, check_player
 from .Base import async_lock
 
-matcher = on_command('bound append', force_whitespace=True, block=True, priority=5, rule=rule)
+matcher = on_command('bound append', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
 
 
 @matcher.handle()

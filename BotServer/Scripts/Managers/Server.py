@@ -6,7 +6,7 @@ from nonebot.log import logger
 
 from .Data import data_manager
 from ..Config import config
-from ..Utils import decode, encode
+from ..Utils import Json
 
 
 class Server:
@@ -30,10 +30,10 @@ class Server:
             message_data = {'type': event_type}
             if data is not None:
                 message_data['data'] = data
-            await self.websocket.send(encode(message_data))
+            await self.websocket.send(Json.encode(message_data))
             if wait is True:
                 logger.debug(F'已向服务器 [{self.name}] 发送数据 {message_data}，正在等待回应……')
-                response = decode(await self.websocket.receive())
+                response = Json.decode(await self.websocket.receive())
                 if response.get('success'):
                     logger.debug(F'已收到服务器 [{self.name}] 的回应 {response}，数据发送成功！')
                     return response.get('data')

@@ -5,10 +5,10 @@ from nonebot.params import CommandArg
 
 from Scripts.Config import config
 from Scripts.Managers import data_manager
-from Scripts.Utils import turn_message, rule
+from Scripts.Utils import Rules, turn_message
 
 logger.debug('加载命令 Help 完毕！')
-matcher = on_command('help', force_whitespace=True, rule=rule)
+matcher = on_command('help', force_whitespace=True, rule=Rules.command_rule)
 
 
 @matcher.handle()

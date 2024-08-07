@@ -6,4 +6,4 @@ from .List import *
 from .Query import *
 from .Remove import *
 
-logger.debug('命令加载 Bound 完毕！')
+logger.debug('加载命令 Bound 完毕！')

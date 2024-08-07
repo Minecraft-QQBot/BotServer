@@ -8,13 +8,13 @@ from nonebot.log import logger
 from .. import Memory
 from ..Config import config
 from ..Managers import server_manager, data_manager
-from ..Utils import send_synchronous_message, decode, encode
+from ..Utils import Json, send_synchronous_message
 
 
 async def verify(websocket: WebSocket):
     logger.info('检测到 WebSocket 链接，正在验证身份……')
     if info := websocket.request.headers.get('info'):
-        info = decode(info)
+        info = Json.decode(info)
         name = info.get('name')
         if info.get('token') != config.token or (not name):
             await websocket.close()
@@ -57,7 +57,7 @@ async def handle_websocket_bot(websocket: WebSocket):
         try:
             while True:
                 response = None
-                receive_message = decode(await websocket.receive())
+                receive_message = Json.decode(await websocket.receive())
                 if receive_message is None:
                     continue
                 data = receive_message.get('data')
@@ -79,12 +79,12 @@ async def handle_websocket_bot(websocket: WebSocket):
                 if response is not None:
                     logger.debug(F'对来自 [{name}] 的数据 {receive_message}')
                     if response is True:
-                        await websocket.send(encode({'success': True}))
+                        await websocket.send(Json.encode({'success': True}))
                         continue
-                    await websocket.send(encode({'success': True, 'data': response}))
+                    await websocket.send(Json.encode({'success': True, 'data': response}))
                     continue
                 logger.warning(F'收到来自 [{name}] 无法解析的数据 {receive_message}')
-                await websocket.send(encode({'success': False}))
+                await websocket.send(Json.encode({'success': False}))
         except (ConnectionError, WebSocketClosed):
             logger.info('WebSocket 连接已关闭！')
 

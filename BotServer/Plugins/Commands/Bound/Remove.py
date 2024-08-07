@@ -4,10 +4,10 @@ from nonebot.params import CommandArg
 
 from Scripts.Config import config
 from Scripts.Managers import data_manager, server_manager
-from Scripts.Utils import get_user_name, get_permission, get_args, rule
+from Scripts.Utils import Rules, get_user_name, get_permission, get_args
 from .Base import async_lock
 
-matcher = on_command('bound remove', force_whitespace=True, block=True, priority=5, rule=rule)
+matcher = on_command('bound remove', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
 
 
 @matcher.handle()

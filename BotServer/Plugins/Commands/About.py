@@ -3,10 +3,10 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent
 from nonebot.log import logger
 
 from Version import __version__
-from Scripts.Utils import turn_message, rule
+from Scripts.Utils import Rules, turn_message
 
 logger.debug('加载命令 About 完毕！')
-matcher = on_command('about', force_whitespace=True, rule=rule)
+matcher = on_command('about', force_whitespace=True, rule=Rules.command_rule)
 
 
 @matcher.handle()

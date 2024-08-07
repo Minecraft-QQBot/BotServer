@@ -6,13 +6,13 @@ from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent
 from nonebot.log import logger
 
-from Scripts.Utils import turn_message, rule
+from Scripts.Utils import Rules, turn_message
 
 bad_things = ('造世吞（直接放飞', '修机器（一修就炸', '挖矿（只挖到原石')
 good_things = ('造世吞（完美运行', '修机器（一修就好', '挖矿（挖到十钻石')
 
 logger.debug('加载命令 Luck 完毕！')
-matcher = on_command('luck', force_whitespace=True, rule=rule)
+matcher = on_command('luck', force_whitespace=True, rule=Rules.command_rule)
 
 
 @matcher.handle()
