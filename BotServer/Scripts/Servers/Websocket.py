@@ -100,8 +100,9 @@ async def message(name: str, group_message: str):
 async def server_startup(name: str, data: dict):
     logger.info('收到服务器开启数据！尝试连接到服务器……')
     data_manager.append_server(name)
-    if config.broadcast_server:
+    if config.sync_message_between_servers:
         await server_manager.broadcast(name, message='服务器已开启！', except_server=name)
+    if config.broadcast_server:
         if await send_synchronous_message(F'服务器 [{name}] 已开启，喵～'):
             return config.sync_all_game_message
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
@@ -112,8 +113,9 @@ async def server_startup(name: str, data: dict):
 async def server_shutdown(name: str, data: dict):
     logger.info('收到服务器关闭信息！正在断开连接……')
     await server_manager.disconnect_server(name)
-    if config.broadcast_server:
+    if config.sync_message_between_servers:
         await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
+    if config.broadcast_server:
         if await send_synchronous_message(F'服务器 [{name}] 已关闭，呜……'):
             return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
