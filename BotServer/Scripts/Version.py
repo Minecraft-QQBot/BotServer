@@ -9,6 +9,8 @@ async def check_update():
     if __version__ != latest_version:
         color_logger = logger.opt(colors=True)
         color_logger.info(F'<blue><b>发现新版本: {latest_version}</b></blue>')
+        return True
+    return False
 
 
 async def get_latest_version():
