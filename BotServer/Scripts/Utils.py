@@ -2,20 +2,21 @@ import binascii
 import inspect
 import os
 import re
-from base64 import b64encode, b64decode
-from json import loads, dumps
+from base64 import b64decode, b64encode
+from collections.abc import Iterable
+from json import dumps, loads
 from pathlib import Path
 from threading import Timer
 
 from nonebot import get_bot
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageEvent, Message
-from nonebot.exception import NetworkError, ActionFailed
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, MessageEvent
+from nonebot.exception import ActionFailed, NetworkError
 from nonebot.log import logger
 from uvicorn.server import Server
 
 from .Config import config
 
-regex = re.compile(R'[A-Z0-9_]+', re.IGNORECASE)
+regex = re.compile(R"[A-Z0-9_]+", re.IGNORECASE)
 
 
 def rule(event: GroupMessageEvent):
@@ -24,24 +25,24 @@ def rule(event: GroupMessageEvent):
 
 def restart():
     frames = inspect.getouterframes(inspect.currentframe())
-    servers = (info.frame.f_locals.get('server') for info in frames[::-1])
+    servers = (info.frame.f_locals.get("server") for info in frames[::-1])
     server = next(server for server in servers if isinstance(server, Server))
 
     def core():
-        file = Path('Bot.py').absolute()
-        os.system(F'start python {file}')
+        file = Path("Bot.py").absolute()
+        os.system(f"start python {file}")
         server.should_exit = True
 
-    if os.name == 'nt':
+    if os.name == "nt":
         timer = Timer(2, core)
         timer.start()
         return True
     return False
 
 
-def turn_message(iterator: iter):
+def turn_message(iterator: Iterable) -> Message:
     lines = tuple(iterator)
-    return Message('\n'.join(lines))
+    return Message("\n".join(lines))
 
 
 def get_player_name(name):
@@ -58,36 +59,38 @@ def check_player(player: str):
 def get_args(args: Message):
     result = []
     for segment in args:
-        if segment.type == 'text':
-            for arg in segment.data['text'].split(' '):
-                if arg: result.append(arg)
-        elif segment.type == 'at':
-            result.append(str(segment.data['qq']))
-    logger.debug(F'从 {args} 中提取参数 {result} 完毕。')
+        if segment.type == "text":
+            for arg in segment.data["text"].split(" "):
+                if arg:
+                    result.append(arg)
+        elif segment.type == "at":
+            result.append(str(segment.data["qq"]))
+    logger.debug(f"从 {args} 中提取参数 {result} 完毕。")
     return result
 
 
 def encode(data: dict):
     # 编码
     string = dumps(data)
-    string = string.encode('Utf-8')
+    string = string.encode("Utf-8")
     string = b64encode(string)
-    return string.decode('Utf-8')
+    return string.decode("Utf-8")
 
 
 def decode(string: str):
-    string = string.encode('Utf-8')
+    string = string.encode("Utf-8")
     try:
         string = b64decode(string)
     except binascii.Error:
-        logger.warning(F'无法解码字符串 {string}')
+        logger.warning(f"无法解码字符串 {string}")
         return None
-    return loads(string.decode('Utf-8'))
+    return loads(string.decode("Utf-8"))
 
 
 def get_permission(event: MessageEvent):
     return (str(event.user_id) in config.superusers) or (
-            config.admin_superusers and event.sender.role in ('admin', 'owner'))
+        config.admin_superusers and event.sender.role in ("admin", "owner")
+    )
 
 
 async def get_user_name(group: int, user: int):
@@ -96,7 +99,7 @@ async def get_user_name(group: int, user: int):
         response = await bot.get_group_member_info(group_id=group, user_id=user)
     except (NetworkError, ActionFailed, ValueError):
         return None
-    return response.get('card') or response.get('nickname')
+    return response.get("card") or response.get("nickname")
 
 
 async def send_synchronous_message(message: str):
