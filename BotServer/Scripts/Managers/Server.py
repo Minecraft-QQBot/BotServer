@@ -86,12 +86,6 @@ class ServerManager:
         if server := self.servers.get(name):
             await server.disconnect()
 
-    async def unload(self):
-        logger.info('正在断开所有服务器的连接……')
-        for server in self.servers.values():
-            await server.disconnect()
-        logger.success('所有服务器的连接已断开！')
-
     async def execute(self, command: str):
         logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
         return {name: await server.send_command(command) for name, server in self.servers.items() if server.status}

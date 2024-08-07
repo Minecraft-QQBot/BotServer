@@ -23,6 +23,8 @@ async def mcdr_handler(args: list):
         return '参数不正确！请查看语法后再试。'
     server_flag, *command = args
     command = ' '.join(command)
+    if not command.startswith('!!'):
+        command = ('!!' + command)
     if server_flag == '*':
         await server_manager.execute_mcdr(command)
         return '命令已发送到所有已连接的服务器！'

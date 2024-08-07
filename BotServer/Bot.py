@@ -1,7 +1,7 @@
-import asyncio
-
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
+
+from Scripts import Version
 
 nonebot.init()
 
@@ -20,16 +20,17 @@ def startup():
     Logger.init()
     data_manager.load()
     environment_manager.init()
-    WebUi.setup_webui_http_server()
     Websocket.setup_websocket_server()
+
+    Version.check_update()
+    WebUi.setup_webui_http_server()
 
 
 @driver.on_shutdown
 def shutdown():
-    from Scripts.Managers import server_manager, data_manager
+    from Scripts.Managers import data_manager
 
     data_manager.save()
-    asyncio.run(server_manager.unload())
 
 
 if __name__ == '__main__':

@@ -1,6 +1,14 @@
 from httpx import AsyncClient, codes
+from nonebot.log import logger
 
 __version__ = '2.0.2'
+
+
+async def check_update():
+    latest_version = await get_latest_version()
+    if __version__ != latest_version:
+        color_logger = logger.opt(colors=True)
+        color_logger.info(F'<blue><b>发现新版本: {latest_version}</b></blue>')
 
 
 async def get_latest_version():
