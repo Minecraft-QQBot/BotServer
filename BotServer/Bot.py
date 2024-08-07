@@ -19,7 +19,8 @@ def startup():
     from Scripts.Managers import Logger, environment_manager, data_manager
     from Scripts.Servers.Http import WebUi
 
-    asyncio.run(Version.check_update(True))
+    if version := asyncio.run(Version.check_update()):
+        Version.update_version(version)
 
     Logger.init()
     data_manager.load()

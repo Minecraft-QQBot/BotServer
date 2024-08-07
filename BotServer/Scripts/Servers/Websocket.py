@@ -135,26 +135,28 @@ async def player_chat(name: str, data: list):
 async def player_death(name: str, data: list):
     player, death_message = data
     logger.debug(F'收到玩家死亡 {death_message} 消息！')
-    if config.broadcast_player and (not config.bot_prefix or not player.upper().startswith(config.bot_prefix)):
-        server_message = F'玩家 {player} 死亡了，呜……'
-        if not (await send_synchronous_message(server_message)):
-            logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+    if (not config.bot_prefix) or (not player.upper().startswith(config.bot_prefix)):
+        broadcast_message = F'玩家 {player} 死亡了，呜……'
         if config.sync_message_between_servers:
-            await server_manager.broadcast(name, message=server_message, except_server=name)
+            await server_manager.broadcast(name, message=broadcast_message, except_server=name)
+        if config.broadcast_player:
+            if await send_synchronous_message(broadcast_message):
+                return True
+            logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+            return False
     return True
 
 
 async def player_joined(name: str, player: str):
     logger.info('收到玩家加入服务器通知！')
+    server_message = F'玩家 {player} 加入了游戏。'
+    group_message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
+    if config.bot_prefix and player.upper().startswith(config.bot_prefix):
+        group_message = F'机器人 {player} 加入了 [{name}] 服务器。'
+        server_message = F'机器人 {player} 加入了游戏。'
+    if config.sync_message_between_servers:
+        await server_manager.broadcast(name, message=server_message, except_server=name)
     if config.broadcast_player:
-        server_message = F'玩家 {player} 加入了游戏。'
-        group_message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
-        if config.bot_prefix and player.upper().startswith(config.bot_prefix):
-            group_message = F'机器人 {player} 加入了 [{name}] 服务器。'
-            if config.sync_message_between_servers:
-                server_message = F'机器人 {player} 加入了游戏。'
-        if config.sync_message_between_servers:
-            await server_manager.broadcast(name, message=server_message, except_server=name)
         if await send_synchronous_message(group_message):
             return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
@@ -164,14 +166,14 @@ async def player_joined(name: str, player: str):
 
 async def player_left(name: str, player: str):
     logger.info('收到玩家离开服务器通知！')
+    server_message = F'玩家 {player} 离开了游戏。'
+    group_message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
+    if config.bot_prefix and player.upper().startswith(config.bot_prefix):
+        server_message = F'机器人 {player} 离开了游戏。'
+        group_message = F'机器人 {player} 离开了 [{name}] 服务器。'
+    if config.sync_message_between_servers:
+        await server_manager.broadcast(name, message=server_message, except_server=name)
     if config.broadcast_player:
-        server_message = F'玩家 {player} 离开了游戏。'
-        group_message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
-        if config.bot_prefix and player.upper().startswith(config.bot_prefix):
-            server_message = F'机器人 {player} 离开了游戏。'
-            group_message = F'机器人 {player} 离开了 [{name}] 服务器。'
-        if config.sync_message_between_servers:
-            await server_manager.broadcast(name, message=server_message, except_server=name)
         if await send_synchronous_message(group_message):
             return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')

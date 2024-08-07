@@ -7,16 +7,12 @@ from nonebot.log import logger
 __version__ = '2.0.2'
 
 
-async def check_update(update: bool = False):
+async def check_update():
     latest_version = await get_latest_version()
     if __version__ != latest_version:
         color_logger = logger.opt(colors=True)
-        if update is False:
-            color_logger.info(F'<blue><b>发现新版本 {latest_version}</b></blue>')
-            return True
-        color_logger.info(F'<blue><b>发现新版本 {latest_version} 正在自动更新……</b></blue>')
-        await update_version(latest_version)
-        return True
+        color_logger.info(F'<blue><b>发现新版本 {latest_version}</b></blue>。')
+        return latest_version
     return False
 
 
@@ -28,13 +24,14 @@ async def get_latest_version():
 
 
 async def update_version(version: str):
+    logger.info(F'更新版本到 {version}...')
     if version_bytes := await download_version(version):
         with ZipFile(version_bytes) as zip_file:
             for file in zip_file.namelist():
                 if file.startswith('BotServer/') and ('.env' not in file):
                     zip_file.extract(file, path='./')
-        logger.success(F'更新版本到 {version} 成功！')
-        return True
+        logger.success(F'更新版本到 {version} 成功！请重启机器人。')
+        exit()
     logger.warning(F'更新版本到 {version} 失败，请检查网络稍后再试。')
 
 
