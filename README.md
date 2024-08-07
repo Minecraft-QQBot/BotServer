@@ -46,11 +46,11 @@
 ```bash
 pip3 install "nonebot2[fastapi]>=2.3.1"
 pip3 install "nonebot-adapter-onebot>=2.4.3"
-pip3 install "requests>=2.32.3"
+pip3 install "httpx~=0.27.0"
 pip3 install "matplotlib>=3.9.0"
 ```
 
-如果你看到控制台输出 `install successfully` 类似的日志，说明你安装依赖完毕，可以正常使用机器人。
+如果你看到控制台输出 `installed successfully` 类似的日志，说明你安装依赖完毕，可以正常使用机器人。
 
 > [!WARNING]
 > 此机器人仅支持 Python 3.8 及以上版本。若版本过低，否则可能会出现不可预知的错误。
