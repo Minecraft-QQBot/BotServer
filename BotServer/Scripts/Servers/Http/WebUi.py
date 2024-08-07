@@ -6,8 +6,8 @@ from nonebot import get_driver, get_app
 from nonebot.drivers import URL, Request, Response, ASGIMixin, HTTPServerSetup
 from nonebot.log import logger
 
-from Scripts.Utils import restart
 from Scripts.Managers import environment_manager, data_manager
+from Scripts.Utils import restart
 
 
 async def api(request: Request):

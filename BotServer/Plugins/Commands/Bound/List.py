@@ -2,9 +2,9 @@ from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent
 
 from Scripts.Managers import data_manager
-from Scripts.Utils import turn_message, get_permission, rule
+from Scripts.Utils import Rules, turn_message, get_permission
 
-matcher = on_command('bound list', force_whitespace=True, block=True, priority=5, rule=rule)
+matcher = on_command('bound list', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
 
 
 @matcher.handle()

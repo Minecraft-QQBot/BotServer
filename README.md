@@ -1,16 +1,20 @@
 # Minecraft_QQBot
 
-**一款基于 Nonebot2 用多种方式与 Minecraft 交互的 Python QQ 机器人**。功能丰富，使用简单且可以自行配置，仅需简单配置即可使用。目前已实现的功能有：
+### [**文档**](https://qqbot.ylmty.cc)
 
-- 多服互联。
+**一款基于 Nonebot2 用多种方式与 Minecraft 交互的 Python QQ 机器人**。功能丰富，使用简单，性能高强且可以自行配置，仅需简单配置即可使用。目前已实现的功能有：
+
+- 多服互联，群服互通。
+    - 在不同服务器之间转发消息。
+    - 可在游戏内看到 QQ 群的消息。
+    - 可使用指令在游戏内向 QQ 群发送消息。
+    - 可播报服务器开启、关闭，玩家进入离开服务器以及死亡消息。
 - 使用 WebUi 简单配置。
 - 戳一戳机器人发送一言卡片。
-- 可使用指令在游戏内向 QQ 群发送消息。
-- 把 QQ 群内的消息转发到游戏内。
-- 禁用 QQ 群内的特定命令。
+- 可自行配置指令的开启或关闭。
 - 对 QQ 群指令相应。目前已实现的指令有：
     - `luck` 查看今日幸运指数。
-    - `list` 查询每个服务器的玩家在线情况。（依靠原版 list 指令实现）
+    - `list` 查询每个服务器的玩家在线情况。
     - `help` 查看帮助信息。
     - `server` 查看当前在线的服务器并显示对应编号，也可用于查看服务器占用。
     - `bound` 有关绑定白名单的指令。
@@ -33,7 +37,7 @@
 > [!WARNING]
 > 本机器人 V2.x.x 并不向下兼容 V1.x.x，请在更新后重新配置。只有新版的机器人可以支持多种对接的方式，旧版机器人仅支持 Mcdr
 > 插件。
-> 如需从 V1 升级，请查看 [V1 升级指南](https://github.com/Minecraft-QQBot/BotServer/blob/main/Docs/Upgrade.md)
+> 如需从 V1 升级，请查看 [V1 升级指南](https://docs-qqbot.ylmty.cc/文档/升级.html)
 
 ## 安装依赖
 
@@ -42,11 +46,11 @@
 ```bash
 pip3 install "nonebot2[fastapi]>=2.3.1"
 pip3 install "nonebot-adapter-onebot>=2.4.3"
-pip3 install "requests>=2.32.3"
-pip3 install "matplotlib>=3.9.1"
+pip3 install "httpx~=0.27.0"
+pip3 install "matplotlib>=3.9.0"
 ```
 
-如果你看到控制台输出 `install successfully` 类似的日志，说明你安装依赖完毕，可以正常使用机器人。
+如果你看到控制台输出 `installed successfully` 类似的日志，说明你安装依赖完毕，可以正常使用机器人。
 
 > [!WARNING]
 > 此机器人仅支持 Python 3.8 及以上版本。若版本过低，否则可能会出现不可预知的错误。

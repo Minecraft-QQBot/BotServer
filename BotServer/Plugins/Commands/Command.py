@@ -7,10 +7,10 @@ from nonebot.params import CommandArg
 
 from Scripts.Config import config
 from Scripts.Managers import server_manager
-from Scripts.Utils import turn_message, get_permission, get_args, rule
+from Scripts.Utils import Rules, turn_message, get_permission, get_args
 
-logger.debug('命令 Command 加载完毕！')
-matcher = on_command('command', force_whitespace=True, rule=rule)
+logger.debug('加载命令 Command 完毕！')
+matcher = on_command('command', force_whitespace=True, rule=Rules.command_rule)
 
 
 @matcher.handle()

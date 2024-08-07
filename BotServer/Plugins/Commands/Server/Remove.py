@@ -3,9 +3,9 @@ from nonebot.adapters.onebot.v11 import MessageEvent, Message
 from nonebot.params import CommandArg
 
 from Scripts.Managers import server_manager, data_manager
-from Scripts.Utils import get_permission, rule
+from Scripts.Utils import Rules, get_permission
 
-matcher = on_command('server remove', force_whitespace=True, block=True, priority=5, rule=rule)
+matcher = on_command('server remove', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
 
 
 @matcher.handle()

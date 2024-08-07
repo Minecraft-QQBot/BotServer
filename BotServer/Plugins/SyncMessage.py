@@ -4,15 +4,13 @@ from nonebot.log import logger
 
 from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
-from Scripts.Utils import get_player_name, get_user_name
+from Scripts.Utils import Rules, get_player_name, get_user_name
 
+matcher = on_message(rule=Rules.message_rule)
 mapping = {'record': '语音', 'image': '图片', 'reply': '回复', 'face': '表情', 'file': '文件'}
 
 
-@on_message
 async def sync_message(event: GroupMessageEvent):
-    if (not config.sync_all_qq_message) or (event.group_id not in config.message_groups):
-        return None
     plain_text = event.get_plaintext()
     for start in config.command_start:
         if plain_text.startswith(start):

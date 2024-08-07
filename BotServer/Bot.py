@@ -3,6 +3,8 @@ import asyncio
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
 
+from Scripts import Version
+
 nonebot.init()
 
 nonebot.load_plugins('Plugins')
@@ -17,19 +19,20 @@ def startup():
     from Scripts.Managers import Logger, environment_manager, data_manager
     from Scripts.Servers.Http import WebUi
 
+    asyncio.run(Version.check_update(True))
+
     Logger.init()
     data_manager.load()
     environment_manager.init()
-    WebUi.setup_webui_http_server()
     Websocket.setup_websocket_server()
+    WebUi.setup_webui_http_server()
 
 
 @driver.on_shutdown
 def shutdown():
-    from Scripts.Managers import server_manager, data_manager
+    from Scripts.Managers import data_manager
 
     data_manager.save()
-    asyncio.run(server_manager.unload())
 
 
 if __name__ == '__main__':

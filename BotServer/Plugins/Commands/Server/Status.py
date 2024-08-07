@@ -10,7 +10,7 @@ from nonebot.params import CommandArg
 
 from Scripts import Memory
 from Scripts.Managers import server_manager
-from Scripts.Utils import turn_message, rule
+from Scripts.Utils import Rules, turn_message
 
 
 def choose_font():
@@ -25,7 +25,7 @@ def choose_font():
 
 
 font = choose_font()
-matcher = on_command('server status', force_whitespace=True, block=True, priority=5, rule=rule)
+matcher = on_command('server status', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
 
 
 @matcher.handle()

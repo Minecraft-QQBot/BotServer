@@ -31,7 +31,7 @@ class EnvironmentManager:
                     pass
                 self.environment[key] = value
                 self.mapping.append(key)
-            logger.success('预加载配置文件完毕！')
+            logger.success('预加载配置文件完毕！文件已载入到内存中。')
 
     def update(self, new: dict):
         logger.info(F'正在更新配置 {new}')
