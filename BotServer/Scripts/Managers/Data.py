@@ -112,8 +112,9 @@ class DataManager:
         return False
 
     def check_player_occupied(self, player: str):
+        player = player.lower()
         for bounded_players in self.players.values():
-            if player.lower() in (bounded_player.lower() for bounded_player in bounded_players):
+            if player in (bounded_player.lower() for bounded_player in bounded_players):
                 return True
         return False
 
