@@ -20,7 +20,7 @@ def startup():
     from Scripts.Servers.Http import WebUi
 
     if version := asyncio.run(Version.check_update()):
-        Version.update_version(version)
+        asyncio.run(Version.update_version(version))
 
     Logger.init()
     data_manager.load()
