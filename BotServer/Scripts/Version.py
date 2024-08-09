@@ -19,7 +19,7 @@ async def check_update():
 
 async def get_latest_version():
     async with AsyncClient() as client:
-        response = await client.get('https://qqbot.ylmty.cc/version.json')
+        response = await client.get('https://qqbot.ylmty.cc/Version.json')
     if response.status_code == 200:
         return response.json()[0]
     logger.warning('尝试获取新版本时出错！')
