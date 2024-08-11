@@ -3,7 +3,6 @@ import asyncio
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
 
-from Scripts import Version
 
 nonebot.init()
 
@@ -16,11 +15,11 @@ driver.register_adapter(Adapter)
 @driver.on_startup
 def startup():
     from Scripts.Servers import Websocket
-    from Scripts.Managers import Logger, environment_manager, data_manager
     from Scripts.Servers.Http import WebUi
+    from Scripts.Managers import Logger, environment_manager, data_manager, version_manager
 
-    if version := asyncio.run(Version.check_update()):
-        asyncio.run(Version.update_version(version))
+    if version_manager.check_update():
+        asyncio.run(version_manager.update_version())
 
     Logger.init()
     data_manager.load()

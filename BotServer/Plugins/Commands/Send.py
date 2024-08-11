@@ -4,10 +4,10 @@ from nonebot.log import logger
 from nonebot.params import CommandArg
 
 from Scripts.Managers import server_manager, data_manager
-from Scripts.Utils import get_player_name, command_rule
+from Scripts.Utils import Rules, get_player_name
 
 logger.debug('加载命令 Send 完毕！')
-matcher = on_command('send', force_whitespace=True, rule=command_rule)
+matcher = on_command('send', force_whitespace=True, rule=Rules.command_rule)
 
 
 @matcher.handle()

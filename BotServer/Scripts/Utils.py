@@ -109,7 +109,7 @@ class Json:
 
 class Rules:
     @staticmethod
-    def message_rule(event: MessageEvent):
+    def message_rule(event: GroupMessageEvent):
         return event.group_id in config.message_groups
 
     @staticmethod

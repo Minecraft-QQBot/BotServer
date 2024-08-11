@@ -37,7 +37,7 @@ async def watch_poke(event: PokeNotifyEvent):
 
 def poke_handler(sentence):
     now = datetime.now()
-    yield F'{now.strftime('%Y-%m-%d')} 星期{week_mapping[now.weekday()]}  {now.strftime('%H:%M:%S')}'
+    yield F'{now.strftime("%Y-%m-%d")} 星期{week_mapping[now.weekday()]}  {now.strftime("%H:%M:%S")}'
     if sentence:
         yield F'\n「{sentence["content"]}」'
         yield F'               —— {sentence["author"]}《{sentence["origin"]}》'

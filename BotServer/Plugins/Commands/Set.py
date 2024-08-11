@@ -4,7 +4,7 @@ from nonebot.log import logger
 from nonebot.params import CommandArg
 
 from Scripts.Config import config
-from Scripts.Utils import Rules, get_permission
+from Scripts.Utils import Rules, get_permission, get_args
 
 allow_setting = ('sync_all_game_message', 'broadcast_player', 'broadcast_server')
 
@@ -16,7 +16,7 @@ matcher = on_command('set', force_whitespace=True, rule=Rules.command_rule)
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if not get_permission(event):
         await matcher.finish('你没有权限执行此命令！')
-    message = set_handler(args)
+    message = set_handler(get_args(args))
     await matcher.finish(message)
 
 
