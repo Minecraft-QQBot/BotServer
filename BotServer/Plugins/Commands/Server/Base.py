@@ -21,5 +21,5 @@ def server_handler():
             yield F'({(index + 1):0>2}) [{name}] -> {status}'
             continue
         yield F'({(index + 1):0>2}) [{name}] -> 离线'
-    if not status:
-        yield '当前没有已连接的服务器！请检查是否正确安装了插件或重启服务器后再试。'
+        return None
+    yield '当前没有已连接的服务器！请检查是否正确安装了插件或重启服务器后再试。'
