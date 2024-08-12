@@ -1,8 +1,4 @@
 {
-  "set": {
-    "usage": "set <key> <value>",
-    "description": "在内存中临时设置某个配置项的值，重启后失效，配置项的作用名称请参考 WebUi 页面。"
-  },
   "luck": {
     "usage": "luck",
     "description": "查看今日运势（仅供参考）。"
