@@ -103,6 +103,8 @@ A: 请检查你是否加上了指令前缀（即 .env 内的 COMMAND_START）。
 
 ## 鸣谢
 
+感谢 [Lagrange](https://lagrangedev.github.io/Lagrange.Doc/) 提供了稳定的 QQ 协议端。
+
 感谢以下人员为此机器人开发提供帮助，在此特别鸣谢：
 
 - [Msg_Lbo](https://github.com/Msg-Lbo) 提供网站服务器以及域名，贡献 WebUi 代码。

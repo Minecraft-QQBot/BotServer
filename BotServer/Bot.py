@@ -3,7 +3,6 @@ import asyncio
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
 
-
 nonebot.init()
 
 nonebot.load_plugins('Plugins')
@@ -18,6 +17,7 @@ def startup():
     from Scripts.Servers.Http import WebUi
     from Scripts.Managers import Logger, environment_manager, data_manager, version_manager
 
+    version_manager.init()
     if version_manager.check_update():
         asyncio.run(version_manager.update_version())
 

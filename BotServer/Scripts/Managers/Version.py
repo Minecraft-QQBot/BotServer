@@ -10,11 +10,11 @@ class VersionManager:
     version: str = '2.0.3'
     latest_version: str = None
 
-    def __init__(self):
+    def init(self):
         if response := request('https://qqbot.ylmty.cc/Version.json'):
             self.latest_version = response.json()[0]['version']
-        else:
-            logger.warning('尝试获取新版本时出错！')
+            return None
+        logger.warning('尝试获取新版本时出错！')
 
     def check_update(self):
         if self.latest_version is None:

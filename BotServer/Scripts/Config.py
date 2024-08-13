@@ -3,6 +3,9 @@ from pydantic import BaseModel
 
 
 class Config(BaseModel):
+    port: int = 8000
+    onebot_access_token: str = ''
+
     token: str = ''
     bot_prefix: str = None
     admin_superusers: bool = True
