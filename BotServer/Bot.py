@@ -15,11 +15,12 @@ driver.register_adapter(Adapter)
 def startup():
     from Scripts.Servers import Websocket
     from Scripts.Servers.Http import WebUi
-    from Scripts.Managers import Logger, environment_manager, data_manager, version_manager
+    from Scripts.Managers import Logger, environment_manager, data_manager, version_manager, lagrange_manager
 
-    version_manager.init()
-    if version_manager.check_update():
-        asyncio.run(version_manager.update_version())
+    lagrange_manager.init()
+    # version_manager.init()
+    # if version_manager.check_update():
+    #     asyncio.run(version_manager.update_version())
 
     Logger.init()
     data_manager.load()

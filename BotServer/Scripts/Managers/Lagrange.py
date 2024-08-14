@@ -1,7 +1,8 @@
 import platform
 import tarfile
-import asyncio
+from subprocess import PIPE, Popen
 from pathlib import Path
+from threading import Thread
 from json import load, dump
 
 from nonebot.log import logger
@@ -10,23 +11,38 @@ from ..Config import config
 from ..Network import download
 
 
-class LagrangeManager:
-    task = None
-    lagrange: list = None
+class LagrangeManager(Thread):
+    task: Popen = None
 
+    lagrange_path: Path = None
     path: Path = Path('Lagrange')
 
     def __init__(self):
-        self.lagrange = list(self.path.rglob('Lagrange.OneBot*'))
+        Thread.__init__(self, name='Lagrange', daemon=True)
+        for path in self.path.rglob('Lagrange.OneBot*'):
+            self.lagrange_path = path
 
     def init(self):
-        self.update_config()
-        if self.lagrange:
-            logger.info('检测到 Lagrange.Onebot 已经安装，正在启动……')
+        if self.lagrange_path:
+            logger.info('Lagrange.Onebot 已经安装，正在自动启动……')
+            self.start()
 
-    def start(self):
-        process = asyncio.create_subprocess_exec(self.lagrange[0])
-        self.task = asyncio.create_task(process)
+    def run(self):
+        command = ('.' + str(self.lagrange_path)[8:])
+        self.task = Popen(command, stdout=PIPE, cwd=self.path)
+        logger.success('Lagrange.Onebot 启动成功！请扫描目录下的图片登录。')
+        while self.task:
+            line = self.task.stdout.readline()
+            line = line.decode('Utf-8').strip()
+            if line.startswith('█') or line.startswith('▀'):
+                logger.info(line)
+                continue
+            logger.debug('[Lagrange] ' + line)
+
+    def stop(self):
+        if self.task:
+            self.task.terminate()
+            self.task = None
 
     def update_config(self):
         config_path = (self.path / 'appsettings.json')
@@ -44,7 +60,7 @@ class LagrangeManager:
             return True
 
     async def install(self):
-        if self.lagrange:
+        if self.lagrange_path:
             logger.warning('Lagrange.Onebot 已经安装，无需再次安装！')
             return True
         if not self.path.exists():
@@ -62,7 +78,8 @@ class LagrangeManager:
                             with open((self.path / file_name), 'wb') as target_file:
                                 target_file.write(file.read())
             logger.success('Lagrange.Onebot 安装成功！')
-            self.lagrange.append(next(self.path.rglob('Lagrange.OneBot*')))
+            self.lagrange_path = next(self.path.rglob('Lagrange.OneBot*'))
+            self.lagrange_path.chmod(0o755)
             return self.update_config()
         logger.error('Lagrange.Onebot 安装失败！')
         return False
@@ -79,3 +96,6 @@ class LagrangeManager:
         elif system == 'Linux':
             architecture = 'x64' if architecture == 'x86_64' else 'arm'
         return system_mapping[system], architecture
+
+
+lagrange_manager = LagrangeManager()
