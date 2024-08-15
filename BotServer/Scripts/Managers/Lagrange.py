@@ -1,3 +1,4 @@
+import os
 import platform
 import tarfile
 from subprocess import PIPE, Popen
@@ -25,15 +26,17 @@ class LagrangeManager(Thread):
     def init(self):
         if self.lagrange_path:
             logger.info('Lagrange.Onebot 已经安装，正在自动启动……')
+            self.update_config()
             self.start()
 
     def run(self):
-        command = ('.' + str(self.lagrange_path)[8:])
+        command = str(self.lagrange_path) if os.name == 'nt' else ('.' + str(self.lagrange_path)[8:])
         self.task = Popen(command, stdout=PIPE, cwd=self.path)
         logger.success('Lagrange.Onebot 启动成功！请扫描目录下的图片登录。')
         while self.task:
             line = self.task.stdout.readline()
             line = line.decode('Utf-8').strip()
+            if not line: continue
             if line.startswith('█') or line.startswith('▀'):
                 logger.info(line)
                 continue

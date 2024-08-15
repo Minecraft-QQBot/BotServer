@@ -1,6 +1,7 @@
 import asyncio
 
 import nonebot
+from atexit import register
 from nonebot.adapters.onebot.v11 import Adapter
 
 nonebot.init()
@@ -18,9 +19,9 @@ def startup():
     from Scripts.Managers import Logger, environment_manager, data_manager, version_manager, lagrange_manager
 
     lagrange_manager.init()
-    # version_manager.init()
-    # if version_manager.check_update():
-    #     asyncio.run(version_manager.update_version())
+    version_manager.init()
+    if version_manager.check_update():
+        asyncio.run(version_manager.update_version())
 
     Logger.init()
     data_manager.load()
@@ -37,4 +38,5 @@ def shutdown():
 
 
 if __name__ == '__main__':
+    register(shutdown)
     nonebot.run()

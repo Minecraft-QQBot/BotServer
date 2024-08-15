@@ -11,7 +11,7 @@ class VersionManager:
     latest_version: str = None
 
     def init(self):
-        if response := request('https://qqbot.ylmty.cc/Version.json'):
+        if response := request('http://api.qqbot.bugjump.xyz/version'):
             self.latest_version = response.json()[0]['version']
             return None
         logger.warning('尝试获取新版本时出错！')
