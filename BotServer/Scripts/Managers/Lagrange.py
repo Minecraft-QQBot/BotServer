@@ -1,4 +1,5 @@
 import os
+import time
 import platform
 import tarfile
 from subprocess import PIPE, Popen
@@ -34,6 +35,7 @@ class LagrangeManager(Thread):
         self.task = Popen(command, stdout=PIPE, cwd=self.path)
         logger.success('Lagrange.Onebot 启动成功！请扫描目录下的图片登录。')
         while self.task:
+            time.sleep(0.2)
             line = self.task.stdout.readline()
             line = line.decode('Utf-8').strip()
             if not line: continue

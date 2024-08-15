@@ -4,17 +4,16 @@ from nonebot.adapters.onebot.v11 import MessageEvent
 from Scripts.Managers import server_manager, data_manager
 from Scripts.Utils import Rules, turn_message
 
-matcher = on_command('server', force_whitespace=True, priority=10, rule=Rules.command_rule)
+servr_matcher = on_command('server', force_whitespace=True, priority=10, rule=Rules.command_rule)
 
 
-@matcher.handle()
+@servr_matcher.handle()
 async def handle_group(event: MessageEvent):
     message = turn_message(server_handler())
-    await matcher.finish(message)
+    await servr_matcher.finish(message)
 
 
 def server_handler():
-    status = None
     for index, name in enumerate(data_manager.servers):
         if server := server_manager.servers.get(name):
             status = '在线' if server.status else '离线'

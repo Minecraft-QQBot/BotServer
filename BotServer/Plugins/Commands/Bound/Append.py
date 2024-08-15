@@ -7,16 +7,17 @@ from Scripts.Managers import server_manager, data_manager
 from Scripts.Utils import Rules, get_permission, get_user_name, get_args, check_player
 from .Base import async_lock
 
-matcher = on_command('bound append', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
+bound_append_matcher = on_command('bound append', force_whitespace=True, block=True, priority=5,
+                                  rule=Rules.command_rule)
 
 
-@matcher.handle()
+@bound_append_matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if not get_permission(event):
-        await matcher.finish('你没有权限执行此命令！')
+        await bound_append_matcher.finish('你没有权限执行此命令！')
     args = get_args(args)
     message = await bound_append_handler(args, event.group_id)
-    await matcher.finish(message)
+    await bound_append_matcher.finish(message)
 
 
 async def bound_append_handler(args: list, group: int):

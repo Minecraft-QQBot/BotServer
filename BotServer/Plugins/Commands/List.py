@@ -10,17 +10,17 @@ from Scripts.Managers import server_manager
 from Scripts.Utils import Rules, turn_message
 
 logger.debug('加载命令 List 完毕！')
-matcher = on_command('list', force_whitespace=True, rule=Rules.command_rule)
+list_matcher = on_command('list', force_whitespace=True, rule=Rules.command_rule)
 
 
-@matcher.handle()
+@list_matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     server = (args.extract_plain_text().strip()) or None
     flag, response = await get_players(server)
     if flag is False:
-        await matcher.finish(response)
+        await list_matcher.finish(response)
     message = turn_message(list_handler(response, flag))
-    await matcher.finish(message)
+    await list_matcher.finish(message)
 
 
 def list_handler(players: Union[dict, list], name: str = None):

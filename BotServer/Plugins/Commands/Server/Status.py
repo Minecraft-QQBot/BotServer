@@ -25,23 +25,23 @@ def choose_font():
 
 
 font = choose_font()
-matcher = on_command('server status', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
+server_status_matcher = on_command('server status', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
 
 
-@matcher.handle()
+@server_status_matcher.handle()
 async def handle_group(event: MessageEvent, args: Message = CommandArg()):
     if args := args.extract_plain_text().strip():
         flag, response = await get_status(args)
         if flag is False:
-            await matcher.finish(response)
+            await server_status_matcher.finish(response)
         message = turn_message(detailed_handler(flag, response))
-        await matcher.finish(message)
+        await server_status_matcher.finish(message)
     flag, response = await get_status()
     if flag is False:
-        await matcher.finish(response)
+        await server_status_matcher.finish(response)
     logger.error(response)
     message = turn_message(status_handler(response))
-    await matcher.finish(message)
+    await server_status_matcher.finish(message)
 
 
 def status_handler(data: dict):

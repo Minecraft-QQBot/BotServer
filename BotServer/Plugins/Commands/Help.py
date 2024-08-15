@@ -8,16 +8,16 @@ from Scripts.Managers import data_manager
 from Scripts.Utils import Rules, turn_message
 
 logger.debug('加载命令 Help 完毕！')
-matcher = on_command('help', force_whitespace=True, rule=Rules.command_rule)
+help_matcher = on_command('help', force_whitespace=True, rule=Rules.command_rule)
 
 
-@matcher.handle()
+@help_matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if name := args.extract_plain_text().strip():
         message = turn_message(detailed_handler(name))
-        await matcher.finish(message)
+        await help_matcher.finish(message)
     message = turn_message(help_handler())
-    await matcher.finish(message)
+    await help_matcher.finish(message)
 
 
 def help_handler():
