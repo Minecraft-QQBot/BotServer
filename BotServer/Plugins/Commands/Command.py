@@ -10,18 +10,18 @@ from Scripts.Managers import server_manager
 from Scripts.Utils import Rules, turn_message, get_permission, get_args
 
 logger.debug('加载命令 Command 完毕！')
-command_matcher = on_command('command', force_whitespace=True, rule=Rules.command_rule)
+matcher = on_command('command', force_whitespace=True, rule=Rules.command_rule)
 
 
-@command_matcher.handle()
+@matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if not get_permission(event):
-        await command_matcher.finish('你没有权限执行此命令！')
+        await matcher.finish('你没有权限执行此命令！')
     flag, response = await execute_command(get_args(args))
     if flag is False:
-        await command_matcher.finish(response)
+        await matcher.finish(response)
     message = turn_message(command_handler(flag, response))
-    await command_matcher.finish(message)
+    await matcher.finish(message)
 
 
 def command_handler(name: str, response: Union[str, dict]):

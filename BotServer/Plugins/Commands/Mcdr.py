@@ -7,15 +7,15 @@ from Scripts.Managers import server_manager
 from Scripts.Utils import Rules, get_permission, get_args
 
 logger.debug('加载命令 Mcdr 完毕！')
-mcdr_matcher = on_command('mcdr', force_whitespace=True, rule=Rules.command_rule)
+matcher = on_command('mcdr', force_whitespace=True, rule=Rules.command_rule)
 
 
-@mcdr_matcher.handle()
+@matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if not get_permission(event):
-        await mcdr_matcher.finish('你没有权限执行此命令！')
+        await matcher.finish('你没有权限执行此命令！')
     message = await mcdr_handler(get_args(args))
-    await mcdr_matcher.finish(message)
+    await matcher.finish(message)
 
 
 async def mcdr_handler(args: list):

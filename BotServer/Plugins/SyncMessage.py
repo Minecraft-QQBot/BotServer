@@ -6,11 +6,11 @@ from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
 from Scripts.Utils import Rules, get_player_name, get_user_name
 
-sync_message_matcher = on_message(rule=Rules.message_rule)
+matcher = on_message(rule=Rules.message_rule, block=False)
 mapping = {'record': '语音', 'image': '图片', 'reply': '回复', 'face': '表情', 'file': '文件'}
 
 
-@sync_message_matcher.handle()
+@matcher.handle()
 async def sync_message(event: GroupMessageEvent):
     plain_text = event.get_plaintext()
     for start in config.command_start:

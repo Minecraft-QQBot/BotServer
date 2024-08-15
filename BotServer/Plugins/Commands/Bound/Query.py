@@ -5,16 +5,16 @@ from nonebot.params import CommandArg
 from Scripts.Managers import data_manager
 from Scripts.Utils import Rules, get_user_name, get_args
 
-bound_query_matcher = on_command('bound query', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
+matcher = on_command('bound query', force_whitespace=True, block=True, priority=5, rule=Rules.command_rule)
 
 
-@bound_query_matcher.handle()
+@matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if args := get_args(args):
         message = await bound_query_handler(args, event.group_id)
-        await bound_query_matcher.finish(message)
+        await matcher.finish(message)
     message = await bound_query_handler([str(event.user_id)], event.group_id)
-    await bound_query_matcher.finish(message)
+    await matcher.finish(message)
 
 
 async def bound_query_handler(args: list, group: int):

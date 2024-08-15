@@ -9,15 +9,15 @@ from Scripts.Managers import data_manager, server_manager
 from Scripts.Utils import Rules, check_player
 
 async_lock = asyncio.Lock()
-bound_matcher = on_command('bound', force_whitespace=True, priority=10, rule=Rules.command_rule)
+matcher = on_command('bound', force_whitespace=True, priority=10, rule=Rules.command_rule)
 
 
-@bound_matcher.handle()
+@matcher.handle()
 async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if player := args.extract_plain_text().strip():
         message = await bound_handler(event, player)
-        await bound_matcher.finish(message)
-    await bound_matcher.finish('请输入要绑定的玩家名称！')
+        await matcher.finish(message)
+    await matcher.finish('请输入要绑定的玩家名称！')
 
 
 async def bound_handler(event: GroupMessageEvent, player: str):
