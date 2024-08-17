@@ -1,10 +1,11 @@
 import psutil
 from hashlib import sha512
-
 from io import BytesIO
 from httpx import AsyncClient, Client
 
 from nonebot.log import logger
+
+from .Managers import temp_manager
 
 
 def request(url: str):
@@ -12,6 +13,15 @@ def request(url: str):
         response = client.get(url)
     if response.status_code == 200:
         return response.json()
+
+
+def get_player_uuid(name: str):
+    if name in temp_manager.player_uuid:
+        return temp_manager.player_uuid[name]
+    response = request(F'https://api.mojang.com/users/profiles/minecraft/{name}')
+    if uuid := response.get('id'):
+        temp_manager.player_uuid[name] = uuid
+        return uuid
 
 
 def send_bot_status(status: bool):

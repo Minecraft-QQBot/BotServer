@@ -31,7 +31,7 @@ class LagrangeManager(Thread):
             self.start()
 
     def run(self):
-        command = str(self.lagrange_path) if os.name == 'nt' else ('.' + str(self.lagrange_path)[8:])
+        command = str(self.lagrange_path) if os.name == 'nt' else ('./' + self.lagrange_path.name)
         self.task = Popen(command, stdout=PIPE, cwd=self.path)
         logger.success('Lagrange.Onebot 启动成功！请扫描目录下的图片登录。')
         while self.task:

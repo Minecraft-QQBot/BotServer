@@ -8,12 +8,14 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
 
-from Scripts import Memory
-from Scripts.Managers import server_manager
+import Flags
+from Scripts.Managers import server_manager, temp_manager
 from Scripts.Utils import Rules, turn_message
 
 
 def choose_font():
+    if temp_manager.chart_font_path:
+        return FontProperties(fname=temp_manager.chart_font_path, size=15)
     for font_format in ('ttf', 'ttc'):
         if exists(F'./Font.{font_format}'):
             logger.info(F'已找到用户设置字体文件，将自动选择该字体作为图表字体。')
@@ -21,6 +23,7 @@ def choose_font():
     for font_path in findSystemFonts():
         if 'KAITI' in font_path.upper():
             logger.success(F'自动选择系统字体 {font_path} 设为图表字体。')
+            temp_manager.chart_font_path = font_path
             return FontProperties(fname=font_path, size=15)
 
 
@@ -102,8 +105,8 @@ def draw_chart(data: dict):
 
 def draw_history_chart(name: str):
     logger.debug(F'正在绘制服务器 [{name}] 状态图表……')
-    cpu = Memory.cpu_occupation.get(name)
-    ram = Memory.ram_occupation.get(name)
+    cpu = Flags.cpu_occupation.get(name)
+    ram = Flags.ram_occupation.get(name)
     if len(cpu) >= 5:
         pyplot.ylim(0, 100)
         pyplot.xlabel('Time', loc='right')
