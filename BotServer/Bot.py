@@ -4,7 +4,6 @@ from atexit import register
 import nonebot
 from nonebot.adapters.onebot.v11 import Adapter
 
-from Scripts import Network
 
 nonebot.init()
 
@@ -16,6 +15,7 @@ driver.register_adapter(Adapter)
 
 @driver.on_startup
 def startup():
+    from Scripts import Network
     from Scripts.Servers import Websocket
     from Scripts.Servers.Http import WebUi
     from Scripts.Managers import (
@@ -40,6 +40,7 @@ def startup():
 
 @driver.on_shutdown
 def shutdown():
+    from Scripts import Network
     from Scripts.Managers import data_manager
 
     data_manager.save()

@@ -19,9 +19,10 @@ class TempManager:
         if self.file_path.exists():
             with self.file_path.open('r', encoding='Utf-8') as file:
                 temp_data = load(file)
-                self.file_path = temp_data['font']
                 self.player_uuid = temp_data['player']
+                self.chart_font_path = temp_data['font']
                 logger.success('临时文件加载成功！')
+            return None
         logger.info('临时文件不存在，正在创建！')
         self.save()
 

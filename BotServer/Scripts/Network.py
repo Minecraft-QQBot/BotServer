@@ -5,7 +5,7 @@ from httpx import AsyncClient, Client
 
 from nonebot.log import logger
 
-from .Managers import temp_manager
+from .Managers.Temp import temp_manager
 
 
 def request(url: str):
@@ -34,7 +34,7 @@ def send_bot_status(status: bool):
     bot_id = sha512((mac + 'Minecraft_QQBot').encode())
     with Client() as client:
         data = {'bot_id': bot_id.hexdigest(), 'status': status}
-        response = client.post('https://api.qqbot.bugjump.xyz/status/change', data=data)
+        response = client.post('http://api.qqbot.bugjump.xyz/status/change', data=data)
         if response.status_code == 200:
             logger.success('发送机器人状态改变信息成功！')
             return True
