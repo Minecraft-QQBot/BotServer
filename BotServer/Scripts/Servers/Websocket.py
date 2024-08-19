@@ -92,9 +92,10 @@ async def handle_websocket_bot(websocket: WebSocket):
 async def message(name: str, group_message: str):
     if group_message:
         logger.debug(F'发送消息 {group_message} 到消息群！')
-        return await send_synchronous_message(group_message) or None
+        if await send_synchronous_message(group_message):
+            return True
     logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
-    return True
+    return None
 
 
 async def server_startup(name: str, data: dict):

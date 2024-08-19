@@ -38,6 +38,10 @@ class Config(BaseModel):
 
     qq_bound_max_number: int = 1
 
+    ai_enabled: bool = False
+    ai_api_key: str = None
+    ai_role_message: str = None
+
 
 config: Config = get_plugin_config(Config)
 

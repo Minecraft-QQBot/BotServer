@@ -12,14 +12,15 @@ mapping = {'record': '语音', 'image': '图片', 'reply': '回复', 'face': '�
 
 @matcher.handle()
 async def sync_message(event: GroupMessageEvent):
-    plain_text = event.get_plaintext()
-    for start in config.command_start:
-        if plain_text.startswith(start):
-            return None
-    plain_text = await turn_text(event)
-    name = data_manager.players.get(str(event.user_id), [get_player_name(event.sender.card)])[0]
-    await server_manager.broadcast('QQ', (name or event.sender.nickname), plain_text)
-    logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')
+    if config.sync_all_qq_message:
+        plain_text = event.get_plaintext()
+        for start in config.command_start:
+            if plain_text.startswith(start):
+                return None
+        plain_text = await turn_text(event)
+        name = data_manager.players.get(str(event.user_id), [get_player_name(event.sender.card)])[0]
+        await server_manager.broadcast('QQ', (name or event.sender.nickname), plain_text)
+        logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')
 
 
 async def turn_text(event: GroupMessageEvent):
