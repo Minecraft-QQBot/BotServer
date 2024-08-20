@@ -14,7 +14,7 @@ driver.register_adapter(Adapter)
 
 
 @driver.on_startup
-def startup():
+async def startup():
     from Scripts import Network
     from Scripts.Servers import Websocket
     from Scripts.Servers.Http import WebUi
@@ -23,10 +23,10 @@ def startup():
         version_manager, data_manager, temp_manager
     )
 
-    lagrange_manager.init()
     version_manager.init()
+    await lagrange_manager.init()
     if version_manager.check_update():
-        asyncio.run(version_manager.update_version())
+        await version_manager.update_version()
 
     Logger.init()
     data_manager.load()
@@ -39,7 +39,7 @@ def startup():
 
 
 @driver.on_shutdown
-def shutdown():
+async def shutdown():
     from Scripts import Network
     from Scripts.Managers import data_manager
 

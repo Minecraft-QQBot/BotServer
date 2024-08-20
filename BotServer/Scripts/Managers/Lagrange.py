@@ -1,10 +1,9 @@
-import os
-import time
 import platform
 import tarfile
-from subprocess import PIPE, Popen
+import asyncio
+from asyncio import Task
+from asyncio.subprocess import Process, PIPE
 from pathlib import Path
-from threading import Thread
 from json import load, dump
 
 from nonebot.log import logger
@@ -13,41 +12,16 @@ from ..Config import config
 from ..Network import download
 
 
-class LagrangeManager(Thread):
-    task: Popen = None
-
+class LagrangeManager:
+    task: Task = None
+    process: Process = None
     lagrange_path: Path = None
+
     path: Path = Path('Lagrange')
 
     def __init__(self):
-        Thread.__init__(self, name='Lagrange', daemon=True)
         for path in self.path.rglob('Lagrange.OneBot*'):
-            self.lagrange_path = path
-
-    def init(self):
-        if self.lagrange_path:
-            logger.info('Lagrange.Onebot 已经安装，正在自动启动……')
-            self.update_config()
-            self.start()
-
-    def run(self):
-        command = str(self.lagrange_path) if os.name == 'nt' else ('./' + self.lagrange_path.name)
-        self.task = Popen(command, stdout=PIPE, cwd=self.path)
-        logger.success('Lagrange.Onebot 启动成功！请扫描目录下的图片登录。')
-        while self.task:
-            time.sleep(0.2)
-            line = self.task.stdout.readline()
-            line = line.decode('Utf-8').strip()
-            if not line: continue
-            if line.startswith('█') or line.startswith('▀'):
-                logger.info(line)
-                continue
-            logger.debug('[Lagrange] ' + line)
-
-    def stop(self):
-        if self.task:
-            self.task.terminate()
-            self.task = None
+            self.lagrange_path = path.absolute()
 
     def update_config(self):
         config_path = (self.path / 'appsettings.json')
@@ -64,6 +38,49 @@ class LagrangeManager(Thread):
             logger.success('Lagrange.Onebot 配置文件更新成功！')
             return True
 
+    @staticmethod
+    def parse_platform():
+        system = platform.system()
+        architecture = platform.machine()
+        system_mapping = {'Linux': 'linux', 'Darwin': 'osx', 'Windows': 'win'}
+        if system == 'Windows':
+            architecture = 'x64' if architecture == 'AMD64' else 'x86'
+        elif system == 'Darwin':
+            architecture = 'x64' if architecture == 'x86_64' else 'arm64'
+        elif system == 'Linux':
+            architecture = 'x64' if architecture == 'x86_64' else 'arm'
+        return system_mapping[system], architecture
+
+    async def init(self):
+        if self.lagrange_path:
+            logger.info('Lagrange.Onebot 已经安装，正在自动启动……')
+            await asyncio.create_task(self.run())
+
+    async def stop(self):
+        async def checker(process: Process):
+            await asyncio.sleep(10)
+            if process.returncode is None:
+                process.kill()
+
+        if self.process:
+            self.process.terminate()
+            checker_task = asyncio.create_task(checker(self.process))
+            await self.process.wait()
+            checker_task.cancel()
+            self.task.cancel()
+            self.process = None
+
+    async def run(self):
+        self.update_config()
+        self.process = await asyncio.create_subprocess_exec(str(self.lagrange_path), stdout=PIPE, cwd=self.path)
+        logger.success('Lagrange.Onebot 启动成功！请扫描目录下的图片或下面的二维码登录。')
+        async for line in self.process.stdout:
+            line = line.decode('Utf-8').strip()
+            if line.startswith('█') or line.startswith('▀'):
+                logger.info(line)
+                continue
+            logger.debug('[Lagrange] ' + line)
+
     async def install(self):
         if self.lagrange_path:
             logger.warning('Lagrange.Onebot 已经安装，无需再次安装！')
@@ -73,7 +90,8 @@ class LagrangeManager(Thread):
         self.path.chmod(0o755)
         system, architecture = self.parse_platform()
         logger.info(F'检测到当前的系统架构为 {system} {architecture} 正在下载对应的安装包……')
-        if response := await download(F'https://github.com/LagrangeDev/Lagrange.Core/releases/download/nightly/Lagrange.OneBot_{system}-{architecture}_net8.0_SelfContained.tar.gz'):
+        if response := await download(
+                F'https://github.com/LagrangeDev/Lagrange.Core/releases/download/nightly/Lagrange.OneBot_{system}-{architecture}_net8.0_SelfContained.tar.gz'):
             logger.success(F'Lagrange.Onebot 下载成功！正在安装……')
             with tarfile.open(fileobj=response) as zip_file:
                 for member in zip_file.getmembers():
@@ -88,19 +106,6 @@ class LagrangeManager(Thread):
             return self.update_config()
         logger.error('Lagrange.Onebot 安装失败！')
         return False
-
-    @staticmethod
-    def parse_platform():
-        system = platform.system()
-        architecture = platform.machine()
-        system_mapping = {'Linux': 'linux', 'Darwin': 'osx', 'Windows': 'win'}
-        if system == 'Windows':
-            architecture = 'x64' if architecture == 'AMD64' else 'x86'
-        elif system == 'Darwin':
-            architecture = 'x64' if architecture == 'x86_64' else 'arm64'
-        elif system == 'Linux':
-            architecture = 'x64' if architecture == 'x86_64' else 'arm'
-        return system_mapping[system], architecture
 
 
 lagrange_manager = LagrangeManager()
