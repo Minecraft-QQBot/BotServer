@@ -8,8 +8,8 @@ from Scripts.Config import config
 if config.ai_enable:
     from openai import RateLimitError, OpenAI
 
-    client = OpenAI(base_url='https://api.moonshot.cn/v1', api_key='ApiKey')
-    system_message = {'role': 'system', 'content': '你是小依，18岁的少男，温柔可爱，很招人喜欢。'}
+    system_message = {'role': 'system', 'content': config.ai_system_message}
+    client = OpenAI(base_url='https://api.moonshot.cn/v1', api_key=config.ai_api_key)
 
     matcher = on_message(rule=to_me() & Rules.command_rule)
 
