@@ -12,7 +12,7 @@ class VersionManager:
 
     def init(self):
         if response := request('http://api.qqbot.bugjump.xyz/version'):
-            self.latest_version = response.json()[0]['version']
+            self.latest_version = response.get('version')
             return None
         logger.warning('尝试获取新版本时出错！')
 

@@ -6,7 +6,7 @@ from Globals import openai
 from Scripts.Utils import Rules
 from Scripts.Config import config
 
-if config.ai_enable:
+if config.ai_enabled:
     system_message = {'role': 'system', 'content': config.ai_system_message}
     client = openai.OpenAI(base_url='https://api.moonshot.cn/v1', api_key=config.ai_api_key)
 
