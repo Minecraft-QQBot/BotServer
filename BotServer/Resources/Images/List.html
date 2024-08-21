@@ -24,17 +24,21 @@
         body main .container {
             width: 100%;
             min-height: 400px;
+            padding: 35px;
             border-radius: 10px;
             box-sizing: border-box;
-            padding: 20px;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             background-color: rgba(255, 255, 255, 0.5);
         }
 
         body main .container h1 {
-            margin-top: 0;
+            margin: 0;
             text-align: center;
+        }
+
+        body main .container .server {
+            margin-top: 30px;
         }
 
         body main .container .server h2 {
@@ -45,9 +49,9 @@
         body main .container .server h2::after {
             content: "";
             display: block;
-            width: calc(100% - 50px);
             height: 1px;
             margin-top: 5px;
+            width: calc(100% - 50px);
             background-color: rgba(0, 0, 0, 0.3);
         }
 
@@ -58,6 +62,7 @@
         }
 
         body main .container .server .players span {
+            text-wrap: nowrap;
             display: flex;
             align-items: center;
             width: calc(33.33% - 10px);
@@ -66,6 +71,7 @@
 
         body main .container .server .players span.bot {
             opacity: .5;
+            margin-left: 30px;
         }
 
         body main .container .server .players span img {
