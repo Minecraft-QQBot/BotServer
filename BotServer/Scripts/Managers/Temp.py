@@ -8,7 +8,7 @@ from nonebot.log import logger
 class TempManager:
     file_path: Path = None
 
-    player_uuid: list = []
+    player_uuid: dict = {}
     chart_font_path: str = None
 
     def __init__(self):

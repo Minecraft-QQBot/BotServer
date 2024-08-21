@@ -18,9 +18,9 @@ def request(url: str):
 def get_player_uuid(name: str):
     if name in temp_manager.player_uuid:
         return temp_manager.player_uuid[name]
-    response = request(F'https://api.mojang.com/users/profiles/minecraft/{name}')
-    if not (uuid := response.get('id')):
-        uuid = '8667ba71b85a4004af54457a9734eed7'
+    uuid = '8667ba71b85a4004af54457a9734eed7'
+    if response := request(F'https://api.mojang.com/users/profiles/minecraft/{name}'):
+        uuid = response.get('id') or '8667ba71b85a4004af54457a9734eed7'
     temp_manager.player_uuid[name] = uuid
     return uuid
 
