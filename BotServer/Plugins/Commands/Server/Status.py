@@ -8,7 +8,7 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
 
-import Flags
+import Globals
 from Scripts.Managers import server_manager, temp_manager
 from Scripts.Utils import Rules, turn_message
 
@@ -105,8 +105,8 @@ def draw_chart(data: dict):
 
 def draw_history_chart(name: str):
     logger.debug(F'正在绘制服务器 [{name}] 状态图表……')
-    cpu = Flags.cpu_occupation.get(name)
-    ram = Flags.ram_occupation.get(name)
+    cpu = Globals.cpu_occupation.get(name)
+    ram = Globals.ram_occupation.get(name)
     if len(cpu) >= 5:
         pyplot.ylim(0, 100)
         pyplot.xlabel('Time', loc='right')

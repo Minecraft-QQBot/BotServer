@@ -10,6 +10,8 @@ class Config(BaseModel):
     bot_prefix: str = None
     admin_superusers: bool = True
 
+    image_mode: bool = False
+
     superusers: list[str] = []
     command_start: list[str] = ['.']
     command_enabled: list[str] = []

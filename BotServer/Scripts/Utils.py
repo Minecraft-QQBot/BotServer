@@ -93,16 +93,14 @@ class Json:
     @staticmethod
     def encode(data: dict):
         # 编码
-        string = dumps(data)
-        string = string.encode('Utf-8')
-        string = b64encode(string)
+        string = dumps(data, ensure_ascii=False)
+        string = b64encode(string.encode('Utf-8'))
         return string.decode('Utf-8')
 
     @staticmethod
     def decode(string: str):
-        string = string.encode('Utf-8')
         try:
-            string = b64decode(string)
+            string = b64decode(string.encode('Utf-8'))
         except binascii.Error:
             logger.warning(f'无法解码字符串 {string}')
             return None

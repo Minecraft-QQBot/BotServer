@@ -5,7 +5,7 @@ from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 from nonebot.exception import WebSocketClosed
 from nonebot.log import logger
 
-import Flags
+import Globals
 from ..Config import config
 from ..Managers import server_manager, data_manager
 from ..Utils import Json, send_synchronous_message
@@ -30,8 +30,8 @@ async def handle_websocket_minecraft(websocket: WebSocket):
         time_count = 0
         data_manager.append_server(name)
         server = server_manager.append_server(name, websocket)
-        Flags.cpu_occupation[name] = []
-        Flags.ram_occupation[name] = []
+        Globals.cpu_occupation[name] = []
+        Globals.ram_occupation[name] = []
         while not websocket.closed:
             time_count += 1
             await asyncio.sleep(30)
@@ -41,13 +41,13 @@ async def handle_websocket_minecraft(websocket: WebSocket):
             if data := await server.send_server_occupation():
                 time_count = 0
                 cpu, ram = data
-                Flags.cpu_occupation[name].append(cpu)
-                Flags.ram_occupation[name].append(ram)
-                if len(Flags.cpu_occupation[name]) > config.server_memory_max_cache:
-                    Flags.cpu_occupation[name].pop(0)
-                    Flags.ram_occupation[name].pop(0)
-        Flags.cpu_occupation.pop(name, None)
-        Flags.ram_occupation.pop(name, None)
+                Globals.cpu_occupation[name].append(cpu)
+                Globals.ram_occupation[name].append(ram)
+                if len(Globals.cpu_occupation[name]) > config.server_memory_max_cache:
+                    Globals.cpu_occupation[name].pop(0)
+                    Globals.ram_occupation[name].pop(0)
+        Globals.cpu_occupation.pop(name, None)
+        Globals.ram_occupation.pop(name, None)
         logger.info(F'检测到连接与 [{name}] 已断开！移除此服务器内存数据。')
 
 

@@ -41,9 +41,10 @@ async def startup():
 @driver.on_shutdown
 async def shutdown():
     from Scripts import Network
-    from Scripts.Managers import data_manager
+    from Scripts.Managers import data_manager, temp_manager
 
     data_manager.save()
+    temp_manager.save()
 
     Network.send_bot_status(False)
 

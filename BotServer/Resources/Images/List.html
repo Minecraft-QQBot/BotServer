@@ -1,15 +1,108 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8" />
     <style>
         body {
-            back
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body main {
+            padding: 30px;
+            width: 800px;
+            min-height: 1000px;
+            box-sizing: border-box;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            /* background-image: url("https://bing.img.run/rand_uhd.php"); */
+            background-image: url("https://bing.img.run/rand.php");
+        }
+
+        body main .container {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            box-sizing: border-box;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        body main .container h1 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        body main .container .server h2 {
+            margin-top: 0;
+            margin-left: 50px;
+        }
+
+        body main .container .server h2::after {
+            content: "";
+            display: block;
+            width: calc(100% - 50px);
+            height: 1px;
+            margin-top: 5px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body main .container .server .players {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        body main .container .server .players span {
+            display: flex;
+            align-items: center;
+            width: calc(33.33% - 10px);
+            /* 每行显示三个span，减去gap */
+        }
+
+        body main .container .server .players span.bot {
+            opacity: .5;
+        }
+
+        body main .container .server .players span img {
+            margin-right: 10px;
         }
     </style>
 </head>
-<body>
 
+<body>
+    <main>
+        <div class="container">
+            <h1>在线玩家列表</h1>
+            {% for server, (real_players, fake_players) in player_list.items() %}
+            <div class="server">
+                <h2>{{ server }}</h2>
+                <div class="players">
+                    {% if real_players or fake_players %}
+                        {% for player in real_players %}
+                        <span>
+                            <!-- <img src="https://crafatar.com/avatars/{{ player }}?size=64" alt="{{ player }}" /> -->
+                            <span>{{ player }}</span>
+                        </span>
+                        {% endfor %}
+                        {% for player in fake_players %}
+                        <span class="bot">
+                            <!-- <img src="https://crafatar.com/avatars/{{ player }}?size=64" alt="{{ player }}" /> -->
+                            <span>{{ player }}</span>
+                        </span>
+                        {% endfor %}
+                    {% else %}
+                        <span>暂无在线玩家！</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </main>
 </body>
+
 </html>
