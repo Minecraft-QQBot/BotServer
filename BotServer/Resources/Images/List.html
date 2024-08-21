@@ -85,13 +85,12 @@
                     {% if real_players or fake_players %}
                         {% for player in real_players %}
                         <span>
-                            <!-- <img src="https://crafatar.com/avatars/{{ player }}?size=64" alt="{{ player }}" /> -->
+                            <img src="https://crafatar.com/avatars/{{ uuids[player] }}?size=64" alt="{{ player }}" />
                             <span>{{ player }}</span>
                         </span>
                         {% endfor %}
                         {% for player in fake_players %}
                         <span class="bot">
-                            <!-- <img src="https://crafatar.com/avatars/{{ player }}?size=64" alt="{{ player }}" /> -->
                             <span>{{ player }}</span>
                         </span>
                         {% endfor %}

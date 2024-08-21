@@ -7,6 +7,7 @@ from Globals import render_template
 from Scripts.Config import config
 from Scripts.Managers import server_manager
 from Scripts.Utils import Rules, turn_message
+from Scripts.Network import get_player_uuid
 
 logger.debug('加载命令 List 完毕！')
 matcher = on_command('list', force_whitespace=True, rule=Rules.command_rule)
@@ -19,7 +20,11 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
     if flag is False:
         await matcher.finish(response)
     if config.image_mode:
-        image = await render_template('List.html', (700, 1000), player_list=response)
+        player_uuids = {}
+        for players in response.items():
+            for player in players[0]:
+                player_uuids[player] = get_player_uuid(player)
+        image = await render_template('List.html', (700, 1000), player_list=response, uuids=player_uuids)
         await matcher.finish(image)
     message = turn_message(list_handler(response))
     await matcher.finish(message)

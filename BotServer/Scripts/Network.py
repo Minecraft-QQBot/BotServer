@@ -19,9 +19,10 @@ def get_player_uuid(name: str):
     if name in temp_manager.player_uuid:
         return temp_manager.player_uuid[name]
     response = request(F'https://api.mojang.com/users/profiles/minecraft/{name}')
-    if uuid := response.get('id'):
-        temp_manager.player_uuid[name] = uuid
-        return uuid
+    if not (uuid := response.get('id')):
+        uuid = '8667ba71b85a4004af54457a9734eed7'
+    temp_manager.player_uuid[name] = uuid
+    return uuid
 
 
 def send_bot_status(status: bool):
