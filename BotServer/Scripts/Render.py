@@ -3,10 +3,10 @@ from pathlib import Path
 from nonebot import require
 from nonebot.adapters.onebot.v11 import MessageSegment
 
+from .Config import config
+
 require('nonebot_plugin_htmlrender')
 from nonebot_plugin_htmlrender import template_to_pic
-
-from .Config import config
 
 template_path = str(Path('Resources/Images/').absolute())
 
