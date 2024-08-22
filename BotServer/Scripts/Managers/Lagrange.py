@@ -54,7 +54,7 @@ class LagrangeManager:
     async def init(self):
         if self.lagrange_path:
             logger.info('Lagrange.Onebot 已经安装，正在自动启动……')
-            await self.run()
+            self.task = asyncio.create_task(self.run())
 
     async def stop(self):
         async def checker(process: Process):
