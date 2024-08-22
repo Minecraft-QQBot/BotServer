@@ -51,6 +51,7 @@ pip3 install "nonebot2[fastapi]>=2.3.1"
 pip3 install "nonebot-adapter-onebot>=2.4.3"
 pip3 install "httpx~=0.27.0"
 pip3 install "matplotlib>=3.9.0"
+pip3 install "psutil>=6.0.0"
 ```
 
 如果你看到控制台输出 `installed successfully` 类似的日志，说明你安装依赖完毕，可以正常使用机器人。
