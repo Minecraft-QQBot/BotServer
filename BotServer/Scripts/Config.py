@@ -11,6 +11,7 @@ class Config(BaseModel):
     admin_superusers: bool = True
 
     image_mode: bool = False
+    image_background: str = None
 
     superusers: list[str] = []
     command_start: list[str] = ['.']
