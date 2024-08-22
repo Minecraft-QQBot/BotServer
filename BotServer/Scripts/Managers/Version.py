@@ -7,7 +7,7 @@ from ..Network import download, request
 
 
 class VersionManager:
-    version: str = 'v2.0.3'
+    version: str = 'v2.0.4'
     latest_version: str = None
 
     def check_update(self):

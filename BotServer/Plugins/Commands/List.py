@@ -67,7 +67,7 @@ def format_players(players: list):
 
 
 def classify_players(players: list):
-    if config.bot_prefix is None:
+    if not config.bot_prefix:
         return players
     fake_players, real_players = [], []
     for player in players:
