@@ -1,4 +1,3 @@
-import asyncio
 from atexit import register
 
 import nonebot
@@ -23,8 +22,8 @@ async def startup():
         version_manager, data_manager, temp_manager
     )
 
-    version_manager.init()
     await lagrange_manager.init()
+    await version_manager.init()
     if version_manager.check_update():
         await version_manager.update_version()
 
@@ -32,10 +31,10 @@ async def startup():
     data_manager.load()
     temp_manager.load()
     environment_manager.init()
-    Websocket.setup_websocket_server()
     WebUi.setup_webui_http_server()
+    Websocket.setup_websocket_server()
 
-    Network.send_bot_status(True)
+    await Network.send_bot_status(True)
 
 
 @driver.on_shutdown
@@ -46,7 +45,7 @@ async def shutdown():
     data_manager.save()
     temp_manager.save()
 
-    Network.send_bot_status(False)
+    await Network.send_bot_status(False)
 
 
 if __name__ == '__main__':

@@ -14,8 +14,6 @@ from Scripts.Utils import Rules, turn_message
 
 
 def choose_font():
-    if temp_manager.chart_font_path:
-        return FontProperties(fname=temp_manager.chart_font_path, size=15)
     for font_format in ('ttf', 'ttc'):
         if exists(F'./Font.{font_format}'):
             logger.info(F'已找到用户设置字体文件，将自动选择该字体作为图表字体。')

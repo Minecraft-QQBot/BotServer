@@ -7,23 +7,24 @@ from ..Network import download, request
 
 
 class VersionManager:
-    version: str = '2.0.3'
+    version: str = 'v2.0.3'
     latest_version: str = None
-
-    def init(self):
-        if response := request('http://api.qqbot.bugjump.xyz/version'):
-            self.latest_version = response.get('version')
-            return None
-        logger.warning('尝试获取新版本时出错！')
 
     def check_update(self):
         if self.latest_version is None:
             return False
         return self.latest_version != self.version
 
+    async def init(self):
+        if response := await request('http://api.qqbot.bugjump.xyz/version'):
+            self.latest_version = response.get('version')
+            return None
+        logger.warning('尝试获取新版本时出错！')
+
     async def update_version(self):
         logger.info(F'更新版本到 {self.latest_version}……')
-        if response := await download(F'https://github.com/Minecraft-QQBot/BotServer/releases/download/v{self.latest_version}/BotServer-v{self.latest_version}.zip'):
+        if response := await download(
+                F'https://github.com/Minecraft-QQBot/BotServer/releases/download/v{self.latest_version}/BotServer-v{self.latest_version}.zip'):
             with ZipFile(response) as zip_file:
                 for file in zip_file.namelist():
                     if file.startswith('BotServer/') and ('.env' not in file):

@@ -9,7 +9,6 @@ class TempManager:
     file_path: Path = None
 
     player_uuid: dict = {}
-    chart_font_path: str = None
 
     def __init__(self):
         directory = Path(tempfile.gettempdir())
@@ -19,8 +18,7 @@ class TempManager:
         if self.file_path.exists():
             with self.file_path.open('r', encoding='Utf-8') as file:
                 temp_data = load(file)
-                self.player_uuid = temp_data['player']
-                self.chart_font_path = temp_data['font']
+                self.player_uuid = temp_data.get('player')
                 logger.success('临时文件加载成功！')
             return None
         logger.info('临时文件不存在，正在创建！')
@@ -28,7 +26,7 @@ class TempManager:
 
     def save(self):
         with self.file_path.open('w', encoding='Utf-8') as file:
-            dump({'font': self.chart_font_path, 'player': self.player_uuid}, file)
+            dump({'player': self.player_uuid}, file)
             logger.success('临时文件保存成功！')
 
 

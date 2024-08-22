@@ -23,7 +23,7 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
         player_uuids = {}
         for players in response.values():
             for player in players[0]:
-                player_uuids[player] = get_player_uuid(player)
+                player_uuids[player] = await get_player_uuid(player)
         image = await render_template('List.html', (700, 1000), player_list=response, uuids=player_uuids)
         await matcher.finish(image)
     message = turn_message(list_handler(response))
