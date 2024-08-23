@@ -11,7 +11,7 @@ from Scripts.Config import config
 from Scripts.Managers import data_manager, server_manager
 from Scripts.Utils import Rules, turn_message
 
-matcher = on_notice(rule=Rules.message_rule)
+matcher = on_notice(rule=Rules.message_rule, block=False)
 week_mapping = ('一', '二', '三', '四', '五', '六', '日')
 
 
