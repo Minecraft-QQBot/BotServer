@@ -3,11 +3,15 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
 
+from Scripts.Config import config
 from Scripts.Managers import server_manager, data_manager
 from Scripts.Utils import Rules, get_player_name
 
 logger.debug('加载命令 Send 完毕！')
-matcher = on_command('send', force_whitespace=True, rule=Rules.command_rule)
+matcher = on_command(
+    'send', force_whitespace=True,
+    rule=Rules.command_rule, aliases=config.command_aliases.get('send', {})
+)
 
 
 @matcher.handle()

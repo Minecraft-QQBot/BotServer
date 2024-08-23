@@ -10,7 +10,10 @@ from Scripts.Managers import server_manager
 from Scripts.Utils import Rules, turn_message, get_permission, get_args
 
 logger.debug('加载命令 Command 完毕！')
-matcher = on_command('command', force_whitespace=True, rule=Rules.command_rule)
+matcher = on_command(
+    'command', force_whitespace=True,
+    rule=Rules.command_rule, aliases=config.command_aliases.get('command', {})
+)
 
 
 @matcher.handle()

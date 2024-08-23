@@ -13,6 +13,7 @@ class Config(BaseModel):
     superusers: list[str] = []
     command_start: list[str] = ['.']
     command_enabled: list[str] = []
+    command_aliases: dict[str, set[str]] = {}
 
     command_groups: list[int] = []
     message_groups: list[int] = []
@@ -46,7 +47,7 @@ class Config(BaseModel):
     image_background: str = None
 
     auto_reply: bool = False
-    auto_reply_keywords: dict = None
+    auto_reply_keywords: dict[str, list[str]] = None
 
 
 config: Config = get_plugin_config(Config)
