@@ -29,6 +29,7 @@
 
 本机器人可通过各种方式与 Minecraft 服务器进行交互，包括：
 
+- 挂假人（开发中）
 - [Fabric](https://www.github.com/Minecraft-QQBot/Fabric) 模组（开发中）
 - [Spigot](https://www.github.com/Minecraft-QQBot/Spigot) 插件
 - [McdReforged](https://www.github.com/Minecraft-QQBot/McdReforged) 插件
@@ -36,11 +37,6 @@
 请前往你需要插件的仓库按照说明进行安装。请注意，不同的插件所提供的功能可能是不一样的，您可根据需求选择安装。
 
 如你有能力开发其他的对接插件，欢迎联系并加入我们！
-
-> [!WARNING]
-> 本机器人 V2.x.x 并不向下兼容 V1.x.x，请在更新后重新配置。只有新版的机器人可以支持多种对接的方式，旧版机器人仅支持 Mcdr
-> 插件。
-> 如需从 V1 升级，请查看 [V1 升级指南](https://docs-qqbot.ylmty.cc/文档/升级.html)
 
 ## 安装依赖
 

@@ -35,13 +35,13 @@ def list_handler(players: dict):
         server_name, players = players.popitem()
         yield F'===== {server_name} 玩家列表 ====='
         yield from format_players(players)
-        yield F'当前在线人数共 {len(players)} 人'
+        yield F'当前在线人数共 {players[2] if len(players) == 3 else len(players)} 人'
         return None
     player_count = 0
     if players:
         yield '====== 玩家列表 ======'
-        for name, value in players.items():
-            player_count += len(value)
+        for name, value, count in players.items():
+            player_count += count
             yield F' -------- {name} --------'
             yield from format_players(value)
         yield F'当前在线人数共 {player_count} 人'
@@ -69,13 +69,15 @@ def format_players(players: list):
 def classify_players(players: list):
     if not config.bot_prefix:
         return players
+    player_count = 0
     fake_players, real_players = [], []
     for player in players:
+        player_count += 1
         if player.upper().startswith(config.bot_prefix):
             fake_players.append(player)
             continue
         real_players.append(player)
-    return real_players, fake_players
+    return real_players, fake_players, player_count
 
 
 async def get_players(server_flag: str = None):
