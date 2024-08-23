@@ -40,7 +40,7 @@ def list_handler(players: dict):
     player_count = 0
     if players:
         yield '====== 玩家列表 ======'
-        for name, value, count in players.items():
+        for name, (*value, count) in players.items():
             player_count += count
             yield F' -------- {name} --------'
             yield from format_players(value)
