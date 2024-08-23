@@ -1,10 +1,12 @@
 from datetime import datetime
 
-from httpx import AsyncClient
 from nonebot import on_notice
-from nonebot.adapters.onebot.v11 import GroupDecreaseNoticeEvent, GroupIncreaseNoticeEvent, PokeNotifyEvent
 from nonebot.log import logger
+from nonebot.adapters.onebot.v11 import (
+    GroupDecreaseNoticeEvent, GroupIncreaseNoticeEvent, PokeNotifyEvent, GroupMessageEvent
+)
 
+from Scripts.Network import request
 from Scripts.Config import config
 from Scripts.Managers import data_manager, server_manager
 from Scripts.Utils import Rules, turn_message
@@ -27,10 +29,21 @@ async def watch_increase(event: GroupIncreaseNoticeEvent):
 
 
 @matcher.handle()
+async def watch_keywords(event: GroupMessageEvent):
+    if not config.auto_reply:
+        return None
+    plain_text = event.get_plaintext()
+    for reply_text, keywords in config.auto_reply_keywords.items():
+        for keyword in keywords:
+            if all(word in plain_text for word in keyword.split()):
+                await matcher.finish(reply_text, at_sender=True)
+
+
+@matcher.handle()
 async def watch_poke(event: PokeNotifyEvent):
     if not event.is_tome():
-        return
-    sentence = await get_sentence()
+        return None
+    sentence = await request('https://v1.jinrishici.com/all.json')
     message = turn_message(poke_handler(sentence))
     await matcher.finish(message)
 
@@ -38,13 +51,6 @@ async def watch_poke(event: PokeNotifyEvent):
 def poke_handler(sentence):
     now = datetime.now()
     yield F'{now.strftime("%Y-%m-%d")} 星期{week_mapping[now.weekday()]}  {now.strftime("%H:%M:%S")}'
-    if sentence:
+    if sentence is None:
         yield F'\n「{sentence["content"]}」'
         yield F'               —— {sentence["author"]}《{sentence["origin"]}》'
-
-
-async def get_sentence():
-    async with AsyncClient() as client:
-        response = await client.get('https://v1.jinrishici.com/all.json')
-    if response.status_code == 200:
-        return response.json()

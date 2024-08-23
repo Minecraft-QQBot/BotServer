@@ -10,9 +10,6 @@ class Config(BaseModel):
     bot_prefix: str = None
     admin_superusers: bool = True
 
-    image_mode: bool = False
-    image_background: str = None
-
     superusers: list[str] = []
     command_start: list[str] = ['.']
     command_enabled: list[str] = []
@@ -44,6 +41,12 @@ class Config(BaseModel):
     ai_enabled: bool = False
     ai_api_key: str = None
     ai_role_message: str = None
+
+    image_mode: bool = False
+    image_background: str = None
+
+    auto_reply: bool = False
+    auto_reply_keywords: dict = None
 
 
 config: Config = get_plugin_config(Config)
