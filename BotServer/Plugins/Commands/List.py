@@ -10,10 +10,7 @@ from Scripts.Utils import Rules, turn_message
 from Scripts.Network import get_player_uuid
 
 logger.debug('加载命令 List 完毕！')
-matcher = on_command(
-    'list', force_whitespace=True,
-    rule=Rules.command_rule, aliases=config.command_aliases.get('list', {})
-)
+matcher = on_command('list', force_whitespace=True, rule=Rules.command_rule)
 
 
 @matcher.handle()

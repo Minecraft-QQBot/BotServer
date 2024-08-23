@@ -13,7 +13,6 @@ class Config(BaseModel):
     superusers: list[str] = []
     command_start: list[str] = ['.']
     command_enabled: list[str] = []
-    command_aliases: dict[str, set[str]] = {}
 
     command_groups: list[int] = []
     message_groups: list[int] = []
