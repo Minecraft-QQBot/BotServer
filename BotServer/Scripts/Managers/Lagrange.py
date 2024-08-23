@@ -18,22 +18,23 @@ class LagrangeManager:
     lagrange_path: Path = None
 
     path: Path = Path('Lagrange')
+    config_path: Path = (path / 'appsettings.json')
 
     def __init__(self):
         for path in self.path.rglob('Lagrange.OneBot*'):
             self.lagrange_path = path.absolute()
 
-    def update_config(self):
-        config_path = (self.path / 'appsettings.json')
-        lagrange_config_path = Path('Resources/Lagrange.json')
-        if not lagrange_config_path.exists():
-            logger.error('Lagrange.Onebot 配置文件不存在，初始化配置文件失败！')
-            return False
-        with lagrange_config_path.open('r', encoding='Utf-8') as file:
+    async def update_config(self):
+        if not self.config_path.exists():
+            process = await asyncio.create_subprocess_exec(str(self.lagrange_path))
+            while not self.config_path.exists():
+                await asyncio.sleep(2)
+            process.kill()
+        with self.config_path.open('r', encoding='Utf-8') as file:
             lagrange_config = load(file)
         lagrange_config['Implementations'][0]['Port'] = config.port
         lagrange_config['Implementations'][0]['AccessToken'] = config.onebot_access_token
-        with config_path.open('w', encoding='Utf-8') as file:
+        with self.config_path.open('w', encoding='Utf-8') as file:
             dump(lagrange_config, file)
             logger.success('Lagrange.Onebot 配置文件更新成功！')
             return True
@@ -71,14 +72,18 @@ class LagrangeManager:
             self.process = None
 
     async def run(self):
-        self.update_config()
+        await self.update_config()
         self.process = await asyncio.create_subprocess_exec(str(self.lagrange_path), stdout=PIPE, cwd=self.path)
         logger.success('Lagrange.Onebot 启动成功！请扫描目录下的图片或下面的二维码登录。')
         async for line in self.process.stdout:
-            line = line.decode('Utf-8').strip()
+            line = line.decode('Utf-8').rstrip()
             if line.startswith('█') or line.startswith('▀'):
                 logger.info(line)
                 continue
+            elif '[FATAL]' in line:
+                logger.error(line)
+            elif '[WARNING]' in line:
+                logger.warning(line)
             logger.debug('[Lagrange] ' + line)
 
     async def install(self):
