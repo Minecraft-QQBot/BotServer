@@ -65,7 +65,6 @@
             display: flex;
             align-items: center;
             width: calc(33.33% - 10px);
-            /* 每行显示三个span，减去gap */
         }
 
         body main .container .server .players span.bot {
@@ -91,7 +90,7 @@
                     {% if real_players or fake_players %}
                         {% for player in real_players %}
                         <span>
-                            <img src="https://crafatar.com/avatars/{{ uuids[player] }}?size=20" alt="{{ player }}" />
+                            <img src="https://crafatar.com/avatars/{{ uuids[player] }}?size=20&overlay" alt="{{ player }}" />
                             <span>{{ player }}</span>
                         </span>
                         {% endfor %}
