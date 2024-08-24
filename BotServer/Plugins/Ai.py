@@ -13,6 +13,7 @@ messages = [{'role': 'system', 'content': config.ai_role_message}]
 matcher = on_message(rule=to_me() & Rules.command_rule, priority=15, block=False)
 
 if config.ai_enabled:
+    import openai
     client = openai.AsyncClient(base_url='https://api.moonshot.cn/v1', api_key=config.ai_api_key)
 
 
@@ -23,6 +24,9 @@ if config.ai_enabled:
             if not get_permission(event):
                 await matcher.finish('你没有权限执行此操作！')
             messages.clear()
+            file_list = await client.files.list()
+            for file in file_list.data:
+                await client.files.delete(file.id)
             await matcher.finish('缓存已清除！')
         for segment in event.message:
             if segment.type in ('image', 'file'):
