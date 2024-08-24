@@ -7,10 +7,10 @@ from Scripts.Utils import Rules
 from Scripts.Config import config
 
 if config.ai_enabled:
-    system_message = {'role': 'system', 'content': config.ai_system_message}
+    system_message = {'role': 'system', 'content': config.ai_role_message}
     client = openai.OpenAI(base_url='https://api.moonshot.cn/v1', api_key=config.ai_api_key)
 
-    matcher = on_message(rule=to_me() & Rules.command_rule, block=False)
+    matcher = on_message(rule=to_me() & Rules.command_rule, priority=15, block=False)
 
 
     @matcher.handle()

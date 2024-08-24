@@ -45,8 +45,8 @@ class Config(BaseModel):
     image_mode: bool = False
     image_background: str = None
 
-    auto_reply: bool = False
-    auto_reply_keywords: dict[str, list[str]] = None
+    group_auto_reply: bool = False
+    group_auto_reply_keywords: dict[str, list[str]] = None
 
 
 config: Config = get_plugin_config(Config)

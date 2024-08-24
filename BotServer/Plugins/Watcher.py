@@ -11,7 +11,7 @@ from Scripts.Config import config
 from Scripts.Managers import data_manager, server_manager
 from Scripts.Utils import Rules, turn_message
 
-matcher = on_notice(rule=Rules.message_rule, block=False)
+matcher = on_notice(rule=Rules.message_rule, priority=15, block=False)
 week_mapping = ('一', '二', '三', '四', '五', '六', '日')
 
 
@@ -30,10 +30,10 @@ async def watch_increase(event: GroupIncreaseNoticeEvent):
 
 @matcher.handle()
 async def watch_keywords(event: GroupMessageEvent):
-    if not config.auto_reply:
+    if not config.group_auto_reply:
         return None
     plain_text = event.get_plaintext()
-    for reply_text, keywords in config.auto_reply_keywords.items():
+    for reply_text, keywords in config.group_auto_reply_keywords.items():
         for keyword in keywords:
             if all(word in plain_text for word in keyword.split()):
                 await matcher.finish(reply_text, at_sender=True)
