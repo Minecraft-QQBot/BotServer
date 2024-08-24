@@ -12,6 +12,7 @@
 - 使用 WebUi 简单配置。
 - 戳一戳机器人发送一言卡片。
 - 可自行配置指令的开启或关闭。
+- 可自行配置接入 AI 功能。
 - 对 QQ 群指令相应。目前已实现的指令有：
     - `luck` 查看今日幸运指数。
     - `list` 查询每个服务器的玩家在线情况。
@@ -38,68 +39,9 @@
 
 如你有能力开发其他的对接插件，欢迎联系并加入我们！
 
-## 安装依赖
+## 安装教程
 
-在命令行内输入以下指令安装依赖：
-
-```bash
-pip3 install "nonebot2[fastapi]>=2.3.1"
-pip3 install "nonebot-adapter-onebot>=2.4.3"
-pip3 install "httpx~=0.27.0"
-pip3 install "matplotlib>=3.9.0"
-pip3 install "psutil>=6.0.0"
-```
-
-如果你看到控制台输出 `installed successfully` 类似的日志，说明你安装依赖完毕，可以正常使用机器人。
-
-> [!WARNING]
-> 此机器人仅支持 Python 3.8 及以上版本。若版本过低，否则可能会出现不可预知的错误。
-
-## 配置环境
-
-你可以到 [Releases](https://github.com/Minecraft-QQBot/BotServer/releases) 下载最新版本的机器人服务器。
-
-### 使用 WebUi 配置（推荐）
-
-在 V2.0.0 版本中，我们加入了 Webui 配置界面，帮助使用者更容易的调整配置。
-
-要想使用 WebUi 请先运行机器人，双击解压后的 `BotServer` 文件夹内的 `Start.bat` 运行。在控制台中会打印出一串类似
-
-```log
-05-25 19:49:08 [INFO] WebUi http://host:port/webui?token=********
-```
-
-复制链接到浏览器里，就可以使用 WebUi 进行配置。注意，配置完成后请重启机器人配置才会生效。
-
-> 本机器人仅支持 Onebot V11 协议，建议用 Websocket 反向链接。
-
-### 手动配置（不推荐）
-
-解压下载的 `BotServer.zip` 到任意位置，进入 `BotServer`
-文件夹，编辑文件夹下的 [`.env`](https://github.com/Minecraft-QQBot/BotServer/blob/main/BotServer/.env) 文件，按照注释配置即可。
-
-对于 QQ 机器人（如 GoCqHttp，LLOneBot，NapCat 等）的配置请见 [Onebot](https://onebot.adapters.nonebot.dev/docs/guide/setup)
-适配器文档。
-
-### 运行服务
-
-双击解压后的 `BotServer` 文件夹内的 `Start.bat` 运行机器人服务器。当看到出现类似如下的日志时，
-
-```log
-05-25 19:49:08 [INFO] nonebot | OneBot V11 | Bot 2********6 connected
-```
-
-即代表机器人**连接成功**，你可以向群内发送`help`指令，若机器人正常回复，那么恭喜你已经安装成功了。若无反应，请检查配置是否正确，或联系作者寻求帮助。开始使用你的机器人吧！
-
-## 帮助
-
-Q: 如何使用指令？
-
-A: 你可以在 QQ 群内发送 `help` 指令查看机器人的帮助信息，也可以用 `help <指令名称>` 查看具体指令的帮助信息。
-
-Q: 为什么我发送的指令没有响应？
-
-A: 请检查你是否加上了指令前缀（即 .env 内的 COMMAND_START）。
+请参考 [快速开始](https://qqbot.bugjump.xyz/文档/快速开始/) 进行安装。  
 
 ## 鸣谢
 

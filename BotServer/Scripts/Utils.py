@@ -16,7 +16,7 @@ from nonebot.log import logger
 
 from .Config import config
 
-regex = re.compile(R'[A-Z0-9_]+', re.IGNORECASE)
+regex = re.compile(R'[A-Z0-9_]|\.[A-Z0-9_]+', re.IGNORECASE)
 
 
 def turn_message(iterator: Iterable) -> Message:
