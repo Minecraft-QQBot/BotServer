@@ -18,23 +18,22 @@ class LagrangeManager:
     lagrange_path: Path = None
 
     path: Path = Path('Lagrange')
-    config_path: Path = Path('Lagrange/appsettings.json')
 
     def __init__(self):
         for path in self.path.rglob('Lagrange.OneBot*'):
             self.lagrange_path = path.absolute()
 
     async def update_config(self):
-        if not self.config_path.exists():
-            process = await asyncio.create_subprocess_exec(str(self.lagrange_path))
-            while not self.config_path.exists():
-                await asyncio.sleep(2)
-            process.kill()
-        with self.config_path.open('r', encoding='Utf-8') as file:
+        config_path = Path('Resources/Lagrange.json')
+        if not config_path.exists():
+            logger.error('找不到 Lagrange.Onebot 的配置文件模版！请尝试重新安装机器人。')
+            exit(1)
+        with config_path.open('r', encoding='Utf-8') as file:
             lagrange_config = load(file)
+        config_path = (self.path / 'appsettings.json')
         lagrange_config['Implementations'][0]['Port'] = config.port
         lagrange_config['Implementations'][0]['AccessToken'] = config.onebot_access_token
-        with self.config_path.open('w', encoding='Utf-8') as file:
+        with config_path.open('w', encoding='Utf-8') as file:
             dump(lagrange_config, file)
             logger.success('Lagrange.Onebot 配置文件更新成功！')
             return True
@@ -76,7 +75,7 @@ class LagrangeManager:
         self.process = await asyncio.create_subprocess_exec(str(self.lagrange_path), stdout=PIPE, cwd=self.path)
         logger.success('Lagrange.Onebot 启动成功！请扫描目录下的图片或下面的二维码登录。')
         async for line in self.process.stdout:
-            line = line.decode('Utf-8').rstrip()
+            line = line.decode('Utf-8').strip()
             if line.startswith('█') or line.startswith('▀'):
                 logger.info(line)
                 continue
