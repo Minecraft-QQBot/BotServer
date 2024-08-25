@@ -35,30 +35,49 @@ def list_handler(players: dict):
         server_name, players = players.popitem()
         yield F'===== {server_name} 玩家列表 ====='
         yield from format_players(players)
-        yield F'当前在线人数共 {players[2] if len(players) == 3 else len(players)} 人'
+        # 计算在线人数
+        online_count = sum(len(players) for players in players.values())
+        yield F'当前在线人数共 {online_count} 人'
         return None
     player_count = 0
     if players:
         yield '====== 玩家列表 ======'
-        for name, (*value, count) in players.items():
-            player_count += count
-            yield F' -------- {name} --------'
-            yield from format_players(value)
+        for name, value in players.items():
+            # 确保 value 是一个列表
+            if isinstance(value, list):
+                # 获取在线人数
+                # 注意：value 是一个包含两个列表的列表，因此需要计算两个列表的长度之和
+                count = len(value[0]) + len(value[1])
+                player_count += count
+                yield F' -------- {name} --------'
+                yield from format_players(value)
+            else:
+                # 如果 value 不是列表，则忽略
+                continue
         yield F'当前在线人数共 {player_count} 人'
         return None
     yield '当前没有已连接的服务器！'
 
 
+
+
+
 def format_players(players: list):
     if config.bot_prefix:
-        real_players = '\n    '.join(players[0])
-        fake_players = '\n    '.join(players[1])
+        # 检查 players 是否足够长以进行解包
+        if len(players) == 2:
+            real_players, fake_players = players
+        else:
+            # 如果不够长，则直接使用 players 作为 real_players，并设置 fake_players 为空
+            real_players, fake_players = players[0], []
+        real_players_str = '\n    '.join(real_players)
+        fake_players_str = '\n    '.join(fake_players)
         yield '  ———— 玩家 ————'
-        if not real_players: real_players = '没有玩家在线！'
-        yield '    ' + real_players
+        if not real_players_str: real_players_str = '没有玩家在线！'
+        yield '    ' + real_players_str
         yield '  ———— 假人 ————'
-        if not fake_players: fake_players = '没有假人在线！'
-        yield '    ' + fake_players + '\n'
+        if not fake_players_str: fake_players_str = '没有假人在线！'
+        yield '    ' + fake_players_str + '\n'
         return None
     if players:
         yield '    ' + '\n    '.join(players) + '\n'
@@ -66,18 +85,18 @@ def format_players(players: list):
     yield '  没有玩家在线！\n'
 
 
+
 def classify_players(players: list):
     if not config.bot_prefix:
-        return players
-    player_count = 0
+        # 当 config.bot_prefix 为 False 时，返回一个包含两个列表的列表
+        return [players, []]
     fake_players, real_players = [], []
     for player in players:
-        player_count += 1
         if player.upper().startswith(config.bot_prefix):
             fake_players.append(player)
-            continue
-        real_players.append(player)
-    return real_players, fake_players, player_count
+        else:
+            real_players.append(player)
+    return [real_players, fake_players]
 
 
 async def get_players(server_flag: str = None):
