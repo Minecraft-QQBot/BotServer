@@ -5,15 +5,15 @@ from nonebot.rule import to_me
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment
 
 from Globals import openai
+from Scripts.Network import download
 from Scripts.Utils import Rules, get_permission
 from Scripts.Config import config
-from Scripts.Network import download
 
 messages = [{'role': 'system', 'content': config.ai_role_message}]
 matcher = on_message(rule=to_me() & Rules.command_rule, priority=15, block=False)
 
 if config.ai_enabled:
-    import openai
+
     client = openai.AsyncClient(base_url='https://api.moonshot.cn/v1', api_key=config.ai_api_key)
 
 

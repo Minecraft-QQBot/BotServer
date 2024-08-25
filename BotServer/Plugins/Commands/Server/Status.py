@@ -9,7 +9,7 @@ from nonebot.log import logger
 from nonebot.params import CommandArg
 
 import Globals
-from Scripts.Managers import server_manager, temp_manager
+from Scripts.Managers import server_manager
 from Scripts.Utils import Rules, turn_message
 
 
@@ -21,7 +21,6 @@ def choose_font():
     for font_path in findSystemFonts():
         if 'KAITI' in font_path.upper():
             logger.success(F'自动选择系统字体 {font_path} 设为图表字体。')
-            temp_manager.chart_font_path = font_path
             return FontProperties(fname=font_path, size=15)
 
 

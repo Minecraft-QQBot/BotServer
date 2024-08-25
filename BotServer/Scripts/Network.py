@@ -1,11 +1,11 @@
 import psutil
 from hashlib import md5
 from io import BytesIO
-from httpx import AsyncClient, Client
+from httpx import AsyncClient
 
 from nonebot.log import logger
 
-from .Managers.Temp import temp_manager
+from Globals import uuid_caches
 
 client = AsyncClient()
 
@@ -17,12 +17,12 @@ async def request(url: str):
 
 
 async def get_player_uuid(name: str):
-    if name in temp_manager.player_uuid:
-        return temp_manager.player_uuid[name]
+    if name in uuid_caches:
+        return uuid_caches[name]
     uuid = '8667ba71b85a4004af54457a9734eed7'
     if response := await request(F'https://api.mojang.com/users/profiles/minecraft/{name}'):
         uuid = (response.get('id') or '8667ba71b85a4004af54457a9734eed7')
-    temp_manager.player_uuid[name] = uuid
+    uuid_caches[name] = uuid
     return uuid
 
 

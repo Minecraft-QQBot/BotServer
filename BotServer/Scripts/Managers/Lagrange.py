@@ -18,7 +18,7 @@ class LagrangeManager:
     lagrange_path: Path = None
 
     path: Path = Path('Lagrange')
-    config_path: Path = (path / 'appsettings.json')
+    config_path: Path = Path('Lagrange/appsettings.json')
 
     def __init__(self):
         for path in self.path.rglob('Lagrange.OneBot*'):

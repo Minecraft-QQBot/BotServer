@@ -1,5 +1,6 @@
 from Scripts.Config import config
 
+uuid_caches: dict[str, str] = {}
 cpu_occupation: dict[str, list] = {}
 ram_occupation: dict[str, list] = {}
 

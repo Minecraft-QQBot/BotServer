@@ -25,8 +25,8 @@ async def verify(websocket: WebSocket):
 
 
 async def handle_websocket_minecraft(websocket: WebSocket):
+    await websocket.accept()
     if name := await verify(websocket):
-        await websocket.accept()
         time_count = 0
         data_manager.append_server(name)
         server = server_manager.append_server(name, websocket)
@@ -52,8 +52,8 @@ async def handle_websocket_minecraft(websocket: WebSocket):
 
 
 async def handle_websocket_bot(websocket: WebSocket):
+    await websocket.accept()
     if name := await verify(websocket):
-        await websocket.accept()
         try:
             while True:
                 response = None

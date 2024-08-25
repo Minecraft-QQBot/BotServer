@@ -19,7 +19,7 @@ async def startup():
     from Scripts.Servers.Http import WebUi
     from Scripts.Managers import (
         Logger, environment_manager, lagrange_manager,
-        version_manager, data_manager, temp_manager
+        version_manager, data_manager
     )
 
     await lagrange_manager.init()
@@ -29,7 +29,6 @@ async def startup():
 
     Logger.init()
     data_manager.load()
-    temp_manager.load()
     environment_manager.init()
     WebUi.setup_webui_http_server()
     Websocket.setup_websocket_server()
@@ -40,10 +39,9 @@ async def startup():
 @driver.on_shutdown
 async def shutdown():
     from Scripts import Network
-    from Scripts.Managers import data_manager, temp_manager
+    from Scripts.Managers import data_manager
 
     data_manager.save()
-    temp_manager.save()
 
     await Network.send_bot_status(False)
 
