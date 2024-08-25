@@ -83,7 +83,7 @@
     <main>
         <div class="container">
             <h1>在线玩家列表</h1>
-            {% for server, (real_players, fake_players, _) in player_list.items() %}
+            {% for server, (real_players, fake_players) in player_list.items() %}
             <div class="server">
                 <h2>{{ server }}</h2>
                 <div class="players">
