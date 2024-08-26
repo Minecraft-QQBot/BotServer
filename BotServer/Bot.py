@@ -1,8 +1,14 @@
+from pathlib import Path
 from atexit import register
 
 import nonebot
+from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import Adapter
 
+log_path = Path('./Logs/')
+if not log_path.exists():
+    log_path.mkdir()
+logger.add((log_path / '{time}.log'), rotation='1 day')
 
 nonebot.init()
 
@@ -17,17 +23,13 @@ async def startup():
     from Scripts import Network
     from Scripts.Servers import Websocket
     from Scripts.Servers.Http import WebUi
-    from Scripts.Managers import (
-        Logger, environment_manager, lagrange_manager,
-        version_manager, data_manager
-    )
+    from Scripts.Managers import environment_manager, lagrange_manager, version_manager, data_manager
 
     await lagrange_manager.init()
     await version_manager.init()
     if version_manager.check_update():
         await version_manager.update_version()
 
-    Logger.init()
     data_manager.load()
     environment_manager.init()
     WebUi.setup_webui_http_server()

@@ -10,7 +10,7 @@ from threading import Timer
 from uvicorn.server import Server
 
 from nonebot import get_bot
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, MessageEvent
+from nonebot.adapters.onebot.v11 import Event, Message, MessageEvent
 from nonebot.exception import ActionFailed, NetworkError
 from nonebot.log import logger
 
@@ -109,9 +109,13 @@ class Json:
 
 class Rules:
     @staticmethod
-    def message_rule(event: GroupMessageEvent):
-        return event.group_id in config.message_groups
+    def message_rule(event: Event):
+        if hasattr(event, 'group_id'):
+            return event.group_id in config.message_groups
+        return True
 
     @staticmethod
-    def command_rule(event: GroupMessageEvent):
-        return event.group_id in config.command_groups
+    def command_rule(event: Event):
+        if hasattr(event, 'group_id'):
+            return event.group_id in config.command_groups
+        return True

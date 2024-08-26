@@ -1,5 +1,3 @@
-from tempfile import tempdir
-
 from nonebot import on_message
 from nonebot.rule import to_me
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment

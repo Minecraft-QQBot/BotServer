@@ -2,9 +2,7 @@ from datetime import datetime
 
 from nonebot import on_notice
 from nonebot.log import logger
-from nonebot.adapters.onebot.v11 import (
-    GroupDecreaseNoticeEvent, GroupIncreaseNoticeEvent, PokeNotifyEvent, GroupMessageEvent
-)
+from nonebot.adapters.onebot.v11 import GroupDecreaseNoticeEvent, GroupIncreaseNoticeEvent, PokeNotifyEvent
 
 from Scripts.Network import request
 from Scripts.Config import config
@@ -29,17 +27,6 @@ async def watch_increase(event: GroupIncreaseNoticeEvent):
 
 
 @matcher.handle()
-async def watch_keywords(event: GroupMessageEvent):
-    if not config.group_auto_reply:
-        return None
-    plain_text = event.get_plaintext()
-    for reply_text, keywords in config.group_auto_reply_keywords.items():
-        for keyword in keywords:
-            if all(word in plain_text for word in keyword.split()):
-                await matcher.finish(reply_text, at_sender=True)
-
-
-@matcher.handle()
 async def watch_poke(event: PokeNotifyEvent):
     if not event.is_tome():
         return None
@@ -51,6 +38,6 @@ async def watch_poke(event: PokeNotifyEvent):
 def poke_handler(sentence):
     now = datetime.now()
     yield F'{now.strftime("%Y-%m-%d")} 星期{week_mapping[now.weekday()]}  {now.strftime("%H:%M:%S")}'
-    if sentence is None:
+    if sentence is not None:
         yield F'\n「{sentence["content"]}」'
         yield F'               —— {sentence["author"]}《{sentence["origin"]}》'

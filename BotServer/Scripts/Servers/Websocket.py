@@ -32,8 +32,9 @@ async def handle_websocket_minecraft(websocket: WebSocket):
         server = server_manager.append_server(name, websocket)
         Globals.cpu_occupation[name] = []
         Globals.ram_occupation[name] = []
-        while not websocket.closed:
+        while True:
             await asyncio.sleep(30)
+            if not server.is_connected: break
             if server.type != 'FakePlayer':
                 time_count += 1
                 if time_count <= config.server_memory_update_interval:
