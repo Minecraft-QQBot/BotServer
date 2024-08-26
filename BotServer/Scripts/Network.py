@@ -46,7 +46,8 @@ async def send_bot_status(status: bool):
 
 async def download(url: str):
     download_bytes = BytesIO()
-    async with client.stream('GET', 'https://mirror.ghproxy.com/' + url) as stream:
+    url = (('https://mirror.ghproxy.com/' + url) if 'github' in url else url)
+    async with client.stream('GET', url) as stream:
         if stream.status_code != 200:
             return False
         async for chunk in stream.aiter_bytes():

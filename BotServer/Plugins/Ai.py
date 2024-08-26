@@ -18,7 +18,7 @@ if config.ai_enabled:
     @matcher.handle()
     async def handle_message(event: GroupMessageEvent):
         plain_text = event.get_plaintext()
-        if plain_text.strip() == '清除缓存':
+        if plain_text.strip() in ('清空缓存', '清除缓存'):
             if not get_permission(event):
                 await matcher.finish('你没有权限执行此操作！')
             messages.clear()
@@ -28,10 +28,16 @@ if config.ai_enabled:
             await matcher.finish('缓存已清除！')
         for segment in event.message:
             if segment.type in ('image', 'file'):
-                file = await download(segment.data['url'])
-                file = await client.files.create(file=file, purpose='file-extract')
-                file_content = await client.files.content(file.id)
-                messages.append({'role': 'system', 'content': file_content.text})
+                if file := await download(segment.data['url']):
+                    from pathlib import Path
+                    path = Path('tmp')
+                    with path.open('wb') as f:
+                        f.write(file.getvalue())
+                    file = await client.files.create(file=path, purpose='file-extract')
+                    file_content = await client.files.content(file.id)
+                    messages.append({'role': 'system', 'content': file_content.text})
+                    continue
+                await matcher.send('下载文件失败！', at_sender=True)
         messages.append({'role': 'user', 'content': plain_text})
         try:
             completion = await client.chat.completions.create(

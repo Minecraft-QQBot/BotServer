@@ -1,5 +1,5 @@
-from json import JSONDecodeError, loads, dumps
 from pathlib import Path
+from json import JSONDecodeError, loads, dumps
 
 from nonebot.log import logger
 
@@ -46,7 +46,7 @@ class EnvironmentManager:
             if line.startswith('#') or (not line):
                 lines.append(line)
                 continue
-            lines.append(F'{line}={dumps(self.environment[line])}')
+            lines.append(F'{line}={dumps(self.environment[line], ensure_ascii=False)}')
         with self.file_path.open('w', encoding='Utf-8') as file:
             file.write('\n'.join(lines))
         logger.success('写入配置成功！手动重启机器人后修改才会生效。')
