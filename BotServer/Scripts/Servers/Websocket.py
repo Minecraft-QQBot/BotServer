@@ -68,14 +68,16 @@ async def handle_websocket_bot(websocket: WebSocket):
                     response = await server_startup(name, data)
                 elif event_type == 'server_shutdown':
                     response = await server_shutdown(name, data)
-                elif event_type == 'player_chat':
-                    response = await player_chat(name, data)
                 elif event_type == 'player_death':
                     response = await player_death(name, data)
                 elif event_type == 'player_left':
                     response = await player_left(name, data)
                 elif event_type == 'player_joined':
                     response = await player_joined(name, data)
+                elif event_type == 'player_chat':
+                    # 若是聊天信息，则不等待回应。
+                    await player_chat(name, data)
+                    continue
                 if response is not None:
                     logger.debug(F'对来自 [{name}] 的数据 {receive_message}')
                     if response is True:
@@ -121,17 +123,6 @@ async def server_shutdown(name: str, data: dict):
             return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
-    return True
-
-
-async def player_chat(name: str, data: list):
-    player, chat_message = data
-    logger.debug(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
-    if config.sync_all_game_message:
-        if not (await send_synchronous_message(F'[{name}] <{player}> {chat_message}')):
-            logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
-    if config.sync_message_between_servers:
-        await server_manager.broadcast(name, player, chat_message, except_server=name)
     return True
 
 
@@ -182,6 +173,16 @@ async def player_left(name: str, player: str):
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
     return True
+
+
+async def player_chat(name: str, data: list):
+    player, chat_message = data
+    logger.debug(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
+    if config.sync_all_game_message:
+        if not (await send_synchronous_message(F'[{name}] <{player}> {chat_message}')):
+            logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
+    if config.sync_message_between_servers:
+        await server_manager.broadcast(name, player, chat_message, except_server=name)
 
 
 def setup_websocket_server():
