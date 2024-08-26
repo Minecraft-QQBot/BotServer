@@ -70,7 +70,9 @@ async def handle_websocket_minecraft(websocket: WebSocket):
         # 循环检测服务器状态
         while True:
             await asyncio.sleep(30)
-            if not server.is_connected: break
+            # 使用 websocket.closed 检查连接是否关闭
+            if websocket.closed:
+                break
             if server.type != 'FakePlayer':
                 time_count += 1
                 if time_count <= config.server_memory_update_interval:
