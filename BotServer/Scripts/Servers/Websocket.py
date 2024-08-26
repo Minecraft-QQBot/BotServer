@@ -33,19 +33,20 @@ async def handle_websocket_minecraft(websocket: WebSocket):
         Globals.cpu_occupation[name] = []
         Globals.ram_occupation[name] = []
         while not websocket.closed:
-            time_count += 1
             await asyncio.sleep(30)
-            if time_count <= config.server_memory_update_interval:
-                continue
-            logger.debug(F'正在尝试获取服务器 [{name}] 的占用数据！')
-            if data := await server.send_server_occupation():
-                time_count = 0
-                cpu, ram = data
-                Globals.cpu_occupation[name].append(cpu)
-                Globals.ram_occupation[name].append(ram)
-                if len(Globals.cpu_occupation[name]) > config.server_memory_max_cache:
-                    Globals.cpu_occupation[name].pop(0)
-                    Globals.ram_occupation[name].pop(0)
+            if server.type != 'FakePlayer':
+                time_count += 1
+                if time_count <= config.server_memory_update_interval:
+                    continue
+                logger.debug(F'正在尝试获取服务器 [{name}] 的占用数据！')
+                if data := await server.send_server_occupation():
+                    time_count = 0
+                    cpu, ram = data
+                    Globals.cpu_occupation[name].append(cpu)
+                    Globals.ram_occupation[name].append(ram)
+                    if len(Globals.cpu_occupation[name]) > config.server_memory_max_cache:
+                        Globals.cpu_occupation[name].pop(0)
+                        Globals.ram_occupation[name].pop(0)
         Globals.cpu_occupation.pop(name, None)
         Globals.ram_occupation.pop(name, None)
         logger.info(F'检测到连接与 [{name}] 已断开！移除此服务器内存数据。')
