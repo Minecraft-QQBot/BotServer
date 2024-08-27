@@ -1,4 +1,4 @@
-from importlib import import_module, util
+from importlib import util
 
 from nonebot.log import logger
 
@@ -12,16 +12,15 @@ openai = None
 render_template = None
 
 if config.ai_enabled:
-    if openai_spec := util.find_spec('openai'):
-        openai = util.module_from_spec(openai_spec)
-    logger.error('你已开启 Ai 功能，但却没有安装 OpenAi 库！请先安装后再启动。')
-    exit(1)
+    if util.find_spec('openai') is None:
+        logger.error('你已开启 Ai 功能，但却没有安装 OpenAi 库！请先安装后再启动。')
+        exit(1)
+    import openai
 if config.image_mode:
     if util.find_spec('nonebot_plugin_htmlrender') is None:
         logger.error('你已开启图片模式，但却没有安装对应的库！请先安装后再启动。')
         exit(1)
-    render_module = import_module('Scripts.Render')
-    render_template = render_module.render_template
+    from Scripts.Render import render_template
 
 # LtNsttMj1tUSaieZRjvHHk2h2AZOEKIG
 # https://crafatar.com/avatars/{uuid}
