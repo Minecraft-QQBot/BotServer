@@ -8,7 +8,7 @@ from nonebot.log import logger
 import Globals
 from ..Config import config
 from ..Managers import server_manager, data_manager
-from ..Utils import Json, send_synchronous_message
+from ..Utils import Json, send_synchronous_message, check_message
 
 
 async def verify(websocket: WebSocket):
@@ -34,7 +34,7 @@ async def handle_websocket_minecraft(websocket: WebSocket):
         Globals.ram_occupation[name] = []
         while True:
             await asyncio.sleep(30)
-            if not server.is_connected: break
+            if websocket.closed: break
             if server.type != 'FakePlayer':
                 time_count += 1
                 if time_count <= config.server_memory_update_interval:
@@ -96,6 +96,10 @@ async def handle_websocket_bot(websocket: WebSocket):
 async def message(name: str, group_message: str):
     if group_message:
         logger.debug(F'发送消息 {group_message} 到消息群！')
+        if check_message(group_message):
+            logger.warning(F'检测到消息 {group_message} 包含敏感词，已丢弃！')
+            await send_synchronous_message('检测到消息包含敏感词，已丢弃！详情请看控制台。')
+            return None
         if await send_synchronous_message(group_message):
             return True
     logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
@@ -181,6 +185,10 @@ async def player_chat(name: str, data: list):
     player, chat_message = data
     logger.debug(F'收到玩家 {player} 在服务器 [{name}] 发送消息！')
     if config.sync_all_game_message:
+        if check_message(chat_message):
+            logger.warning(F'检测到消息 {chat_message} 包含敏感词，已丢弃！')
+            await send_synchronous_message(F'检测到玩家 {player} 发送的消息包含敏感词，已丢弃！详情请看控制台。')
+            return None
         if not (await send_synchronous_message(F'[{name}] <{player}> {chat_message}')):
             logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     if config.sync_message_between_servers:

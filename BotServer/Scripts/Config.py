@@ -27,6 +27,8 @@ class Config(BaseModel):
     sync_all_game_message: bool = False
     sync_message_between_servers: bool = True
 
+    sync_sensitive_words: list[str] = []
+
     server_memory_max_cache: int = 200
     server_memory_update_interval: int = 1
 

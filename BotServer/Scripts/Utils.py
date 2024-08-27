@@ -24,15 +24,15 @@ def turn_message(iterator: Iterable) -> Message:
     return Message('\n'.join(lines))
 
 
-def get_player_name(name):
-    if result := regex.search(name):
-        return result.group()
-
-
 def check_player(player: str):
     if len(player) > 16:
         return False
     return get_player_name(player) == player
+
+
+def check_message(message: str):
+    # 返回是否含有违禁词
+    return any(word in message for word in config.sync_sensitive_words)
 
 
 def get_args(args: Message):
@@ -47,10 +47,32 @@ def get_args(args: Message):
     return result
 
 
+def get_player_name(name):
+    if result := regex.search(name):
+        return result.group()
+
+
 def get_permission(event: MessageEvent):
     return (str(event.user_id) in config.superusers) or (
             config.admin_superusers and event.sender.role in ('admin', 'owner')
     )
+
+
+def restart():
+    frames = inspect.getouterframes(inspect.currentframe())
+    servers = (info.frame.f_locals.get('server') for info in frames[::-1])
+    server = next(server for server in servers if isinstance(server, Server))
+
+    def core():
+        file = Path('Bot.py').absolute()
+        os.system(f'start python {file}')
+        server.should_exit = True
+
+    if os.name == 'nt':
+        timer = Timer(2, core)
+        timer.start()
+        return True
+    return False
 
 
 async def get_user_name(group: int, user: int):
@@ -70,23 +92,6 @@ async def send_synchronous_message(message: str):
     except (NetworkError, ActionFailed, ValueError):
         return False
     return True
-
-
-def restart():
-    frames = inspect.getouterframes(inspect.currentframe())
-    servers = (info.frame.f_locals.get('server') for info in frames[::-1])
-    server = next(server for server in servers if isinstance(server, Server))
-
-    def core():
-        file = Path('Bot.py').absolute()
-        os.system(f'start python {file}')
-        server.should_exit = True
-
-    if os.name == 'nt':
-        timer = Timer(2, core)
-        timer.start()
-        return True
-    return False
 
 
 class Json:
