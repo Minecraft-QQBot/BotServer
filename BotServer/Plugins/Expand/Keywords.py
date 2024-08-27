@@ -3,7 +3,9 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent
 
 from Scripts.Utils import Rules
 from Scripts.Config import config
+from nonebot.log import logger
 
+logger.debug('加载 关键词回复 功能完毕！')
 matcher = on_message(rule=Rules.message_rule, priority=15, block=False)
 
 
