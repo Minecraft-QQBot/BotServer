@@ -11,7 +11,7 @@ from Scripts.Network import download
 from Scripts.Utils import Rules, get_permission
 from Scripts.Config import config
 
-logger.debug('加载 AI 功能完毕！')
+logger.debug('加载 Ai 功能完毕！')
 messages = [{'role': 'system', 'content': config.ai_role_message}]
 matcher = on_message(rule=to_me() & Rules.command_rule, priority=15, block=False, )
 
