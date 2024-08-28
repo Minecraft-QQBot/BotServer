@@ -50,6 +50,9 @@ class Config(BaseModel):
     auto_reply_enabled: bool = False
     auto_reply_keywords: dict[str, list[str]] = None
 
+    api_enabled: bool = False
+    api_token: str = None
+
 
 config: Config = get_plugin_config(Config)
 

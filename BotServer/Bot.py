@@ -21,8 +21,7 @@ driver.register_adapter(Adapter)
 @driver.on_startup
 async def startup():
     from Scripts import Network
-    from Scripts.Servers import Websocket
-    from Scripts.Servers.Http import WebUi
+    from Scripts.Servers import Websocket, Http
     from Scripts.Managers import environment_manager, lagrange_manager, version_manager, data_manager
 
     await lagrange_manager.init()
@@ -32,8 +31,9 @@ async def startup():
 
     data_manager.load()
     environment_manager.init()
-    WebUi.setup_webui_http_server()
     Websocket.setup_websocket_server()
+    Http.setup_api_http_server()
+    Http.setup_webui_http_server()
 
     await Network.send_bot_status(True)
 
