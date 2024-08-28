@@ -33,7 +33,7 @@ async def handle_group(event: GroupMessageEvent, args: Message = CommandArg()):
 def list_handler(players: dict):
     if len(players) == 1:
         server_name, players = players.popitem()
-        online_count = sum(len(players) for players in players.values())
+        online_count = sum(len(players) for players in players)
         yield F'===== {server_name} 玩家列表 ====='
         yield from format_players(players)
         yield F'当前在线人数共 {online_count} 人'
@@ -42,8 +42,7 @@ def list_handler(players: dict):
     if players:
         yield '====== 玩家列表 ======'
         for name, value in players.items():
-            if value is None:
-                continue
+            if value is None: continue
             player_count += sum(len(players) for players in value)
             yield F' -------- {name} --------'
             yield from format_players(value)
@@ -64,7 +63,7 @@ def format_players(players: list):
         if not fake_players_str: fake_players_str = '没有假人在线！'
         yield '    ' + fake_players_str + '\n'
         return None
-    if players:
+    if players := players[0]:
         yield '    ' + '\n    '.join(players) + '\n'
         return None
     yield '  没有玩家在线！\n'
@@ -72,13 +71,13 @@ def format_players(players: list):
 
 def classify_players(players: list):
     if not config.bot_prefix:
-        return players, []
+        return (players, )
     fake_players, real_players = [], []
     for player in players:
         if player.upper().startswith(config.bot_prefix):
             fake_players.append(player)
-        else:
-            real_players.append(player)
+            continue
+        real_players.append(player)
     return real_players, fake_players
 
 
