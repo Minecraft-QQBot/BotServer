@@ -16,7 +16,11 @@ async def get_player_list(request: Request):
         if server := server_manager.get_server(server_flag):
             return Response(200, content=dumps({'success': True, 'players': await server.send_player_list()}))
         return Response(200, content=dumps({'success': False, 'message': '服务器不存在！'}))
-    return {server.name: await server.send_player_list() for server in server_manager.servers.values() if server.status}
+    players = {
+        server.name: await server.send_player_list()
+        for server in server_manager.servers.values() if server.status
+    }
+    return Response(200, content=dumps({'success': True, 'players': players}))
 
 
 def setup_api_http_server():
