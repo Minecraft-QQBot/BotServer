@@ -25,7 +25,7 @@ async def sync_message(event: GroupMessageEvent):
 
 async def turn_text(event: GroupMessageEvent):
     plain_texts = []
-    for segment in event.get_message():
+    for segment in event.original_message:
         if segment.type == 'text' and (text := segment.data['text']):
             plain_texts.append(text)
             continue
