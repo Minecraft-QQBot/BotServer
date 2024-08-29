@@ -48,9 +48,6 @@ class Server:
     async def send_command(self, command: str):
         return await self.send_data('command', command)
 
-    async def send_message(self, message_data: list):
-        await self.send_data('message', message_data, wait=False)
-
     async def send_mcdr_command(self, command: str):
         return await self.send_data('mcdr_command', command)
 
@@ -60,6 +57,9 @@ class Server:
     async def send_server_occupation(self):
         if data := await self.send_data('server_occupation'):
             return tuple(round(percent, 2) for percent in data)
+
+    async def send_message(self, message_data: list):
+        await self.send_data('message', message_data, wait=False)
 
 
 class ServerManager:
@@ -94,6 +94,10 @@ class ServerManager:
         logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
         return {name: await server.send_mcdr_command(command) for name, server in self.servers.items() if
                 server.status and server.type == 'McdReforged'}
+
+    async def get_player_list(self):
+        logger.debug('获取所有已连接服务器的玩家列表。')
+        return {name: await server.send_player_list() for name, server in self.servers.items() if server.status}
 
     async def get_server_occupation(self):
         logger.debug('获取所有已连接服务器的占用率。')
