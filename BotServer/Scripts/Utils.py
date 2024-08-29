@@ -7,12 +7,12 @@ from collections.abc import Iterable
 from json import dumps, loads
 from pathlib import Path
 from threading import Timer
-from uvicorn.server import Server
 
 from nonebot import get_bot
 from nonebot.adapters.onebot.v11 import Event, Message, MessageEvent
 from nonebot.exception import ActionFailed, NetworkError
 from nonebot.log import logger
+from uvicorn.server import Server
 
 from .Config import config
 

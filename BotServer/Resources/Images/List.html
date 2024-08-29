@@ -2,7 +2,7 @@
 <html lang="zh-cn">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <style>
         body {
             margin: 0;
@@ -80,33 +80,34 @@
 </head>
 
 <body>
-    <main>
-        <div class="container">
-            <h1>在线玩家列表</h1>
-            {% for server, (real_players, fake_players) in player_list.items() %}
-            <div class="server">
-                <h2>{{ server }}</h2>
-                <div class="players">
-                    {% if real_players or fake_players %}
-                        {% for player in real_players %}
-                        <span>
-                            <img src="https://crafatar.com/avatars/{{ uuids[player] }}?size=20&overlay" alt="{{ player }}" />
+<main>
+    <div class="container">
+        <h1>在线玩家列表</h1>
+        {% for server, (real_players, fake_players) in player_list.items() %}
+        <div class="server">
+            <h2>{{ server }}</h2>
+            <div class="players">
+                {% if real_players or fake_players %}
+                {% for player in real_players %}
+                <span>
+                            <img alt="{{ player }}"
+                                 src="https://crafatar.com/avatars/{{ uuids[player] }}?size=20&overlay"/>
                             <span>{{ player }}</span>
                         </span>
-                        {% endfor %}
-                        {% for player in fake_players %}
-                        <span class="bot">
+                {% endfor %}
+                {% for player in fake_players %}
+                <span class="bot">
                             <span>{{ player }}</span>
                         </span>
-                        {% endfor %}
-                    {% else %}
-                        <span style="margin-left: 30px;">暂无在线玩家！</span>
-                    {% endif %}
-                </div>
-            {% endfor %}
+                {% endfor %}
+                {% else %}
+                <span style="margin-left: 30px;">暂无在线玩家！</span>
+                {% endif %}
             </div>
+            {% endfor %}
         </div>
-    </main>
+    </div>
+</main>
 </body>
 
 </html>

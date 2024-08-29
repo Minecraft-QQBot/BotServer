@@ -1,9 +1,9 @@
-from pathlib import Path
 from atexit import register
+from pathlib import Path
 
 import nonebot
-from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import Adapter
+from nonebot.log import logger
 
 log_path = Path('./Logs/')
 if not log_path.exists():

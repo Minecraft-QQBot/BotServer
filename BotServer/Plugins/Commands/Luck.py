@@ -8,8 +8,10 @@ from nonebot.log import logger
 
 from Scripts.Utils import Rules, turn_message
 
-bad_things = ('造世吞（直接放飞', '修机器（一修就炸', '挖矿（只挖到原石', '造建筑（啥都没有', '钓鱼（全部是垃圾', '刷附魔（刷的垃圾')
-good_things = ('造世吞（完美运行', '修机器（一修就好', '挖矿（挖到十钻石', '造建筑（要啥都有', '钓鱼（钓到把神弓', '刷附魔（一发就中')
+bad_things = (
+'造世吞（直接放飞', '修机器（一修就炸', '挖矿（只挖到原石', '造建筑（啥都没有', '钓鱼（全部是垃圾', '刷附魔（刷的垃圾')
+good_things = (
+'造世吞（完美运行', '修机器（一修就好', '挖矿（挖到十钻石', '造建筑（要啥都有', '钓鱼（钓到把神弓', '刷附魔（一发就中')
 
 logger.debug('加载命令 Luck 完毕！')
 matcher = on_command('luck', force_whitespace=True, rule=Rules.command_rule)

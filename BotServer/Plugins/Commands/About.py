@@ -2,8 +2,8 @@ from nonebot import on_command
 from nonebot.adapters.onebot.v11 import GroupMessageEvent
 from nonebot.log import logger
 
-from Scripts.Utils import Rules, turn_message
 from Scripts.Managers.Version import version_manager
+from Scripts.Utils import Rules, turn_message
 
 logger.debug('加载命令 About 完毕！')
 matcher = on_command('about', force_whitespace=True, rule=Rules.command_rule)

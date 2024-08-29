@@ -31,7 +31,8 @@ class DataManager:
             with webui_file.open(encoding='Utf-8', mode='r') as file:
                 count_flag += 1
                 self.webui_token = load(file)['token']
-        else: self.create_token()
+        else:
+            self.create_token()
         if server_file.exists():
             with server_file.open(encoding='Utf-8', mode='r') as file:
                 count_flag += 1

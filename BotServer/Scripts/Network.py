@@ -1,8 +1,8 @@
-import psutil
 from hashlib import md5
 from io import BytesIO
-from httpx import AsyncClient
 
+import psutil
+from httpx import AsyncClient
 from nonebot.log import logger
 
 from Scripts.Globals import uuid_caches

@@ -1,5 +1,5 @@
-from pathlib import Path
 from json import JSONDecodeError, loads, dumps
+from pathlib import Path
 
 from nonebot.log import logger
 

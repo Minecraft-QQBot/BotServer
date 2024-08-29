@@ -3,11 +3,11 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
 
-from Scripts.Globals import render_template
 from Scripts.Config import config
+from Scripts.Globals import render_template
 from Scripts.Managers import server_manager
-from Scripts.Utils import Rules, turn_message
 from Scripts.Network import get_player_uuid
+from Scripts.Utils import Rules, turn_message
 
 logger.debug('加载命令 List 完毕！')
 matcher = on_command('list', force_whitespace=True, rule=Rules.command_rule)
@@ -71,7 +71,7 @@ def format_players(players: list):
 
 def classify_players(players: list):
     if not config.bot_prefix:
-        return (players, )
+        return (players,)
     fake_players, real_players = [], []
     for player in players:
         if player.upper().startswith(config.bot_prefix):

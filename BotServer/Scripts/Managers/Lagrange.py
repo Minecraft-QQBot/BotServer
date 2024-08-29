@@ -1,10 +1,10 @@
+import asyncio
 import platform
 import tarfile
-import asyncio
 from asyncio import Task
 from asyncio.subprocess import Process, PIPE
-from pathlib import Path
 from json import load, dump
+from pathlib import Path
 
 from nonebot.log import logger
 

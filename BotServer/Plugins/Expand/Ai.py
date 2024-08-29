@@ -2,14 +2,14 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from nonebot import on_message
-from nonebot.rule import to_me
-from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, Message, Bot
+from nonebot.log import logger
+from nonebot.rule import to_me
 
+from Scripts.Config import config
 from Scripts.Globals import openai
 from Scripts.Network import download
 from Scripts.Utils import Rules, get_permission
-from Scripts.Config import config
 
 logger.debug('加载 Ai 功能完毕！')
 messages = [{'role': 'system', 'content': config.ai_role_message}]
