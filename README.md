@@ -33,7 +33,7 @@
 - [Fabric](https://www.github.com/Minecraft-QQBot/Mode.Fabric) 模组（开发中）
 - [Spigot](https://www.github.com/Minecraft-QQBot/Plugin.Spigot) 插件
 - [McdReforged](https://www.github.com/Minecraft-QQBot/Plugin.McdReforged) 插件
-- [FakePlayer（挂假人）](https://www.github.com/Minecraft-QQBot/Platform.FakePlayer) 平台（测试中）
+- [FakePlayer](https://www.github.com/Minecraft-QQBot/Platform.FakePlayer) 工具
 
 请前往你需要插件的仓库按照说明进行安装。请注意，不同的插件所提供的功能可能是不一样的，您可根据需求选择安装。
 
