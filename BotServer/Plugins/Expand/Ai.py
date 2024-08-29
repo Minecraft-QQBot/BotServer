@@ -6,7 +6,7 @@ from nonebot.rule import to_me
 from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, Message, Bot
 
-from Globals import openai
+from Scripts.Globals import openai
 from Scripts.Network import download
 from Scripts.Utils import Rules, get_permission
 from Scripts.Config import config

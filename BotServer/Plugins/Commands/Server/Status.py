@@ -8,7 +8,7 @@ from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
 
-import Globals
+from Scripts import Globals
 from Scripts.Managers import server_manager
 from Scripts.Utils import Rules, turn_message
 

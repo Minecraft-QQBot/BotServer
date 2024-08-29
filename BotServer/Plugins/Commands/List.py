@@ -3,7 +3,7 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message
 from nonebot.log import logger
 from nonebot.params import CommandArg
 
-from Globals import render_template
+from Scripts.Globals import render_template
 from Scripts.Config import config
 from Scripts.Managers import server_manager
 from Scripts.Utils import Rules, turn_message

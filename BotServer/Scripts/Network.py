@@ -5,7 +5,7 @@ from httpx import AsyncClient
 
 from nonebot.log import logger
 
-from Globals import uuid_caches
+from Scripts.Globals import uuid_caches
 
 client = AsyncClient()
 

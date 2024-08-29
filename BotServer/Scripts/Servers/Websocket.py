@@ -5,7 +5,7 @@ from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 from nonebot.exception import WebSocketClosed
 from nonebot.log import logger
 
-import Globals
+from .. import Globals
 from ..Config import config
 from ..Managers import server_manager, data_manager
 from ..Utils import Json, send_synchronous_message, check_message
