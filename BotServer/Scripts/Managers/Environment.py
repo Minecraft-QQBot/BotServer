@@ -17,21 +17,21 @@ class EnvironmentManager:
         self.load()
 
     def load(self):
-        with self.file_path.open('r', encoding='Utf-8') as file:
-            for line in file:
-                line = line.strip()
-                if line.startswith('#') or (not line):
-                    self.mapping.append(line)
-                    continue
-                key, value = line.split('=')
-                key, value = key.strip(), value.strip()
-                try:
-                    value = loads(value)
-                except JSONDecodeError:
-                    pass
-                self.environment[key] = value
-                self.mapping.append(key)
-            logger.success('预加载配置文件完毕！文件已载入到内存中。')
+        file_content = self.file_path.read_text('Utf-8')
+        for line in file_content.split('\n'):
+            line = line.strip()
+            if line.startswith('#') or (not line):
+                self.mapping.append(line)
+                continue
+            key, value = line.split('=')
+            key, value = key.strip(), value.strip()
+            try:
+                value = loads(value)
+            except JSONDecodeError:
+                pass
+            self.environment[key] = value
+            self.mapping.append(key)
+        logger.success('预加载配置文件完毕！文件已载入到内存中。')
 
     def update(self, new: dict):
         logger.info(F'正在更新配置 {new}')
@@ -47,8 +47,7 @@ class EnvironmentManager:
                 lines.append(line)
                 continue
             lines.append(F'{line}={dumps(self.environment[line], ensure_ascii=False)}')
-        with self.file_path.open('w', encoding='Utf-8') as file:
-            file.write('\n'.join(lines))
+        self.file_path.write_text('\n'.join(lines), encoding='Utf-8')
         logger.success('写入配置成功！手动重启机器人后修改才会生效。')
 
 

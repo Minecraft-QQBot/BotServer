@@ -70,8 +70,7 @@ async def upload_file(message: Message, bot: Bot):
             for segment_data in file_segments:
                 if file := await download(segment_data['url']):
                     path = (temp_path / segment_data['filename'])
-                    with path.open('wb') as download_file:
-                        download_file.write(file.getvalue())
+                    path.write_bytes(file.getvalue())
                     file = await client.files.create(file=path, purpose='file-extract')
                     file_content = await client.files.content(file.id)
                     messages.append({'role': 'system', 'content': file_content.text})

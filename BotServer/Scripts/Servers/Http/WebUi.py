@@ -23,8 +23,7 @@ async def api(request: Request):
 
 async def page(request: Request):
     page_path = Path('Resources/WebUi/Index.html')
-    with page_path.open('r', encoding='Utf-8') as file:
-        return Response(200, content=file.read())
+    return Response(200, content=page_path.read_text('Utf-8'))
 
 
 def setup_webui_http_server():
