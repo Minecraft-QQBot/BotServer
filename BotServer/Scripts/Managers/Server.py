@@ -26,6 +26,10 @@ class Server:
         logger.success(F'已断开与服务器 [{self.name}] 的连接！')
 
     async def send_data(self, event_type: str, data: object = None, wait: bool = True):
+        if self.websocket.closed:
+            logger.info(F'检测到与服务器 [{self.name}] 的连接已断开！')
+            self.status = False
+            return None
         try:
             message_data = {'type': event_type}
             if data is not None:

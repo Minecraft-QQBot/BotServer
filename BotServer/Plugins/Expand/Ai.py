@@ -1,3 +1,5 @@
+from openai import AsyncClient
+from openai import RateLimitError, BadRequestError
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -7,13 +9,12 @@ from nonebot.log import logger
 from nonebot.rule import to_me
 
 from Scripts.Config import config
-from Scripts.Globals import openai
 from Scripts.Network import download
 from Scripts.Utils import Rules, get_permission
 
 logger.debug('加载 Ai 功能完毕！')
 messages = [{'role': 'system', 'content': config.ai_role_message}]
-client = openai.AsyncClient(base_url='https://api.moonshot.cn/v1', api_key=config.ai_api_key)
+client = AsyncClient(base_url='https://api.moonshot.cn/v1', api_key=config.ai_api_key)
 
 matcher = on_message(rule=to_me() & Rules.command_rule, priority=15, block=False, )
 
@@ -33,9 +34,9 @@ async def handle_message(bot: Bot, event: GroupMessageEvent):
         completion = await client.chat.completions.create(
             messages=messages, model='moonshot-v1-8k', temperature=0.3
         )
-    except openai.RateLimitError:
+    except RateLimitError:
         await matcher.finish(MessageSegment.reply(event.message_id) + '啊哦！你问的太快啦，我的脑袋转不过来了 TwT')
-    except openai.BadRequestError as error:
+    except BadRequestError as error:
         await matcher.finish(MessageSegment.reply(event.message_id) + F'啊哦！遇到错误：{error.message}')
     response = completion.choices[0]
     if text := response.message.content:
