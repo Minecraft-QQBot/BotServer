@@ -11,9 +11,14 @@ client = AsyncClient()
 
 
 async def request(url: str):
-    response = await client.get(url)
-    if response.status_code == 200:
-        return response.json()
+    try:
+        response = await client.get(url)
+        if response.status_code == 200:
+            return response.json()
+        logger.warning(F'请求 {url} 失败：错误的状态代码 {response.status_code}')
+        return None
+    except Exception as error:
+        logger.warning(F'请求 {url} 失败：{error}')
 
 
 async def get_player_uuid(name: str):
