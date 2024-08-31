@@ -1,5 +1,5 @@
 from hashlib import md5
-from json import load, dump
+from json import loads, dump
 from pathlib import Path
 from time import time
 
@@ -28,19 +28,15 @@ class DataManager:
         server_file = (self.data_dir / 'Server.json')
         player_file = (self.data_dir / 'Player.json')
         if webui_file.exists():
-            with webui_file.open(encoding='Utf-8', mode='r') as file:
-                count_flag += 1
-                self.webui_token = load(file)['token']
-        else:
-            self.create_token()
+            count_flag += 1
+            self.webui_token = loads(webui_file.read_text('Utf-8'))['token']
+        else: self.create_token()
         if server_file.exists():
-            with server_file.open(encoding='Utf-8', mode='r') as file:
-                count_flag += 1
-                self.servers = load(file)
+            count_flag += 1
+            self.servers = loads(server_file.read_text('Utf-8'))
         if player_file.exists():
-            with player_file.open(encoding='Utf-8', mode='r') as file:
-                count_flag += 1
-                self.players = load(file)
+            count_flag += 1
+            self.players = loads(player_file.read_text('Utf-8'))
         if count_flag == 3:
             logger.success('加载数据文件完毕！')
             return None

@@ -1,3 +1,4 @@
+import asyncio
 from typing import Union
 
 from nonebot.drivers import WebSocket
@@ -91,29 +92,46 @@ class ServerManager:
             await server.disconnect()
 
     async def execute(self, command: str):
+        tasks = {}
         logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
-        return {name: await server.send_command(command) for name, server in self.servers.items() if server.status}
+        for name, server in self.servers.items():
+            if server.status:
+                tasks[name] = asyncio.create_task(server.send_command(command))
+        return {name: await task for name, task in tasks.items()}
 
     async def execute_mcdr(self, command: str):
+        tasks = {}
         logger.debug(F'执行命令 [{command}] 到所有已连接的服务器。')
-        return {name: await server.send_mcdr_command(command) for name, server in self.servers.items() if
-                server.status and server.type == 'McdReforged'}
+        for name, server in self.servers.items():
+            if server.status and server.type == 'McdReforged':
+                tasks[name] = asyncio.create_task(server.send_mcdr_command(command))
+        return {name: await task for name, task in tasks.items()}
 
     async def get_player_list(self):
+        tasks = {}
         logger.debug('获取所有已连接服务器的玩家列表。')
-        return {name: await server.send_player_list() for name, server in self.servers.items() if server.status}
+        for name, server in self.servers.items():
+            if server.status:
+                tasks[name] = asyncio.create_task(server.send_player_list())
+        return {name: await task for name, task in tasks.items()}
 
     async def get_server_occupation(self):
+        tasks = {}
         logger.debug('获取所有已连接服务器的占用率。')
-        return {name: await server.send_server_occupation() for name, server in self.servers.items() if server.status}
+        for name, server in self.servers.items():
+            if server.status:
+                tasks[name] = asyncio.create_task(server.send_server_occupation())
+        return {name: await task for name, task in tasks.items()}
 
     async def broadcast(self, source: str, player: str = None, message: str = None, except_server: str = None):
+        tasks = {}
         message_data = [{'color': config.sync_color_source, 'text': F'[{source}] '}]
         if player: message_data.append({'color': config.sync_color_player, 'text': F'<{player}> '})
         if message: message_data.append({'color': config.sync_color_message, 'text': message})
         for name, server in self.servers.items():
             if ((except_server is None) or name != except_server) and server.status:
-                await server.send_message(message_data)
+                tasks[name] = asyncio.create_task(server.send_message(message_data))
+        return {name: await task for name, task in tasks.items()}
 
 
 server_manager = ServerManager()

@@ -43,7 +43,7 @@ def get_args(args: Message):
                 arg and result.append(arg)
         elif segment.type == 'at':
             result.append(str(segment.data['qq']))
-    logger.debug(f'从 {args} 中提取参数 {result} 完毕。')
+    logger.debug(F'从 {args} 中提取参数 {result} 完毕。')
     return result
 
 
