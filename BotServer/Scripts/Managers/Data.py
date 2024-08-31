@@ -49,8 +49,7 @@ class DataManager:
         if not bot_data.exists():
             logger.error('加载机器人数据失败，请重新安装后再试！')
             exit(1)
-        with bot_data.open('r', encoding='Utf-8') as file:
-            self.commands = load(file)
+        self.commands = loads(bot_data.read_text('Utf-8'))
         logger.success('加载正在加载机器人数据完毕！')
 
     def save(self):
