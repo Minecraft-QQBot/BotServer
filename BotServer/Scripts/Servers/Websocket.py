@@ -1,6 +1,7 @@
 import asyncio
 
-from nonebot import get_driver
+from nonebot import get_driver, get_bot
+from nonebot.exception import NetworkError, ActionFailed
 from nonebot.drivers import WebSocketServerSetup, WebSocket, ASGIMixin, URL
 from nonebot.exception import WebSocketClosed
 from nonebot.log import logger
@@ -8,7 +9,17 @@ from nonebot.log import logger
 from .. import Globals
 from ..Config import config
 from ..Managers import server_manager, data_manager
-from ..Utils import Json, send_synchronous_message, check_message
+from ..Utils import Json, check_message
+
+
+async def send_message(sent_message: str):
+    try:
+        bot = get_bot()
+        for group in config.message_groups:
+            await bot.send_group_msg(group_id=group, message=sent_message)
+    except (NetworkError, ActionFailed, ValueError):
+        return False
+    return True
 
 
 async def verify(websocket: WebSocket):
@@ -98,9 +109,9 @@ async def message(name: str, group_message: str):
         logger.debug(F'发送消息 {group_message} 到消息群！')
         if check_message(group_message):
             logger.warning(F'检测到消息 {group_message} 包含敏感词，已丢弃！')
-            await send_synchronous_message('检测到消息包含敏感词，已丢弃！详情请看控制台。')
+            await send_message('检测到消息包含敏感词，已丢弃！详情请看控制台。')
             return None
-        if await send_synchronous_message(group_message):
+        if await send_message(group_message):
             return True
     logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     return None
@@ -112,7 +123,7 @@ async def server_startup(name: str, data: dict):
     if config.sync_message_between_servers:
         await server_manager.broadcast(name, message='服务器已开启！', except_server=name)
     if config.broadcast_server:
-        if await send_synchronous_message(F'服务器 [{name}] 已开启，喵～'):
+        if await send_message(F'服务器 [{name}] 已开启，喵～'):
             return config.sync_all_game_message
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
@@ -125,7 +136,7 @@ async def server_shutdown(name: str, data: dict):
     if config.sync_message_between_servers:
         await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
     if config.broadcast_server:
-        if await send_synchronous_message(F'服务器 [{name}] 已关闭，呜……'):
+        if await send_message(F'服务器 [{name}] 已关闭，呜……'):
             return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
@@ -140,7 +151,7 @@ async def player_death(name: str, data: list):
         if config.sync_message_between_servers:
             await server_manager.broadcast(name, message=broadcast_message, except_server=name)
         if config.broadcast_player:
-            if await send_synchronous_message(broadcast_message):
+            if await send_message(broadcast_message):
                 return True
             logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
             return False
@@ -157,7 +168,7 @@ async def player_joined(name: str, player: str):
     if config.sync_message_between_servers:
         await server_manager.broadcast(name, message=server_message, except_server=name)
     if config.broadcast_player:
-        if await send_synchronous_message(group_message):
+        if await send_message(group_message):
             return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
@@ -174,7 +185,7 @@ async def player_left(name: str, player: str):
     if config.sync_message_between_servers:
         await server_manager.broadcast(name, message=server_message, except_server=name)
     if config.broadcast_player:
-        if await send_synchronous_message(group_message):
+        if await send_message(group_message):
             return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
@@ -187,9 +198,9 @@ async def player_chat(name: str, data: list):
     if config.sync_all_game_message:
         if check_message(chat_message):
             logger.warning(F'检测到消息 {chat_message} 包含敏感词，已丢弃！')
-            await send_synchronous_message(F'检测到玩家 {player} 发送的消息包含敏感词，已丢弃！详情请看控制台。')
+            await send_message(F'检测到玩家 {player} 发送的消息包含敏感词，已丢弃！详情请看控制台。')
             return None
-        if not (await send_synchronous_message(F'[{name}] <{player}> {chat_message}')):
+        if not (await send_message(F'[{name}] <{player}> {chat_message}')):
             logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
     if config.sync_message_between_servers:
         await server_manager.broadcast(name, player, chat_message, except_server=name)

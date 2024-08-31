@@ -84,16 +84,6 @@ async def get_user_name(group: int, user: int):
     return response.get('card') or response.get('nickname')
 
 
-async def send_synchronous_message(message: str):
-    try:
-        bot = get_bot()
-        for group in config.message_groups:
-            await bot.send_group_msg(group_id=group, message=message)
-    except (NetworkError, ActionFailed, ValueError):
-        return False
-    return True
-
-
 class Json:
     @staticmethod
     def encode(data: dict):
