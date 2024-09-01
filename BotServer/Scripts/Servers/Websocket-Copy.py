@@ -12,6 +12,16 @@ from ..Managers import server_manager, data_manager
 from ..Utils import Json, check_message
 
 
+async def send_message(sent_message: str):
+    try:
+        bot = get_bot()
+        for group in config.message_groups:
+            await bot.send_group_msg(group_id=group, message=sent_message)
+    except (NetworkError, ActionFailed, ValueError):
+        return False
+    return True
+
+
 async def verify(websocket: WebSocket):
     logger.info('检测到 WebSocket 链接，正在验证身份……')
     if info := websocket.request.headers.get('info'):
@@ -92,16 +102,6 @@ async def handle_websocket_bot(websocket: WebSocket):
                 await websocket.send(Json.encode({'success': False}))
         except (ConnectionError, WebSocketClosed):
             logger.info('WebSocket 连接已关闭！')
-
-
-async def send_message(sent_message: str):
-    try:
-        bot = get_bot()
-        for group in config.message_groups:
-            await bot.send_group_msg(group_id=group, message=sent_message)
-    except (NetworkError, ActionFailed, ValueError):
-        return False
-    return True
 
 
 async def message(name: str, group_message: str):

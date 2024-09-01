@@ -23,6 +23,19 @@ class LagrangeManager:
         for path in self.path.rglob('Lagrange.OneBot*'):
             self.lagrange_path = path.absolute()
 
+    @staticmethod
+    def parse_platform():
+        system = platform.system()
+        architecture = platform.machine()
+        system_mapping = {'Linux': 'linux', 'Darwin': 'osx', 'Windows': 'win'}
+        if system == 'Windows':
+            architecture = 'x64' if architecture == 'AMD64' else 'x86'
+        elif system == 'Darwin':
+            architecture = 'x64' if architecture == 'x86_64' else 'arm64'
+        elif system == 'Linux':
+            architecture = 'x64' if architecture == 'x86_64' else 'arm'
+        return system_mapping[system], architecture
+
     async def update_config(self):
         config_path = Path('Resources/Lagrange.json')
         if not config_path.exists():
@@ -37,19 +50,6 @@ class LagrangeManager:
             dump(lagrange_config, file)
             logger.success('Lagrange.Onebot 配置文件更新成功！')
             return True
-
-    @staticmethod
-    def parse_platform():
-        system = platform.system()
-        architecture = platform.machine()
-        system_mapping = {'Linux': 'linux', 'Darwin': 'osx', 'Windows': 'win'}
-        if system == 'Windows':
-            architecture = 'x64' if architecture == 'AMD64' else 'x86'
-        elif system == 'Darwin':
-            architecture = 'x64' if architecture == 'x86_64' else 'arm64'
-        elif system == 'Linux':
-            architecture = 'x64' if architecture == 'x86_64' else 'arm'
-        return system_mapping[system], architecture
 
     async def init(self):
         if self.lagrange_path:
