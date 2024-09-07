@@ -61,7 +61,7 @@ async def upload_file(message: Message, bot: Bot):
             message = await bot.get_msg(message_id=segment.data['id'])
             logger.info(F'正在解析引用消息 {message} 的文件……')
             for reply_segment in message.get('message', []):
-                if reply_segment.type in ('image', 'file'):
+                if reply_segment['type'] in ('image', 'file'):
                     file_segments.append(reply_segment['data'])
     if file_segments:
         logger.debug(F'上传文件：{file_segments}')

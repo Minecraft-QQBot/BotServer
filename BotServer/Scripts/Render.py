@@ -15,5 +15,5 @@ async def render_template(template_name: str, size: tuple, **kwargs):
     width, height = size
     kwargs.setdefault('background', config.image_background)
     page = {'viewport': {'width': width, 'height': height}, 'base_url': 'file://' + template_path}
-    image = await template_to_pic(template_path, template_name, kwargs, pages=page, wait=5)
+    image = await template_to_pic(template_path, template_name, kwargs, pages=page, wait=1)
     return MessageSegment.image(image)
