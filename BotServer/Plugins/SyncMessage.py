@@ -29,6 +29,7 @@ async def sync_message(bot: Bot, event: GroupMessageEvent):
 async def turn_text(bot: Bot, event: Union[GroupMessageEvent | Reply]):
     plain_texts = []
     if isinstance(event, GroupMessageEvent) and event.reply:
+        event.reply.group_id = event.group_id
         reply_plain_text = await turn_text(bot, event.reply)
         plain_texts.append(F'「回复 {event.reply.sender.card or event.reply.sender.nickname}：{reply_plain_text}」')
     for segment in event.message:
