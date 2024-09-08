@@ -6,6 +6,7 @@ from time import time
 from nonebot.log import logger
 
 from ..Config import config
+from .Resources import resources_manager
 
 
 class DataManager:
@@ -24,12 +25,12 @@ class DataManager:
             logger.warning('数据文件目录不存在，正在创建数据目录……')
             self.data_dir.mkdir()
         count_flag = 0
-        webui_file = (self.data_dir / 'Webui.json')
+        webui_file = (self.data_dir / 'Webui.bin')
         server_file = (self.data_dir / 'Server.json')
         player_file = (self.data_dir / 'Player.json')
         if webui_file.exists():
             count_flag += 1
-            self.webui_token = loads(webui_file.read_text('Utf-8'))['token']
+            self.webui_token = loads(webui_file.read_text('Utf-8'))
         else: self.create_token()
         if server_file.exists():
             count_flag += 1
@@ -45,20 +46,16 @@ class DataManager:
 
     def load_bot_data(self):
         logger.debug('正在加载机器人数据……')
-        bot_data = Path('Resources/Commands.json')
-        if not bot_data.exists():
-            logger.error('加载机器人数据失败，请重新安装后再试！')
-            exit(1)
-        self.commands = loads(bot_data.read_text('Utf-8'))
+        self.commands = loads(resources_manager.read_file('Commands.json'))
         logger.success('加载正在加载机器人数据完毕！')
 
     def save(self):
         logger.debug('正在保存数据文件……')
-        webui_file = (self.data_dir / 'Webui.json')
+        webui_file = (self.data_dir / 'Webui.bin')
         server_file = (self.data_dir / 'Server.json')
         player_file = (self.data_dir / 'Player.json')
         with webui_file.open('w', encoding='Utf-8') as file:
-            dump({'token': self.webui_token}, file)
+            dump(self.webui_token, file)
         with server_file.open('w', encoding='Utf-8') as file:
             dump(self.servers, file)
         with player_file.open('w', encoding='Utf-8') as file:
@@ -67,7 +64,7 @@ class DataManager:
 
     def create_token(self):
         md5_digest = md5()
-        md5_digest.update(F'{time()} Webui'.encode('Utf-8'))
+        md5_digest.update(F'{time() * 1000} Webui'.encode('Utf-8'))
         self.webui_token = md5_digest.hexdigest()
 
     def remove_server(self, name: str):

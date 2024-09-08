@@ -1,15 +1,17 @@
-import asyncio
 import platform
 import tarfile
+from json import loads, dump
+from pathlib import Path
+
+import asyncio
 from asyncio import Task
 from asyncio.subprocess import Process, PIPE
-from json import load, dump
-from pathlib import Path
 
 from nonebot.log import logger
 
 from ..Config import config
 from ..Network import download
+from .Resources import resources_manager
 
 
 class LagrangeManager:
@@ -37,13 +39,8 @@ class LagrangeManager:
         return system_mapping[system], architecture
 
     async def update_config(self):
-        config_path = Path('Resources/Lagrange.json')
-        if not config_path.exists():
-            logger.error('找不到 Lagrange.Onebot 的配置文件模版！请尝试重新安装机器人。')
-            exit(1)
-        with config_path.open('r', encoding='Utf-8') as file:
-            lagrange_config = load(file)
         config_path = (self.path / 'appsettings.json')
+        lagrange_config = loads(resources_manager.read_file('Lagrange.json'))
         lagrange_config['Implementations'][0]['Port'] = config.port
         lagrange_config['Implementations'][0]['AccessToken'] = config.onebot_access_token
         with config_path.open('w', encoding='Utf-8') as file:

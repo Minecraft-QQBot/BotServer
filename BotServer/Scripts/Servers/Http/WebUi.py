@@ -1,13 +1,13 @@
 from json import dumps
 from pathlib import Path
-
 from fastapi.staticfiles import StaticFiles
+
 from nonebot import get_driver, get_app
 from nonebot.drivers import URL, Request, Response, ASGIMixin, HTTPServerSetup
 from nonebot.log import logger
 
-from Scripts.Managers import environment_manager, data_manager
 from Scripts.Utils import restart
+from Scripts.Managers import environment_manager, resources_manager, data_manager
 
 
 async def api(request: Request):
@@ -29,7 +29,8 @@ async def page(request: Request):
 def setup_webui_http_server():
     if isinstance((driver := get_driver()), ASGIMixin):
         application = get_app()
-        application.mount('/assets', StaticFiles(directory='Resources/WebUi/Assets'), name='static_assets')
+        static_file_path = (resources_manager.path / 'WebUi/Assets')
+        application.mount('/assets', StaticFiles(directory=static_file_path), name='static_assets')
 
         server = HTTPServerSetup(URL('/webui'), 'GET', 'page', page)
         driver.setup_http_server(server)
