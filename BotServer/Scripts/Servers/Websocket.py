@@ -18,15 +18,15 @@ async def verify(websocket: WebSocket):
         info = Json.decode(info)
         name = info.get('name')
         if info.get('token') != config.token or (not name):
-            await websocket.close()
+            await websocket.close(1008, 'Error token or name.')
             logger.warning('身份验证失败！请检查插件配置文件是否正确。')
             return None
         logger.success(F'身份验证成功，服务器 [{name}] 已连接到！连接已建立。')
+        await websocket.accept()
         return name
 
 
 async def handle_websocket_minecraft(websocket: WebSocket):
-    await websocket.accept()
     if name := await verify(websocket):
         time_count = 0
         data_manager.append_server(name)
@@ -55,7 +55,6 @@ async def handle_websocket_minecraft(websocket: WebSocket):
 
 
 async def handle_websocket_bot(websocket: WebSocket):
-    await websocket.accept()
     if name := await verify(websocket):
         try:
             while True:
