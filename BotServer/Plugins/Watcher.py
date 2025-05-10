@@ -16,9 +16,10 @@ week_mapping = ('一', '二', '三', '四', '五', '六', '日')
 @matcher.handle()
 async def watch_decrease(event: GroupDecreaseNoticeEvent):
     logger.info(F'检测到用户 {event.user_id} 离开了群聊！')
-    if player := data_manager.remove_player(str(event.user_id)):
-        await server_manager.execute(F'{config.whitelist_command} remove {player}')
-        await matcher.finish(F'用户 {event.user_id} 离开了群聊，自动从白名单中移除 {"、".join(player)} 玩家。')
+    if players := data_manager.remove_player(str(event.user_id)):
+        for single_player in players:
+            await server_manager.execute(F'{config.whitelist_command} remove {single_player}')
+        await matcher.finish(F'用户 {event.user_id} 离开了群聊，自动从白名单中移除 {"、".join(players)} 玩家。')
 
 
 @matcher.handle()
