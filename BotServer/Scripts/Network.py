@@ -32,21 +32,23 @@ async def get_player_uuid(name: str):
 
 
 async def send_bot_status(status: bool):
-    mac = None
-    addresses = psutil.net_if_addrs()
-    for interface_name, interface_address in addresses.items():
-        for address in interface_address:
-            if address.family == psutil.AF_LINK:
-                mac = address.address
-        if mac: break
-    bot_id = md5((mac + 'Minecraft_QQBot').encode())
-    data = {'bot_id': bot_id.hexdigest(), 'status': status}
-    response = await client.get('http://api.qqbot.bugjump.xyz/status/change', params=data)
-    if response.status_code == 200:
-        logger.success('发送机器人状态改变信息成功！')
-        return True
-    logger.warning('无法连接上服务器！发送机器人状态改变信息失败。')
-    return False
+    logger.warning('状态服务G了，跳过')
+    return True
+    # mac = None
+    # addresses = psutil.net_if_addrs()
+    # for interface_name, interface_address in addresses.items():
+    #     for address in interface_address:
+    #         if address.family == psutil.AF_LINK:
+    #             mac = address.address
+    #     if mac: break
+    # bot_id = md5((mac + 'Minecraft_QQBot').encode())
+    # data = {'bot_id': bot_id.hexdigest(), 'status': status}
+    # response = await client.get('http://api.qqbot.bugjump.xyz/status/change', params=data)
+    # if response.status_code == 200:
+    #     logger.success('发送机器人状态改变信息成功！')
+    #     return True
+    # logger.warning('无法连接上服务器！发送机器人状态改变信息失败。')
+    # return False
 
 
 async def download(url: str):
