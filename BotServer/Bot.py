@@ -36,8 +36,8 @@ async def startup():
 
     await version_manager.init()
     await lagrange_manager.init()
-    if version_manager.check_update():
-        await version_manager.update_version()
+    # if version_manager.check_update():
+    #     await version_manager.update_version()
 
     data_manager.load()
     environment_manager.init()

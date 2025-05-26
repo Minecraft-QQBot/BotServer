@@ -16,10 +16,15 @@ class VersionManager:
         return self.latest_version != self.version
 
     async def init(self):
-        if response := await request('http://api.qqbot.bugjump.xyz/version'):
-            self.latest_version = response.get('version')
+        try:
+            if response := await request('http://api.qqbot.bugjump.xyz/version'):
+                self.latest_version = response.get('version')
+                return None
+            logger.warning('尝试获取新版本时出错！')
+        except:
+            logger.warning('版本检查服务器G了，作者挖坑不填，捞B')
+            self.latest_version = self.version  # 让代码正常通过
             return None
-        logger.warning('尝试获取新版本时出错！')
 
     async def update_version(self):
         logger.info(F'更新版本到 {self.latest_version}……')
