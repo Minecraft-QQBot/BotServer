@@ -42,7 +42,9 @@ class Config(BaseModel):
 
     ai_enabled: bool = False
     ai_api_key: str = None
-    ai_role_message: str = None
+    ai_base_url: str = None
+    ai_system_prompt: str = None
+    ai_model_name: str = None
 
     image_mode: bool = False
     image_background: str = None
