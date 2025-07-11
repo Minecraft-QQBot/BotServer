@@ -32,6 +32,8 @@ class Config(BaseModel):
     server_memory_max_cache: int = 200
     server_memory_update_interval: int = 1
 
+    list_compatible_mode: bool = False
+
     whitelist_command: str = 'whitelist'
 
     sync_color_source: str = 'gray'

@@ -13,7 +13,7 @@ logger.debug('加载 Ai 功能完毕！')
 messages = [{'role': 'system', 'content': config.ai_system_prompt}]
 client = AsyncClient(base_url=config.ai_base_url, api_key=config.ai_api_key)
 
-matcher = on_message(rule=to_me() & Rules.command_rule, priority=15, block=False, )
+matcher = on_message(rule=to_me() & Rules.command_rule, priority=15, block=False)
 
 
 @matcher.handle()

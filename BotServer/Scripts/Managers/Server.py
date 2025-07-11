@@ -15,6 +15,7 @@ class Server:
     type: str = None
     status: bool = True
     websocket: WebSocket = None
+    player_list: list[str]
 
     def __init__(self, name: str, websocket: WebSocket):
         self.name = name
@@ -57,6 +58,8 @@ class Server:
         return await self.send_data('mcdr_command', command)
 
     async def send_player_list(self):
+        if config.list_compatible_mode:
+            return self.player_list
         return await self.send_data('player_list')
 
     async def send_server_occupation(self):

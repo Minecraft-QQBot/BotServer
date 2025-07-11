@@ -161,11 +161,15 @@ async def player_joined(name: str, player: str):
     logger.info('收到玩家加入服务器通知！')
     server_message = F'玩家 {player} 加入了游戏。'
     group_message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
+    if config.list_compatible_mode:
+        if server := server_manager.get_server(name):
+            if player not in server.player_list:
+                server.player_list.append(player)
     if config.bot_prefix and player.upper().startswith(config.bot_prefix):
         group_message = F'机器人 {player} 加入了 [{name}] 服务器。'
         server_message = F'机器人 {player} 加入了游戏。'
     if config.sync_message_between_servers:
-        await server_manager.broadcast(name, message=server_message, except_server=name)
+        await server_manager.broadcast(source=name, message=server_message, except_server=name)
     if config.broadcast_player:
         if await send_message(group_message):
             return True
@@ -178,6 +182,10 @@ async def player_left(name: str, player: str):
     logger.info('收到玩家离开服务器通知！')
     server_message = F'玩家 {player} 离开了游戏。'
     group_message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
+    if config.list_compatible_mode:
+        if server := server_manager.get_server(name):
+            if player in server.player_list:
+                server.player_list.remove(player)
     if config.bot_prefix and player.upper().startswith(config.bot_prefix):
         server_message = F'机器人 {player} 离开了游戏。'
         group_message = F'机器人 {player} 离开了 [{name}] 服务器。'
