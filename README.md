@@ -42,7 +42,7 @@
 
 ## 安装教程
 
-请参考 [快速开始](https://qqbot.bugjump.xyz/%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.html) 进行安装。  
+请参考 [快速开始](https://mcbot.ytb.icu/%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.html) 进行安装。  
 
 ## 鸣谢
 
