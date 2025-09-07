@@ -2,6 +2,7 @@
 **/__pycache__
 BotServer-v*.*.*.zip
 .idea
+.python-version
 Test.py
 .DS_Store
 BotServer/Plugins/.vscode/settings.json
