@@ -3,17 +3,20 @@ name = "Minecraft_QQBot"
 version = "2.0.2"
 description = "一款与 Minecraft 互通的 Nonebot2 机器人。"
 readme = "README.md"
-requires-python = ">=3.8, <4.0"
+requires-python = ">=3.10, <4.0"
 dependencies = [
     "httpx>=0.28.1",
+    "matplotlib>=3.10.7",
+    "nonebot-adapter-onebot>=2.4.6",
     "nonebot2[fastapi]>=2.2.1",
     "psutil>=7.0.0",
 ]
 
 [tool.nonebot]
-adapters = [
-    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" }
-]
 plugins = []
 plugin_dirs = ["BotServer/Plugins"]
 builtin_plugins = []
+
+[[tool.uv.index]]
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+default = true

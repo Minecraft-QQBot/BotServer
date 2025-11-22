@@ -22,7 +22,7 @@ async def sync_message(bot: Bot, event: GroupMessageEvent):
                 return None
         plain_text = await turn_text(bot, event)
         name = data_manager.players.get(str(event.user_id), (get_player_name(event.sender.card),))[0]
-        await server_manager.broadcast('QQ', player=(name or event.sender.nickname), plain_text)
+        await server_manager.broadcast('QQ', (name or event.sender.nickname), plain_text)
         logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')
 
 
