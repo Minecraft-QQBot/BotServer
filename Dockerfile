@@ -4,8 +4,10 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # 设置国内 apt 源
-RUN sed -i 's/deb http:\/\/deb.debian.org/deb https:\/\/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
-    sed -i 's/deb http:\/\/security.debian.org/deb https:\/\/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+RUN echo "deb https://mirrors.ustc.edu.cn/debian/ bookworm main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
+    echo "deb https://mirrors.ustc.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb https://mirrors.ustc.edu.cn/debian/ bookworm-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb https://mirrors.ustc.edu.cn/debian-security/ bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list
 
 # 安装系统依赖
 RUN apt-get update && apt-get install -y \
