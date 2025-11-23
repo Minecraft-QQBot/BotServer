@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  minecraft-qqbot:
+    build: .
+    container_name: minecraft-qqbot
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./.env:/app/.env
+      - ./Plugins:/app/Plugins
+      - ./Resources:/app/Resources
+      - ./Scripts:/app/Scripts
+      - ./Logs:/app/Logs
+      - ./data:/app/data
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+    restart: unless-stopped
+    networks:
+      - minecraft-qqbot-network
+
+networks:
+  minecraft-qqbot-network:
+    driver: bridge

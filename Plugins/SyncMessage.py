@@ -26,7 +26,7 @@ async def sync_message(bot: Bot, event: GroupMessageEvent):
         logger.debug(F'转发主群用户 {event.sender.card} 消息 {plain_text} 到游戏内。')
 
 
-async def turn_text(bot: Bot, event: Union[GroupMessageEvent | Reply]):
+async def turn_text(bot: Bot, event: GroupMessageEvent, Reply):
     plain_texts = []
     if isinstance(event, GroupMessageEvent) and event.reply:
         event.reply.group_id = event.group_id

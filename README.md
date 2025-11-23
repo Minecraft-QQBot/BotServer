@@ -27,6 +27,37 @@
 > [!WARNING]
 > 本项目采用 GPL3 许可证，请勿商用！如若修改请务必开源并且注明出处。
 
+## Docker 部署
+
+本项目支持使用 Docker 进行部署，方便快捷。
+
+### 使用 Docker Compose (推荐)
+
+1. 确保已安装 Docker 和 Docker Compose
+2. 在项目根目录下创建或修改 `.env` 配置文件
+3. 运行以下命令启动服务：
+
+```bash
+docker-compose up -d
+```
+
+### 自行构建镜像
+
+```bash
+docker build -t minecraft-qqbot .
+docker run -d \
+  --name minecraft-qqbot \
+  -p 8000:8000 \
+  -v $(pwd)/.env:/app/.env \
+  -v $(pwd)/Plugins:/app/Plugins \
+  -v $(pwd)/Resources:/app/Resources \
+  -v $(pwd)/Scripts:/app/Scripts \
+  -v $(pwd)/Logs:/app/Logs \
+  -v $(pwd)/data:/app/data \
+  --restart unless-stopped \
+  minecraft-qqbot
+```
+
 ## 安装插件
 
 本机器人可通过各种方式与 Minecraft 服务器进行交互，包括：
