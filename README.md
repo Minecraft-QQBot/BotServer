@@ -38,6 +38,8 @@
 3. 运行以下命令启动服务：
 
 ```bash
+git clone https://github.com/Minecraft-QQBot/BotServer
+cd BotServer
 docker-compose up -d
 ```
 

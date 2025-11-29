@@ -10,7 +10,7 @@ services:
       - ./Resources:/app/Resources
       - ./Scripts:/app/Scripts
       - ./Logs:/app/Logs
-      - ./data:/app/data
+      - ./Data:/app/Data
     environment:
       - PORT=8000
       - HOST=0.0.0.0
