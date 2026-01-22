@@ -135,7 +135,7 @@ async def server_shutdown(name: str, data: dict):
     if config.sync_message_between_servers:
         await server_manager.broadcast(name, message='服务器已关闭！', except_server=name)
     if config.broadcast_server:
-        if await send_message(F'服务器 [{name}] 已关闭，呜……'):
+        if await send_message(F'服务器 [{name}] 被外星人抓走了喵！已关闭……'):
             return True
         logger.warning('发送消息失败！请检查机器人状态是否正确和群号是否填写正确。')
         return None
@@ -146,7 +146,7 @@ async def player_death(name: str, data: list):
     player, death_message = data
     logger.debug(F'收到玩家死亡 {death_message} 消息！')
     if (not config.bot_prefix) or (not player.upper().startswith(config.bot_prefix)):
-        broadcast_message = F'玩家 {player} 死亡了，呜……'
+        broadcast_message = F'玩家死亡： {death_message} ，呜……'
         if config.sync_message_between_servers:
             await server_manager.broadcast(name, message=broadcast_message, except_server=name)
         if config.broadcast_player:
@@ -161,15 +161,11 @@ async def player_joined(name: str, player: str):
     logger.info('收到玩家加入服务器通知！')
     server_message = F'玩家 {player} 加入了游戏。'
     group_message = F'玩家 {player} 加入了 [{name}] 服务器，喵～'
-    if config.list_compatible_mode:
-        if server := server_manager.get_server(name):
-            if player not in server.player_list:
-                server.player_list.append(player)
     if config.bot_prefix and player.upper().startswith(config.bot_prefix):
         group_message = F'机器人 {player} 加入了 [{name}] 服务器。'
         server_message = F'机器人 {player} 加入了游戏。'
     if config.sync_message_between_servers:
-        await server_manager.broadcast(source=name, message=server_message, except_server=name)
+        await server_manager.broadcast(name, message=server_message, except_server=name)
     if config.broadcast_player:
         if await send_message(group_message):
             return True
@@ -177,15 +173,10 @@ async def player_joined(name: str, player: str):
         return None
     return True
 
-
 async def player_left(name: str, player: str):
     logger.info('收到玩家离开服务器通知！')
     server_message = F'玩家 {player} 离开了游戏。'
-    group_message = F'玩家 {player} 离开了 [{name}] 服务器，呜……'
-    if config.list_compatible_mode:
-        if server := server_manager.get_server(name):
-            if player in server.player_list:
-                server.player_list.remove(player)
+    group_message = F'玩家 {player} 离开了 [{name}] 服务器，还会再见嘛，呜……'
     if config.bot_prefix and player.upper().startswith(config.bot_prefix):
         server_message = F'机器人 {player} 离开了游戏。'
         group_message = F'机器人 {player} 离开了 [{name}] 服务器。'
