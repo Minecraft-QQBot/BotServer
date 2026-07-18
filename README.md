@@ -1,6 +1,6 @@
 # Minecraft_QQBot
 
-> [!WARN]
+> [!WARNING]
 > 本仓库已停止更新，现重构后于 [UniBot](https://github.com/Minecraft-QQBot/UniBot) 维护。
 
 ### [**文档**](https://mcbot.ytb.icu/)
